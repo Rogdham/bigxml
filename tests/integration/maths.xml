@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<expr op="sub">
+    <expr op="mul">
+        <number>42</number>
+        <expr op="add">
+            <number>13</number>
+            <number>25</number>
+        </expr>
+    </expr>
+    <number>7</number>
+    <expr op="mul">
+        <expr op="add">
+            <number>1</number>
+            <number>3</number>
+            <number>3</number>
+            <number>7</number>
+        </expr>
+        <number>18</number>
+    </expr>
+</expr>

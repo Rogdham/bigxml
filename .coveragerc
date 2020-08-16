@@ -1,0 +1,18 @@
+[html]
+directory = coverage
+
+[paths]
+source =
+    src/bigxml/
+    .tox/*/lib/python*/site-packages/bigxml/
+
+[report]
+exclude_lines =
+    pragma: no cover
+    def __repr__
+    if __name__ == "__main__":
+show_missing = True
+
+[run]
+branch = True
+source = bigxml
