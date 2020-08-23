@@ -1,0 +1,118 @@
+name: build
+
+on: [push, pull_request]
+
+env:
+  PY_COLORS: 1
+
+jobs:
+  tests:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        python: [3.6, 3.7, 3.8]
+    steps:
+      - uses: actions/checkout@v2
+      - name: Setup Python ${{ matrix.config.python }}
+        uses: actions/setup-python@v2
+        with:
+          python-version: ${{ matrix.python }}
+      - name: Install dependencies
+        run: pip install tox
+      - name: Run tests
+        run: tox -e py
+      - name: Save coverage artifact
+        uses: actions/upload-artifact@v2
+        with:
+          name: coverage.${{ matrix.python }}
+          path: .tox/.coverage.py
+
+  coverage:
+    needs: tests
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - name: Setup Python
+        uses: actions/setup-python@v2
+        with:
+          python-version: 3.8
+      - name: Install dependencies
+        run: pip install tox
+      - name: Restore coverage artifacts
+        uses: actions/download-artifact@v2
+        with:
+          path: artifacts
+      - name: Gather coverage reports
+        run: |
+          mkdir .tox
+          ls artifacts | while read -r name; do cp "artifacts/$name/.coverage.py" ".tox/.$name"; done
+      - name: Run coverage
+        run: tox -e coverage
+      - name: Save coverage HTML report artifact
+        uses: actions/upload-artifact@v2
+        with:
+          name: coverage-report
+          path: coverage
+
+  lint:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - name: Setup Python
+        uses: actions/setup-python@v2
+        with:
+          python-version: 3.8
+      - name: Install dependencies
+        run: pip install tox
+      - name: Run lint
+        run: tox -e lint
+
+  format:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - name: Setup Python
+        uses: actions/setup-python@v2
+        with:
+          python-version: 3.8
+      - name: Install dependencies
+        run: pip install tox
+      - name: Run format
+        run: tox -e format
+
+  build:
+    needs: [tests, coverage, lint, format]
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+        with:
+          # fetch all commits for setuptools_scm
+          fetch-depth: 0
+      - name: Setup Python
+        uses: actions/setup-python@v2
+        with:
+          python-version: 3.8
+      - name: Install dependencies
+        run: pip install wheel
+      - name: Build
+        run: python setup.py sdist bdist_wheel
+      - name: Save build artifacts
+        uses: actions/upload-artifact@v2
+        with:
+          name: dist
+          path: dist
+
+  publish:
+    if: startsWith(github.ref, 'refs/tags')
+    needs: build
+    runs-on: ubuntu-latest
+    steps:
+      - name: Restore build artifacts
+        uses: actions/download-artifact@v2
+        with:
+          name: dist
+          path: dist
+      - name: Publish to PyPI
+        uses: pypa/gh-action-pypi-publish@master
+        with:
+          password: ${{ secrets.pypi_password }}
