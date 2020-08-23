@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<comments>
+    <comment>Test</comment>
+    <comment>
+        <p>Hello everyone!</p>
+    </comment>
+    <comment>
+        I've found this quote that I feel you may like:
+        <blockquote cite="https://www.osmquote.com/quote/neil-barringham-quote-54c4b8">
+            The grass is greener where you water it.
+            <footer>—Neil Barringham</footer>
+        </blockquote>
+        Feel free to share it!
+    </comment>
+</comments>

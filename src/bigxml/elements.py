@@ -5,6 +5,15 @@ from bigxml.handle_mgr import HandleMgr
 from bigxml.utils import extract_namespace_name
 
 
+def _handler_get_text(node):
+    if isinstance(node, XMLText):
+        yield node.text
+    elif isinstance(node, XMLElement):
+        yield from node.handle(_handler_get_text)
+    else:  # pragma: no cover
+        raise RuntimeError  # should not happen
+
+
 @dataclass
 class XMLElement(HandleMgr):
     name: str
@@ -15,6 +24,20 @@ class XMLElement(HandleMgr):
     def __post_init__(self):
         if not self.namespace:
             self.namespace, self.name = extract_namespace_name(self.name)
+
+    @property
+    def text(self):
+        output = ""
+        last_ends_with_space = False
+        for text in self.handle(_handler_get_text):
+            if not text:
+                continue
+            text_stripped = text.strip()
+            if (last_ends_with_space or not text.startswith(text_stripped)) and output:
+                output += " "
+            output += text_stripped
+            last_ends_with_space = not text.endswith(text_stripped)
+        return output
 
 
 @dataclass

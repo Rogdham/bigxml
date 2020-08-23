@@ -9,6 +9,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/).
 
 [unreleased]: https://github.com/rogdham/bigxml/compare/v0.1.0...HEAD
 
+### :rocket: Added
+
+- `XMLElement` now has a `text` property
+  to walk through all children and gather texts regardless of the tags
+
 ### :memo: Documentation
 
 - Add changelog file
