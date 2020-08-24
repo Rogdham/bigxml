@@ -1,6 +1,6 @@
 from defusedxml.ElementTree import iterparse
 
-from bigxml.elements import XMLElement, XMLText
+from bigxml.nodes import XMLElement, XMLText
 from bigxml.utils import IterWithRollback
 
 

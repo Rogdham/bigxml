@@ -1,4 +1,4 @@
-from bigxml.elements import XMLElement, XMLText
+from bigxml.nodes import XMLElement, XMLText
 from bigxml.utils import dictify
 
 _ATTR_MARKER = "_xml_handlers_on"

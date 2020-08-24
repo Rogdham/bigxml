@@ -1,7 +1,7 @@
 import pytest
 
-from bigxml.elements import XMLText
 from bigxml.handler import _ATTR_MARKER, xml_handle_element, xml_handle_text
+from bigxml.nodes import XMLText
 
 
 def test_one_maker_element():

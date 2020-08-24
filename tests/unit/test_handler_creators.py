@@ -1,8 +1,8 @@
 from unittest.mock import Mock
 import pytest
 
-from bigxml.elements import XMLElement, XMLText
 from bigxml.handler import handler_from_dict, join_handlers
+from bigxml.nodes import XMLElement, XMLText
 
 
 @pytest.fixture

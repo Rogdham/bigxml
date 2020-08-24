@@ -1,7 +1,7 @@
 from unittest.mock import Mock
 import pytest
 
-from bigxml.elements import XMLElement, XMLText
+from bigxml.nodes import XMLElement, XMLText
 
 
 def create_text(text):
