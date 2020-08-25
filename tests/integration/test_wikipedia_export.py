@@ -22,18 +22,17 @@ def test_wikipedia_export():
     class Handler(XMLHandler):
         # pylint: disable=no-self-use
         @xml_handle_element("mediawiki", "page", "revision")
-        def handle_page(self, node):
-            revision = Revision()
-            yield from node.iter_from(revision)
-            yield (revision.date, revision.author)
+        def handle_revision(self, node):
+            yield node.return_from(Revision())
 
     with LZMAFile(Path(__file__).parent / "wikipedia_python_export.xml.xz") as f_in:
         items = list(parse(f_in, Handler()))
         assert len(items) == 1000
-        last_item = items[-1]
-        assert last_item[0].year == 2006
-        assert last_item[0].month == 4
-        assert last_item[0].day == 14
-        assert last_item[0].hour == 15
-        assert last_item[0].minute == 58
-        assert last_item[1] == "Lulu of the Lotus-Eaters"
+        revision = items[-1]
+        assert isinstance(revision, Revision)
+        assert revision.author == "Lulu of the Lotus-Eaters"
+        assert revision.date.year == 2006
+        assert revision.date.month == 4
+        assert revision.date.day == 14
+        assert revision.date.hour == 15
+        assert revision.date.minute == 58

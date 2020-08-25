@@ -17,6 +17,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/).
 
 - `XMLElement` now has a `text` property
   to walk through all children and gather texts regardless of the tags
+- `XMLElement` new `return_from` method
+  can be used when there are no items yielded by the handler
 
 ### :memo: Documentation
 

@@ -1,3 +1,6 @@
+import warnings
+
+
 class HandleMgr:
     _handle_fct = None
 
@@ -13,3 +16,13 @@ class HandleMgr:
 
         # run the handle fct
         return handle_fct(handler)
+
+    def return_from(self, handler):
+        for item in self.iter_from(handler):
+            warnings.warn(
+                "Handler returned non-empty generator: {} (item: {})".format(
+                    self, item
+                ),
+                RuntimeWarning,
+            )
+        return handler
