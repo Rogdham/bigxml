@@ -12,6 +12,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/).
 ### :boom: Breaking changes
 
 - `XMLElement`'s `handle` method is renamed to `iter_from`
+- The `parse` function has been removed in favour of the new `Parser` class;
+  use `Parser(stream).iter_from(handler)` instead of `parse(stream, handler)`
 
 ### :rocket: Added
 

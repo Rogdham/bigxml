@@ -2,7 +2,7 @@ from datetime import datetime
 from lzma import LZMAFile
 from pathlib import Path
 
-from bigxml import XMLHandler, parse, xml_handle_element, xml_handle_text
+from bigxml import Parser, XMLHandler, xml_handle_element, xml_handle_text
 
 
 def test_wikipedia_export():
@@ -25,8 +25,8 @@ def test_wikipedia_export():
         def handle_revision(self, node):
             yield node.return_from(Revision())
 
-    with LZMAFile(Path(__file__).parent / "wikipedia_python_export.xml.xz") as f_in:
-        items = list(parse(f_in, Handler()))
+    with LZMAFile(Path(__file__).parent / "wikipedia_python_export.xml.xz") as stream:
+        items = list(Parser(stream).iter_from(Handler()))
         assert len(items) == 1000
         revision = items[-1]
         assert isinstance(revision, Revision)

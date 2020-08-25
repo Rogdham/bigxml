@@ -1,8 +1,8 @@
 from bigxml.handler import XMLHandler, xml_handle_element, xml_handle_text
-from bigxml.parser import parse
+from bigxml.parser import Parser
 
 __all__ = (
-    "parse",
+    "Parser",
     "XMLHandler",
     "xml_handle_element",
     "xml_handle_text",

@@ -2,7 +2,7 @@ from functools import reduce
 import operator
 from pathlib import Path
 
-from bigxml import XMLHandler, parse, xml_handle_element, xml_handle_text
+from bigxml import Parser, XMLHandler, xml_handle_element, xml_handle_text
 
 
 def test_maths_eval():
@@ -19,5 +19,5 @@ def test_maths_eval():
         def handle_number(self, node):
             yield int(node.text)
 
-    with (Path(__file__).parent / "maths.xml").open("rb") as f_in:
-        assert list(parse(f_in, Eval())) == [1337]
+    with (Path(__file__).parent / "maths.xml").open("rb") as stream:
+        assert list(Parser(stream).iter_from(Eval())) == [1337]

@@ -4,7 +4,7 @@ from unittest.mock import Mock, call
 import pytest
 
 from bigxml.nodes import XMLElement, XMLText
-from bigxml.parser import parse
+from bigxml.parser import Parser
 
 
 @pytest.fixture
@@ -37,8 +37,10 @@ root_node = XMLElement("root", {}, ())
     ids=["self-closing", "empty", "with text", "with children", "attributes", "xmlns"],
 )
 def test_root_level(xml, node, handler):  # pylint: disable=redefined-outer-name
-    parsed = parse(BytesIO(xml), handler)
-    assert list(parsed) == ["handler-yield-0"]
+    stream = BytesIO(xml)
+    parser = Parser(stream)
+    assert parser.stream == stream
+    assert list(parser.iter_from(handler)) == ["handler-yield-0"]
     handler.assert_called_once_with(node)
 
 
@@ -96,6 +98,10 @@ def test_contents(xml_contents, nodes, handler):  # pylint: disable=redefined-ou
     def root_handler(node):
         yield from node.iter_from(handler)
 
-    parsed = parse(BytesIO(b"<root>%s</root>" % xml_contents), root_handler)
-    assert list(parsed) == ["handler-yield-{}".format(i) for i in range(len(nodes))]
+    stream = BytesIO(b"<root>%s</root>" % xml_contents)
+    parser = Parser(stream)
+    assert parser.stream == stream
+    assert list(parser.iter_from(root_handler)) == [
+        "handler-yield-{}".format(i) for i in range(len(nodes))
+    ]
     assert handler.call_args_list == [call(node) for node in nodes]

@@ -1,5 +1,6 @@
 from defusedxml.ElementTree import iterparse
 
+from bigxml.handle_mgr import HandleMgr
 from bigxml.nodes import XMLElement, XMLText
 from bigxml.utils import IterWithRollback
 
@@ -49,6 +50,8 @@ def _parse(iterator, handler, parents=(), parent_elem=None):
             raise RuntimeError  # should not happen
 
 
-def parse(f_in, handler):
-    iterator = IterWithRollback(iterparse(f_in, ("start", "end")))
-    return _parse(iterator, handler)
+class Parser(HandleMgr):
+    def __init__(self, stream):
+        self.stream = stream
+        iterator = IterWithRollback(iterparse(stream, ("start", "end")))
+        self.set_handle(lambda h: _parse(iterator, h))

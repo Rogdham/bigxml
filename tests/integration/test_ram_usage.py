@@ -2,7 +2,7 @@ from io import IOBase
 import resource
 import pytest
 
-from bigxml import XMLHandler, parse, xml_handle_text
+from bigxml import Parser, XMLHandler, xml_handle_text
 
 
 @pytest.fixture
@@ -66,7 +66,7 @@ def test_ram_usage(infinite_stream):
         def handle_nb(self, node):
             yield int(node.text)
 
-    stream = parse(infinite_stream, Handler())
+    stream = Parser(infinite_stream).iter_from(Handler())
 
     for exp, item in enumerate(stream):
         assert item == exp
@@ -76,5 +76,5 @@ def test_ram_usage_no_handler(infinite_stream):
     def handler(node):  # pylint: disable=unused-argument
         yield from ()
 
-    stream = parse(infinite_stream, handler)
+    stream = Parser(infinite_stream).iter_from(handler)
     assert list(stream) == []
