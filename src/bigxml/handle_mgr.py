@@ -4,7 +4,7 @@ class HandleMgr:
     def set_handle(self, handle):
         self._handle_fct = handle
 
-    def handle(self, data):
+    def iter_from(self, handler):
         # make sure handle fct is available
         handle_fct = self._handle_fct
         if not handle_fct:
@@ -12,4 +12,4 @@ class HandleMgr:
         self._handle_fct = None
 
         # run the handle fct
-        return handle_fct(data)
+        return handle_fct(handler)

@@ -9,7 +9,7 @@ def _handler_get_text(node):
     if isinstance(node, XMLText):
         yield node.text
     elif isinstance(node, XMLElement):
-        yield from node.handle(_handler_get_text)
+        yield from node.iter_from(_handler_get_text)
     else:  # pragma: no cover
         raise RuntimeError  # should not happen
 
@@ -29,7 +29,7 @@ class XMLElement(HandleMgr):
     def text(self):
         output = ""
         last_ends_with_space = False
-        for text in self.handle(_handler_get_text):
+        for text in self.iter_from(_handler_get_text):
             if not text:
                 continue
             text_stripped = text.strip()

@@ -24,7 +24,7 @@ def test_wikipedia_export():
         @xml_handle_element("mediawiki", "page", "revision")
         def handle_page(self, node):
             revision = Revision()
-            yield from node.handle(revision)
+            yield from node.iter_from(revision)
             yield (revision.date, revision.author)
 
     with LZMAFile(Path(__file__).parent / "wikipedia_python_export.xml.xz") as f_in:

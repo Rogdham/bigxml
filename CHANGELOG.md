@@ -9,6 +9,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/).
 
 [unreleased]: https://github.com/rogdham/bigxml/compare/v0.1.0...HEAD
 
+### :boom: Breaking changes
+
+- `XMLElement`'s `handle` method is renamed to `iter_from`
+
 ### :rocket: Added
 
 - `XMLElement` now has a `text` property

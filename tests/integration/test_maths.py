@@ -11,7 +11,9 @@ def test_maths_eval():
 
         @xml_handle_element("expr")
         def handle_author(self, node):
-            yield reduce(getattr(operator, node.attributes["op"]), node.handle(Eval()))
+            yield reduce(
+                getattr(operator, node.attributes["op"]), node.iter_from(Eval()),
+            )
 
         @xml_handle_text("number")
         def handle_number(self, node):

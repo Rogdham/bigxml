@@ -17,7 +17,7 @@ def handler_from_dict(handler_dict):
             if isinstance(handler, dict):
                 if isinstance(node, XMLElement):
                     sub_handler = handler_from_dict(handler)
-                    value = node.handle(sub_handler)
+                    value = node.iter_from(sub_handler)
             else:
                 value = handler(node)
         if value is None:

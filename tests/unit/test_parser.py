@@ -94,7 +94,7 @@ BIG_TEXT_LEN = 1_000_000
 )
 def test_contents(xml_contents, nodes, handler):  # pylint: disable=redefined-outer-name
     def root_handler(node):
-        yield from node.handle(handler)
+        yield from node.iter_from(handler)
 
     parsed = parse(BytesIO(b"<root>%s</root>" % xml_contents), root_handler)
     assert list(parsed) == ["handler-yield-{}".format(i) for i in range(len(nodes))]
