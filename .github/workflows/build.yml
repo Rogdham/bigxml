@@ -21,38 +21,6 @@ jobs:
         run: pip install tox
       - name: Run tests
         run: tox -e py
-      - name: Save coverage artifact
-        uses: actions/upload-artifact@v2
-        with:
-          name: coverage.${{ matrix.python }}
-          path: .tox/.coverage.py
-
-  coverage:
-    needs: tests
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v2
-      - name: Setup Python
-        uses: actions/setup-python@v2
-        with:
-          python-version: 3.8
-      - name: Install dependencies
-        run: pip install tox
-      - name: Restore coverage artifacts
-        uses: actions/download-artifact@v2
-        with:
-          path: artifacts
-      - name: Gather coverage reports
-        run: |
-          mkdir .tox
-          ls artifacts | while read -r name; do cp "artifacts/$name/.coverage.py" ".tox/.$name"; done
-      - name: Run coverage
-        run: tox -e coverage
-      - name: Save coverage HTML report artifact
-        uses: actions/upload-artifact@v2
-        with:
-          name: coverage-report
-          path: coverage
 
   lint:
     runs-on: ubuntu-latest
@@ -81,7 +49,7 @@ jobs:
         run: tox -e format
 
   build:
-    needs: [tests, coverage, lint, format]
+    needs: [tests, lint, format]
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
