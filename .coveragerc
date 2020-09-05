@@ -4,7 +4,8 @@ directory = coverage
 [paths]
 source =
     src/bigxml/
-    .tox/*/lib/python*/site-packages/bigxml/
+    .tox/py*/lib/python*/site-packages/bigxml/
+    .tox/py*/site-packages/bigxml/
 
 [report]
 exclude_lines =
