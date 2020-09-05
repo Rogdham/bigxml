@@ -50,7 +50,13 @@ def test_one_marker_text_args():
     def fct(arg):
         return arg * 6
 
-    assert getattr(fct, _ATTR_MARKER, None) == (("abc", "def", XMLText.name,),)
+    assert getattr(fct, _ATTR_MARKER, None) == (
+        (
+            "abc",
+            "def",
+            XMLText.name,
+        ),
+    )
     assert fct(7) == 42
 
 

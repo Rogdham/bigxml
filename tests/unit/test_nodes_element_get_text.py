@@ -42,6 +42,8 @@ def test_element_get_text_direct(text):
 )
 def test_element_get_text_nested(left, middle, right, exp):
     node = create_element(
-        create_text(left), create_element(create_text(middle)), create_text(right),
+        create_text(left),
+        create_element(create_text(middle)),
+        create_text(right),
     )
     assert node.text == exp

@@ -69,7 +69,7 @@ def test_handler_from_dict_deep(nodes):
     handler.assert_called_once_with(nodes[2])
 
 
-def test_handler_from_dict_text_invalid_handler(nodes,):
+def test_handler_from_dict_text_invalid_handler(nodes):
     text_node = XMLText("Hello", (nodes[0],))
     nodes[0].test_handle.side_effect = lambda h: h(text_node)
     handle = handler_from_dict({"a": {XMLText.name: {}}})

@@ -72,7 +72,11 @@ BIG_TEXT_LEN = 1_000_000
         ],
         [
             b'%s<foo />%s<bar abc="def" />%s'
-            % (b"a" * BIG_TEXT_LEN, b"b" * BIG_TEXT_LEN, b"c" * BIG_TEXT_LEN,),
+            % (
+                b"a" * BIG_TEXT_LEN,
+                b"b" * BIG_TEXT_LEN,
+                b"c" * BIG_TEXT_LEN,
+            ),
             [
                 XMLText("a" * BIG_TEXT_LEN, (root_node,)),
                 elem_f_node,

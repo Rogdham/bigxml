@@ -13,7 +13,20 @@ def test_base():
             (("c",), 4),
             (("d", "f"), 5),
         )
-    ) == {"a": {"b": 0, "c": {"d": 1, "e": 2}, "e": 3}, "c": 4, "d": {"f": 5}}
+    ) == {
+        "a": {
+            "b": 0,
+            "c": {
+                "d": 1,
+                "e": 2,
+            },
+            "e": 3,
+        },
+        "c": 4,
+        "d": {
+            "f": 5,
+        },
+    }
 
 
 def test_multiple_iterators():
@@ -28,8 +41,14 @@ def test_multiple_iterators():
         yield (("c", "f"), 3)
 
     assert dictify(gen_x(), gen_y(), gen_z()) == {
-        "a": {"b": 0, "e": 2},
-        "c": {"d": 1, "f": 3},
+        "a": {
+            "b": 0,
+            "e": 2,
+        },
+        "c": {
+            "d": 1,
+            "f": 3,
+        },
     }
 
 

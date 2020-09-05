@@ -13,4 +13,4 @@ def test_namespace():
 
 
 def test_empty_namespace():
-    assert extract_namespace_name(r"{}foo") == ("", "foo",)
+    assert extract_namespace_name(r"{}foo") == ("", "foo")
