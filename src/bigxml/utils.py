@@ -40,6 +40,7 @@ def dictify(*items):
 class IterWithRollback:
     def __init__(self, iterable):
         self.iterator = iter(iterable)
+        self.iteration = 0
         self.first_iteration = True
         self.item_rollback = False
         self.current_item = None
@@ -49,14 +50,17 @@ class IterWithRollback:
 
     def rollback(self):
         if not self.first_iteration:
+            self.iteration -= 1
             self.item_rollback = True
 
     def __next__(self):
         if self.item_rollback:
             self.item_rollback = False
+            self.iteration += 1
             return self.current_item
         self.current_item = next(self.iterator)
         self.first_iteration = False
+        self.iteration += 1
         return self.current_item
 
 

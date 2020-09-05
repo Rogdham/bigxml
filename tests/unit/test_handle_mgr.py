@@ -14,16 +14,15 @@ def test_iter_from_handle():
     hmgr = HandleMgr()
 
     handle = Mock()
-    handle.return_value = iter((13, 37))
+    handle.side_effect = ((13, 37), (42,))
     hmgr.set_handle(handle)
     handle.assert_not_called()
 
     assert list(hmgr.iter_from(0)) == [13, 37]
     handle.assert_called_once_with(0)
 
-    with pytest.raises(RuntimeError):
-        hmgr.iter_from(1)
-    handle.assert_called_once()
+    assert list(hmgr.iter_from(1)) == [42]
+    handle.assert_called_with(1)
 
 
 def test_return_from_no_handle():
@@ -36,23 +35,22 @@ def test_return_from_handle():
     hmgr = HandleMgr()
 
     handle = Mock()
-    handle.return_value = iter(())
+    handle.side_effect = ((), ())
     hmgr.set_handle(handle)
     handle.assert_not_called()
 
     assert hmgr.return_from(0) == 0
     handle.assert_called_once_with(0)
 
-    with pytest.raises(RuntimeError):
-        hmgr.return_from(1)
-    handle.assert_called_once()
+    assert hmgr.return_from(1) == 1
+    handle.assert_called_with(1)
 
 
 def test_return_from_handle_warns():
     hmgr = HandleMgr()
 
     handle = Mock()
-    handle.return_value = iter((13, 37))
+    handle.side_effect = ((13, 37), (42,))
     hmgr.set_handle(handle)
     handle.assert_not_called()
 
@@ -60,6 +58,6 @@ def test_return_from_handle_warns():
         assert hmgr.return_from(0) == 0
     handle.assert_called_once_with(0)
 
-    with pytest.raises(RuntimeError):
-        hmgr.return_from(1)
-    handle.assert_called_once()
+    with pytest.warns(RuntimeWarning):
+        assert hmgr.return_from(1) == 1
+    handle.assert_called_with(1)

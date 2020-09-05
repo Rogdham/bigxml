@@ -5,7 +5,10 @@ from bigxml.nodes import XMLElement, XMLText
 from bigxml.utils import IterWithRollback
 
 
-def _parse(iterator, handler, parents=(), parent_elem=None):
+def _parse(iterator, handler, parents, parent_elem, expected_iteration):
+    if iterator.iteration != expected_iteration:
+        raise RuntimeError("Tried to access a node out of order")
+
     depth = 0
     last_child = None
 
@@ -20,16 +23,18 @@ def _parse(iterator, handler, parents=(), parent_elem=None):
             node = XMLText(text=text, parents=parents)
             yield from handler(node)
 
-    def create_node(elem, parents):
+    def create_node(elem, iteration):
         node = XMLElement(name=elem.tag, attributes=elem.attrib, parents=parents)
-        node.set_handle(lambda h: _parse(iterator, h, parents + (node,), elem,))
+        node.set_handle(
+            lambda h: _parse(iterator, h, parents + (node,), elem, iteration)
+        )
         return node
 
     for action, elem in iterator:
         if action == "start":
             if depth == 0:
                 yield from handle_text()
-                yield from handler(create_node(elem, parents))
+                yield from handler(create_node(elem, iterator.iteration))
 
             depth += 1
 
@@ -54,4 +59,4 @@ class Parser(HandleMgr):
     def __init__(self, stream):
         self.stream = stream
         iterator = IterWithRollback(iterparse(stream, ("start", "end")))
-        self.set_handle(lambda h: _parse(iterator, h))
+        self.set_handle(lambda h: _parse(iterator, h, (), None, 0))

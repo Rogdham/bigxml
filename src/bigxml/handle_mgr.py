@@ -8,14 +8,9 @@ class HandleMgr:
         self._handle_fct = handle
 
     def iter_from(self, handler):
-        # make sure handle fct is available
-        handle_fct = self._handle_fct
-        if not handle_fct:
-            raise RuntimeError("No handle to use. Maybe you called handle already?")
-        self._handle_fct = None
-
-        # run the handle fct
-        return handle_fct(handler)
+        if not self._handle_fct:
+            raise RuntimeError("No handle to use")
+        return self._handle_fct(handler)
 
     def return_from(self, handler):
         for item in self.iter_from(handler):

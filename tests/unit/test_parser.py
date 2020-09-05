@@ -105,3 +105,20 @@ def test_contents(xml_contents, nodes, handler):  # pylint: disable=redefined-ou
         "handler-yield-{}".format(i) for i in range(len(nodes))
     ]
     assert handler.call_args_list == [call(node) for node in nodes]
+
+
+def test_out_of_order():
+    def node_handler(node):
+        yield node
+
+    def root_handler(node):
+        yield from node.iter_from(node_handler)
+
+    stream = BytesIO(b"<root><foo>hello</foo><foo>world</foo><foo>!</foo></root>")
+    parser = Parser(stream)
+    nodes = parser.iter_from(root_handler)
+    first_node = next(nodes)
+    second_node = next(nodes)
+    assert second_node.text == "world"
+    with pytest.raises(RuntimeError):
+        first_node.text  # pylint: disable=pointless-statement
