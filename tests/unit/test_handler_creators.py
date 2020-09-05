@@ -1,4 +1,5 @@
 from unittest.mock import Mock
+
 import pytest
 
 from bigxml.handler import handler_from_dict, join_handlers

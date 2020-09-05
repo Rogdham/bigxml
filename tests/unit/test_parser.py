@@ -1,6 +1,7 @@
 from io import BytesIO
 from itertools import count
 from unittest.mock import Mock, call
+
 import pytest
 
 from bigxml.nodes import XMLElement, XMLText

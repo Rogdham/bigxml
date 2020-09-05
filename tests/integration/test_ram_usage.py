@@ -1,5 +1,6 @@
 from io import IOBase
 import resource
+
 import pytest
 
 from bigxml import Parser, XMLHandler, xml_handle_text
