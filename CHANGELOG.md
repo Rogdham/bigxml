@@ -7,7 +7,16 @@ and this project adheres to [Semantic Versioning](https://semver.org/).
 
 ## [Unreleased]
 
-[unreleased]: https://github.com/rogdham/bigxml/compare/v0.1.0...HEAD
+[unreleased]: https://github.com/rogdham/bigxml/compare/v0.2.0...HEAD
+
+_Nothing yet_
+
+## [0.2.0] - 2020-09-06
+
+[0.2.0]: https://github.com/rogdham/bigxml/compare/v0.1.0...v0.2.0
+
+v0.2.0 changes the API to makes `iter_from` and `return_from` methods
+available on both `Parser` and `XMLElement` instances.
 
 ### :boom: Breaking changes
 
