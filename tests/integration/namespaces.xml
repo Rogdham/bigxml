@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<root xmlns="http://example.com/xml/"
+    xmlns:ex="http://example.com/xml/ex"
+    xmlns:other="http://example.com/xml/other">
+    <aaa>Nodes inherit namespaces</aaa>
+    <aaa xmlns="http://example.com/xml/aaa">Overriding namespace</aaa>
+    <ex:aaa>Overriding namespace bis</ex:aaa>
+    <bbb uuu="0" ex:vvv="1" xxx="2" ex:xxx="3" other:xxx="4" ex:yyy="5" other:yyy="6">
+        Looking for attributes
+    </bbb>
+</root>

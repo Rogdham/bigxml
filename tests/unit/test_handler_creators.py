@@ -80,6 +80,44 @@ def test_handler_from_dict_text_invalid_handler(nodes):
     nodes[2].test_handle.assert_not_called()
 
 
+@pytest.mark.parametrize(
+    "name, expected",
+    (
+        (r"{}aaa", [0]),
+        (r"{xxx}aaa", [0]),
+        (r"{yyy}aaa", [0]),
+        (r"{}bbb", []),
+        (r"{xxx}bbb", [1]),
+        (r"{yyy}bbb", []),
+        (r"{}ccc", [3]),
+        (r"{xxx}ccc", [2]),
+        (r"{yyy}ccc", [2]),
+        (r"{}ddd", [4]),
+        (r"{xxx}ddd", [5]),
+        (r"{yyy}ddd", [4]),
+        (r"{}eee", [7]),
+        (r"{xxx}eee", [6]),
+        (r"{yyy}eee", [7]),
+    ),
+)
+def test_handler_from_dict_namespace(name, expected):
+    handle = handler_from_dict(
+        {
+            r"aaa": lambda _: (0,),
+            r"{xxx}bbb": lambda _: (1,),
+            r"ccc": lambda _: (2,),
+            r"{}ccc": lambda _: (3,),
+            # different path in code depending on order of key without namespace
+            r"ddd": lambda _: (4,),
+            r"{xxx}ddd": lambda _: (5,),
+            r"{xxx}eee": lambda _: (6,),
+            r"eee": lambda _: (7,),
+        }
+    )
+    node = XMLElement(name, {}, ())
+    assert list(handle(node)) == expected
+
+
 def test_join_handlers(nodes):
     handler = Mock()
     handler.return_value = (13, 37)
