@@ -66,3 +66,23 @@ def test_many_handlers(join_handlers):
         (("g",), handler.handle_z),
     }
     join_handlers._handler.assert_called_once_with(node)
+
+
+def test_static_method(join_handlers):
+    class Handler(XMLHandler):
+        @staticmethod
+        @xml_handle_element("a")
+        def handle_x(node):
+            yield ("x", node)
+
+    handler = Handler()
+    node = Mock()
+    assert list(handler(node)) == [13, 37]
+    join_handlers.assert_called_once()
+    jh_args, jh_kwargs = join_handlers.call_args
+    assert len(jh_args) == 1
+    assert not jh_kwargs
+    assert set(jh_args[0]) == {
+        (("a",), handler.handle_x),
+    }
+    join_handlers._handler.assert_called_once_with(node)

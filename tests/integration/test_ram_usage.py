@@ -62,9 +62,9 @@ def infinite_stream():
 
 def test_ram_usage(infinite_stream):
     class Handler(XMLHandler):
-        # pylint: disable=no-self-use
+        @staticmethod
         @xml_handle_text("root", "entry", "nb")
-        def handle_nb(self, node):
+        def handle_nb(node):
             yield int(node.text)
 
     stream = Parser(infinite_stream).iter_from(Handler())

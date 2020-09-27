@@ -5,10 +5,9 @@ from bigxml import Parser, XMLHandler, xml_handle_element
 
 def test_maths_eval():
     class Handler(XMLHandler):
-        # pylint: disable=no-self-use
-
+        @staticmethod
         @xml_handle_element("comments", "comment")
-        def handle_author(self, node):
+        def handle_author(node):
             yield node.text
 
     with (Path(__file__).parent / "comments.xml").open("rb") as stream:

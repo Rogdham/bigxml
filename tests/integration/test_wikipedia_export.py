@@ -20,9 +20,9 @@ def test_wikipedia_export():
             self.date = datetime.strptime(node.text, r"%Y-%m-%dT%H:%M:%SZ")
 
     class Handler(XMLHandler):
-        # pylint: disable=no-self-use
+        @staticmethod
         @xml_handle_element("mediawiki", "page", "revision")
-        def handle_revision(self, node):
+        def handle_revision(node):
             yield node.return_from(Revision())
 
     with LZMAFile(Path(__file__).parent / "wikipedia_python_export.xml.xz") as stream:
