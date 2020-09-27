@@ -55,7 +55,10 @@ class XMLElementAttributes(Mapping):
         return self._len
 
     def __repr__(self):
-        return "XMLElementAttributes({})".format(dict(self))
+        return "XMLElementAttributes({})".format(self)
+
+    def __str__(self):
+        return str(dict(self))
 
 
 @dataclass
@@ -68,6 +71,20 @@ class XMLElement(HandleMgr):
     def __post_init__(self):
         if not self.namespace:
             self.namespace, self.name = extract_namespace_name(self.name)
+
+    def __str__(self):
+        parts = []
+        if self.namespace:
+            parts.append("{{{}}}{}".format(self.namespace, self.name))
+        else:
+            parts.append(self.name)
+        if self.attributes:
+            parts.append("attributes={}".format(self.attributes))
+        if self.parents:
+            parts.append(
+                "parents={}".format(">".join(node.name for node in self.parents))
+            )
+        return "XMLElement({})".format(", ".join(parts))
 
     @property
     def text(self):
@@ -91,3 +108,11 @@ class XMLText:
 
     # classname attribute name to be easily switched on with XMLElement
     name = "\0text"  # \0 makes sure it is an invalid element name
+
+    def __str__(self):
+        parts = [repr(self.text)]
+        if self.parents:
+            parts.append(
+                "parents={}".format(">".join(node.name for node in self.parents))
+            )
+        return "XMLText({})".format(", ".join(parts))

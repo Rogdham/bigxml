@@ -11,6 +11,7 @@ source =
 exclude_lines =
     pragma: no cover
     def __repr__
+    def __str__
     if __name__ == "__main__":
 show_missing = True
 

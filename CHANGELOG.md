@@ -17,6 +17,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/).
 ### :rocket: Added
 
 - Better namespace support in `XMLElement`'s attributes
+- More readable `__str__` values for `XMLElement` and `XMLText`
 
 ## [0.2.0] - 2020-09-06
 
