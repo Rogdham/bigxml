@@ -14,6 +14,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/).
 - `XMLElement`'s `namespace` attribute is now an empty string instead of `None` when the
   node has no namespace
 
+### :rocket: Added
+
+- Better namespace support in `XMLElement`'s attributes
+
 ## [0.2.0] - 2020-09-06
 
 [0.2.0]: https://github.com/rogdham/bigxml/compare/v0.1.0...v0.2.0

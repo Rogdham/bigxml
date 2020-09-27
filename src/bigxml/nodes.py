@@ -1,5 +1,7 @@
+from collections.abc import Mapping
 from dataclasses import dataclass
-from typing import Dict, Tuple
+from typing import Tuple
+import warnings
 
 from bigxml.handle_mgr import HandleMgr
 from bigxml.utils import extract_namespace_name
@@ -14,10 +16,52 @@ def _handler_get_text(node):
         raise RuntimeError  # should not happen
 
 
+class XMLElementAttributes(Mapping):
+    def __init__(self, attributes):
+        self._items = {}  # key -> (alternatives, value)
+        self._len = 0
+        for key, value in attributes.items():
+            namespace, name = extract_namespace_name(key)
+            self._items["{{{}}}{}".format(namespace, name)] = (-1, value)
+            self._len += 1
+            if namespace:
+                alternatives, value = self._items.get(name, (0, value))
+                if alternatives != -1:
+                    self._items[name] = (alternatives + 1, value)
+            else:
+                self._items[name] = (-1, value)
+
+    def __getitem__(self, key):
+        alternatives, value = self._items[key]
+        if alternatives > 1:
+            warnings.warn(
+                (
+                    "Several alternatives for attribute name '{name}'. "
+                    "Specify namespace by using '{{namespace}}{name}' as the key."
+                ).format(name=key),
+                RuntimeWarning,
+            )
+        return value
+
+    def __iter__(self):
+        for key in self._items:
+            if key.startswith(r"{") and self._items[key][0] == -1:
+                if key.startswith(r"{}"):
+                    yield key[2:]
+                else:
+                    yield key
+
+    def __len__(self):
+        return self._len
+
+    def __repr__(self):
+        return "XMLElementAttributes({})".format(dict(self))
+
+
 @dataclass
 class XMLElement(HandleMgr):
     name: str
-    attributes: Dict[str, str]
+    attributes: XMLElementAttributes
     parents: Tuple["XMLElement"]
     namespace: str = ""
 

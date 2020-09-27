@@ -4,7 +4,7 @@ from unittest.mock import Mock, call
 
 import pytest
 
-from bigxml.nodes import XMLElement, XMLText
+from bigxml.nodes import XMLElement, XMLElementAttributes, XMLText
 from bigxml.parser import Parser
 
 
@@ -16,7 +16,11 @@ def handler():
     yield mock
 
 
-root_node = XMLElement("root", {}, ())
+def elem(name, *, attributes=None, parents=(), namespace=""):
+    return XMLElement(name, XMLElementAttributes(attributes or {}), parents, namespace)
+
+
+root_node = elem("root")
 
 
 @pytest.mark.parametrize(
@@ -28,11 +32,11 @@ root_node = XMLElement("root", {}, ())
         [b"<root><foo><bar/></foo></root>", root_node],
         [
             b"<root abc='def' ghi='klm' />",
-            XMLElement("root", {"abc": "def", "ghi": "klm"}, ()),
+            elem("root", attributes={"abc": "def", "ghi": "klm"}),
         ],
         [
             b"<root xmlns='http://www.example.com/xml/' />",
-            XMLElement("root", {}, (), "http://www.example.com/xml/"),
+            elem("root", namespace="http://www.example.com/xml/"),
         ],
     ],
     ids=["self-closing", "empty", "with text", "with children", "attributes", "xmlns"],
@@ -45,8 +49,8 @@ def test_root_level(xml, node, handler):  # pylint: disable=redefined-outer-name
     handler.assert_called_once_with(node)
 
 
-elem_f_node = XMLElement("foo", {}, (root_node,))
-elem_b_node = XMLElement("bar", {"abc": "def"}, (root_node,))
+elem_f_node = elem("foo", parents=(root_node,))
+elem_b_node = elem("bar", parents=(root_node,), attributes={"abc": "def"})
 text_h_node = XMLText("Hello", (root_node,))
 text_w_node = XMLText("World", (root_node,))
 

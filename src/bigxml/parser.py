@@ -1,7 +1,7 @@
 from defusedxml.ElementTree import iterparse
 
 from bigxml.handle_mgr import HandleMgr
-from bigxml.nodes import XMLElement, XMLText
+from bigxml.nodes import XMLElement, XMLElementAttributes, XMLText
 from bigxml.utils import IterWithRollback
 
 
@@ -24,7 +24,9 @@ def _parse(iterator, handler, parents, parent_elem, expected_iteration):
             yield from handler(node)
 
     def create_node(elem, iteration):
-        node = XMLElement(name=elem.tag, attributes=elem.attrib, parents=parents)
+        node = XMLElement(
+            name=elem.tag, attributes=XMLElementAttributes(elem.attrib), parents=parents
+        )
         node.set_handle(
             lambda h: _parse(iterator, h, parents + (node,), elem, iteration)
         )
