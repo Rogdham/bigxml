@@ -19,6 +19,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/).
 - Better namespace support in `XMLElement`'s attributes
 - More readable `__str__` values for `XMLElement` and `XMLText`
 
+### :bug: Fixes
+
+- Fix `xml_handle_*` when wrapping `staticmethod` (other way around was already
+  working properly)
+
 ## [0.2.0] - 2020-09-06
 
 [0.2.0]: https://github.com/rogdham/bigxml/compare/v0.1.0...v0.2.0

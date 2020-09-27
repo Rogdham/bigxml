@@ -44,8 +44,16 @@ def xml_handle_element(*args):
         raise TypeError("Call to xml_handle_element without any args")
 
     def wrapper(obj):
-        markers = getattr(obj, _ATTR_MARKER, ())
-        setattr(obj, _ATTR_MARKER, markers + (tuple(args),))
+        markable = obj
+
+        if isinstance(markable, staticmethod):
+            # staticmethod(xml_handle_element(...)) works as expected
+            # xml_handle_element(staticmethod(...)) needs special care
+            markable = markable.__func__
+
+        markers = getattr(markable, _ATTR_MARKER, ())
+        setattr(markable, _ATTR_MARKER, markers + (tuple(args),))
+
         return obj
 
     return wrapper

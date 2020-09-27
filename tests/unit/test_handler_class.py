@@ -75,6 +75,11 @@ def test_static_method(join_handlers):
         def handle_x(node):
             yield ("x", node)
 
+        @xml_handle_element("b")
+        @staticmethod
+        def handle_y(node):
+            yield ("y", node)
+
     handler = Handler()
     node = Mock()
     assert list(handler(node)) == [13, 37]
@@ -84,5 +89,6 @@ def test_static_method(join_handlers):
     assert not jh_kwargs
     assert set(jh_args[0]) == {
         (("a",), handler.handle_x),
+        (("b",), handler.handle_y),
     }
     join_handlers._handler.assert_called_once_with(node)
