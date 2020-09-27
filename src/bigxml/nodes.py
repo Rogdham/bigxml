@@ -19,7 +19,7 @@ class XMLElement(HandleMgr):
     name: str
     attributes: Dict[str, str]
     parents: Tuple["XMLElement"]
-    namespace: str = None
+    namespace: str = ""
 
     def __post_init__(self):
         if not self.namespace:

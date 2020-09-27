@@ -71,4 +71,4 @@ def extract_namespace_name(name):
     match = _EXTRACT_NAMESPACE_REGEX.match(name)
     if match:
         return match.groups()
-    return (None, name)
+    return ("", name)

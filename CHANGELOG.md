@@ -9,7 +9,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/).
 
 [unreleased]: https://github.com/rogdham/bigxml/compare/v0.2.0...HEAD
 
-_Nothing yet_
+### :boom: Breaking changes
+
+- `XMLElement`'s `namespace` attribute is now an empty string instead of `None` when the
+  node has no namespace
 
 ## [0.2.0] - 2020-09-06
 
