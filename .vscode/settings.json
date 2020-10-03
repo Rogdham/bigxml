@@ -28,5 +28,5 @@
   "python.formatting.provider": "black",
   "python.linting.pylintEnabled": true,
   "python.testing.pytestEnabled": true,
-  "python.sortImports.args": ["-rc", "-sp .isort.cfg"]
+  "python.sortImports.args": ["-sp .isort.cfg"]
 }
