@@ -2,7 +2,7 @@ from unittest.mock import Mock
 
 import pytest
 
-from bigxml.handler import handler_from_dict, join_handlers
+from bigxml.handler_creator import handler_from_dict, join_handlers
 from bigxml.nodes import XMLElement, XMLText
 
 

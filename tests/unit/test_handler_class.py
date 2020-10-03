@@ -3,7 +3,8 @@ from unittest.mock import Mock
 import pytest
 
 import bigxml.handler as module
-from bigxml.handler import XMLHandler, xml_handle_element, xml_handle_text
+from bigxml.handler import XMLHandler
+from bigxml.handler_marker import xml_handle_element, xml_handle_text
 from bigxml.nodes import XMLText
 
 # pragma pylint: disable=protected-access

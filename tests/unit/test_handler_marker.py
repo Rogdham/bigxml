@@ -1,6 +1,6 @@
 import pytest
 
-from bigxml.handler import _ATTR_MARKER, xml_handle_element, xml_handle_text
+from bigxml.handler_marker import _ATTR_MARKER, xml_handle_element, xml_handle_text
 from bigxml.nodes import XMLText
 
 
