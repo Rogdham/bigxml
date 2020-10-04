@@ -13,6 +13,42 @@ def test_one_maker_element():
     assert fct(7) == 42
 
 
+def test_one_maker_element_on_method():
+    class Klass:
+        def __init__(self, multiplier):
+            self.multiplier = multiplier
+
+        @xml_handle_element("abc", "def")
+        def method(self, arg):
+            return arg * self.multiplier
+
+    instance = Klass(6)
+    assert getattr(instance.method, _ATTR_MARKER, None) == (("abc", "def"),)
+    assert instance.method(7) == 42
+
+
+def test_one_maker_element_on_static_method():
+    class Klass:
+        @xml_handle_element("abc", "def")
+        @staticmethod
+        def method(arg):
+            return arg * 6
+
+    assert getattr(Klass.method, _ATTR_MARKER, None) == (("abc", "def"),)
+    assert Klass.method(7) == 42
+
+
+def test_one_maker_element_on_method_before_staticmethod():
+    class Klass:
+        @staticmethod
+        @xml_handle_element("abc", "def")
+        def method(arg):
+            return arg * 6
+
+    assert getattr(Klass.method, _ATTR_MARKER, None) == (("abc", "def"),)
+    assert Klass.method(7) == 42
+
+
 def test_several_maker_element():
     @xml_handle_element("abc", "def")
     @xml_handle_element("ghi")
