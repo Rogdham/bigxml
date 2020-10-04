@@ -9,6 +9,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/).
 
 [unreleased]: https://github.com/rogdham/bigxml/compare/v0.3.0...HEAD
 
+### :boom: Breaking changes
+
+- `return_from` now returns the last yielded item instead of the handler
+
 ### :rocket: Added
 
 - Python 3.9 support

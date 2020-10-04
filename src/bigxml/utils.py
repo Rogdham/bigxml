@@ -1,3 +1,4 @@
+from collections import deque
 from itertools import chain
 import re
 
@@ -72,3 +73,10 @@ def extract_namespace_name(name):
     if match:
         return match.groups()
     return ("", name)
+
+
+def last_item_or_none(iterable):
+    try:
+        return deque(iterable, maxlen=1)[0]
+    except IndexError:
+        return None

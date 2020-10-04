@@ -1,4 +1,4 @@
-import warnings
+from bigxml.utils import last_item_or_none
 
 
 class HandleMgr:
@@ -13,11 +13,4 @@ class HandleMgr:
         return self._handle_fct(handler)
 
     def return_from(self, handler):
-        for item in self.iter_from(handler):
-            warnings.warn(
-                "Handler returned non-empty generator: {} (item: {})".format(
-                    self, item
-                ),
-                RuntimeWarning,
-            )
-        return handler
+        return last_item_or_none(self.iter_from(handler))

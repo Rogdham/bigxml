@@ -23,7 +23,9 @@ def test_wikipedia_export():
         @staticmethod
         @xml_handle_element("mediawiki", "page", "revision")
         def handle_revision(node):
-            yield node.return_from(Revision())
+            revision = Revision()
+            node.return_from(revision)
+            yield revision
 
     with LZMAFile(Path(__file__).parent / "wikipedia_python_export.xml.xz") as stream:
         items = list(Parser(stream).iter_from(Handler()))

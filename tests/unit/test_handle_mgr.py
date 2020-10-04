@@ -36,29 +36,15 @@ def test_return_from_handle():
     hmgr = HandleMgr()
 
     handle = Mock()
-    handle.side_effect = ((), ())
+    handle.side_effect = ((13, 37), (42,), ())
     hmgr.set_handle(handle)
     handle.assert_not_called()
 
-    assert hmgr.return_from(0) == 0
+    assert hmgr.return_from(0) == 37
     handle.assert_called_once_with(0)
 
-    assert hmgr.return_from(1) == 1
+    assert hmgr.return_from(1) == 42
     handle.assert_called_with(1)
 
-
-def test_return_from_handle_warns():
-    hmgr = HandleMgr()
-
-    handle = Mock()
-    handle.side_effect = ((13, 37), (42,))
-    hmgr.set_handle(handle)
-    handle.assert_not_called()
-
-    with pytest.warns(RuntimeWarning):
-        assert hmgr.return_from(0) == 0
-    handle.assert_called_once_with(0)
-
-    with pytest.warns(RuntimeWarning):
-        assert hmgr.return_from(1) == 1
-    handle.assert_called_with(1)
+    assert hmgr.return_from(2) is None
+    handle.assert_called_with(2)
