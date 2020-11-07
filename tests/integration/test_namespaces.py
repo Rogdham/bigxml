@@ -20,13 +20,13 @@ def test_namespaces():
 
         # using `{...}aaa` overrides `aaa` handler
         @staticmethod
-        @xml_handle_element("root", r"{http://example.com/xml/ex}aaa")
+        @xml_handle_element("root", "{http://example.com/xml/ex}aaa")
         def handle_aaa_ex(node):
             yield ("aaa_ex", node.namespace)
 
         # using `{}aaa` overrides `aaa` handler when there is no namespace
         @staticmethod
-        @xml_handle_element("root", r"{}aaa")
+        @xml_handle_element("root", "{}aaa")
         def handle_aaa_no_namespace(node):
             # this code is never run
             yield ("aaa_no_namespace", node.namespace)
@@ -42,20 +42,20 @@ def test_namespaces():
             # `{ns}name` gets specific namespace
             # `{}name` gets no namespace
             yield ("bbb", "uuu default", node.attributes["uuu"])
-            yield ("bbb", "uuu no", node.attributes[r"{}uuu"])
+            yield ("bbb", "uuu no", node.attributes["{}uuu"])
             yield ("bbb", "vvv default", node.attributes["vvv"])
             yield (
                 "bbb",
                 "vvv specific",
-                node.attributes[r"{http://example.com/xml/ex}vvv"],
+                node.attributes["{http://example.com/xml/ex}vvv"],
             )
             # `name` prefers to get no namespace when possible
             yield ("bbb", "xxx default", node.attributes["xxx"])  # -> 2
-            yield ("bbb", "xxx no", node.attributes[r"{}xxx"])
+            yield ("bbb", "xxx no", node.attributes["{}xxx"])
             yield (
                 "bbb",
                 "xxx specific",
-                node.attributes[r"{http://example.com/xml/ex}xxx"],
+                node.attributes["{http://example.com/xml/ex}xxx"],
             )
             # note that a warning is emitted if there are attributes with various
             # namespaces but none without namespace

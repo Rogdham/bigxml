@@ -4,25 +4,25 @@ from bigxml.nodes import XMLElementAttributes
 
 ATTRIBUTES = {
     # no namespace
-    r"aaa": "0",
+    "aaa": "0",
     # one namespace
-    r"{xxx}bbb": "1",
+    "{xxx}bbb": "1",
     # several namespaces
-    r"{xxx}ccc": "2",
-    r"{yyy}ccc": "3",
+    "{xxx}ccc": "2",
+    "{yyy}ccc": "3",
     # different path in code depending on order of key without namespace
     # prefer no namespace (1)
-    r"ddd": "4",
-    r"{xxx}ddd": "5",
-    r"{yyy}ddd": "6",
+    "ddd": "4",
+    "{xxx}ddd": "5",
+    "{yyy}ddd": "6",
     # prefer no namespace (2)
-    r"{xxx}eee": "7",
-    r"eee": "8",
-    r"{yyy}eee": "9",
+    "{xxx}eee": "7",
+    "eee": "8",
+    "{yyy}eee": "9",
     # prefer no namespace (3)
-    r"{xxx}fff": "10",
-    r"{yyy}fff": "11",
-    r"fff": "12",
+    "{xxx}fff": "10",
+    "{yyy}fff": "11",
+    "fff": "12",
 }
 XML_ELEMENT_ATTRIBUTES = XMLElementAttributes(ATTRIBUTES)
 
@@ -75,7 +75,7 @@ def test_eq():
     assert i == i  # pylint: disable=comparison-with-itself
     assert i == XMLElementAttributes(i)
 
-    j = XMLElementAttributes({r"{}foo": "bar"})
+    j = XMLElementAttributes({"{}foo": "bar"})
     assert j == j  # pylint: disable=comparison-with-itself
     assert j == XMLElementAttributes(j)
 

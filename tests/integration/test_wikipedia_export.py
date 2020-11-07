@@ -17,7 +17,7 @@ def test_wikipedia_export():
 
         @xml_handle_text("timestamp")
         def handle_date(self, node):
-            self.date = datetime.strptime(node.text, r"%Y-%m-%dT%H:%M:%SZ")
+            self.date = datetime.strptime(node.text, "%Y-%m-%dT%H:%M:%SZ")
 
     class Handler(XMLHandler):
         @staticmethod
