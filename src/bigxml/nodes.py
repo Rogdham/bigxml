@@ -22,7 +22,7 @@ class XMLElementAttributes(Mapping):
         self._len = 0
         for key, value in attributes.items():
             namespace, name = extract_namespace_name(key)
-            self._items["{{{}}}{}".format(namespace, name)] = (-1, value)
+            self._items[f"{{{namespace}}}{name}"] = (-1, value)
             self._len += 1
             if namespace:
                 alternatives, value = self._items.get(name, (0, value))
@@ -36,9 +36,9 @@ class XMLElementAttributes(Mapping):
         if alternatives > 1:
             warnings.warn(
                 (
-                    "Several alternatives for attribute name '{name}'. "
-                    "Specify namespace by using '{{namespace}}{name}' as the key."
-                ).format(name=key),
+                    f"Several alternatives for attribute name '{key}'. "
+                    f"Specify namespace by using '{{namespace}}{key}' as the key."
+                ),
                 RuntimeWarning,
             )
         return value
@@ -55,7 +55,7 @@ class XMLElementAttributes(Mapping):
         return self._len
 
     def __repr__(self):
-        return "XMLElementAttributes({})".format(self)
+        return f"XMLElementAttributes({self})"
 
     def __str__(self):
         return str(dict(self))
@@ -75,16 +75,14 @@ class XMLElement(HandleMgr):
     def __str__(self):
         parts = []
         if self.namespace:
-            parts.append("{{{}}}{}".format(self.namespace, self.name))
+            parts.append(f"{{{self.namespace}}}{self.name}")
         else:
             parts.append(self.name)
         if self.attributes:
-            parts.append("attributes={}".format(self.attributes))
+            parts.append(f"attributes={self.attributes}")
         if self.parents:
-            parts.append(
-                "parents={}".format(">".join(node.name for node in self.parents))
-            )
-        return "XMLElement({})".format(", ".join(parts))
+            parts.append(f"parents={'>'.join(node.name for node in self.parents)}")
+        return f"XMLElement({', '.join(parts)})"
 
     @property
     def text(self):
@@ -112,7 +110,5 @@ class XMLText:
     def __str__(self):
         parts = [repr(self.text)]
         if self.parents:
-            parts.append(
-                "parents={}".format(">".join(node.name for node in self.parents))
-            )
-        return "XMLText({})".format(", ".join(parts))
+            parts.append(f"parents={'>'.join(node.name for node in self.parents)}")
+        return f"XMLText({', '.join(parts)})"

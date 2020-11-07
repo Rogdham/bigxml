@@ -8,7 +8,7 @@ def handler_from_dict(handler_dict):
     def handle(node):
         handler = None
         if hasattr(node, "namespace"):
-            handler = handler_dict.get("{{{}}}{}".format(node.namespace, node.name))
+            handler = handler_dict.get(f"{{{node.namespace}}}{node.name}")
         if handler is None:
             handler = handler_dict.get(node.name)
         value = None

@@ -12,7 +12,7 @@ from bigxml.parser import Parser
 def handler():
     mock = Mock()
     return_values = count()
-    mock.side_effect = lambda _: ("handler-yield-{}".format(next(return_values)),)
+    mock.side_effect = lambda _: (f"handler-yield-{next(return_values)}",)
     yield mock
 
 
@@ -111,7 +111,7 @@ def test_contents(xml_contents, nodes, handler):  # pylint: disable=redefined-ou
     parser = Parser(stream)
     assert parser.stream == stream
     assert list(parser.iter_from(root_handler)) == [
-        "handler-yield-{}".format(i) for i in range(len(nodes))
+        f"handler-yield-{i}" for i in range(len(nodes))
     ]
     assert handler.call_args_list == [call(node) for node in nodes]
 

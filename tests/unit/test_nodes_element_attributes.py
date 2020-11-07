@@ -56,7 +56,7 @@ def test_get_without_namespace(key, value, should_warn):
 
 @pytest.mark.parametrize(
     "key, value",
-    ((k if k[0] == "{" else "{{}}{}".format(k), v) for k, v in ATTRIBUTES.items()),
+    ((k if k[0] == "{" else f"{{}}{k}", v) for k, v in ATTRIBUTES.items()),
 )
 def test_get_with_namespace(key, value):
     assert XML_ELEMENT_ATTRIBUTES[key] == value

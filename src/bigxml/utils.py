@@ -20,7 +20,7 @@ def dictify(*items):
             if part in current_dict:
                 if not isinstance(current_dict[part], dict):
                     raise TypeError(
-                        "{} is set to item: {}".format(current_path, current_dict[part])
+                        f"{current_path} is set to item: {current_dict[part]}"
                     )
             else:
                 current_dict[part] = {}
@@ -30,9 +30,7 @@ def dictify(*items):
         part = parts[-1]
         current_path.append(part)
         if part in current_dict:
-            raise TypeError(
-                "{} already exists: {}".format(current_path, current_dict[part])
-            )
+            raise TypeError(f"{current_path} already exists: {current_dict[part]}")
         current_dict[part] = item
 
     return final_dict
