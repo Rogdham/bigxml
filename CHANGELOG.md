@@ -15,6 +15,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/).
 
 ### :rocket: Added
 
+- It is now possible to use directly `@xml_handle_text` in place of `@xml_handle_text()`
 - Python 3.9 support
 
 ## [0.3.0] - 2020-09-27

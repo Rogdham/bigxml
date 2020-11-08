@@ -23,4 +23,9 @@ def xml_handle_element(*args):
 
 
 def xml_handle_text(*args):
+    # @xml_handle_text
+    if len(args) == 1 and callable(args[0]):  # https://stackoverflow.com/q/653368
+        return xml_handle_element(XMLText.name)(args[0])
+
+    # @xml_handle_text(...)
     return xml_handle_element(*args, XMLText.name)

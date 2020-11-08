@@ -72,6 +72,15 @@ def test_one_maker_element_no_args():
             return arg * 6
 
 
+def test_one_marker_text_no_call():
+    @xml_handle_text
+    def fct(arg):
+        return arg * 6
+
+    assert getattr(fct, _ATTR_MARKER, None) == ((XMLText.name,),)
+    assert fct(7) == 42
+
+
 def test_one_marker_text_no_args():
     @xml_handle_text()
     def fct(arg):
