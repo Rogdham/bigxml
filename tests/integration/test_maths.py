@@ -9,7 +9,7 @@ def test_maths_eval():
     class Eval(XMLHandler):
         @staticmethod
         @xml_handle_element("expr")
-        def handle_author(node):
+        def handle_expr(node):
             yield reduce(
                 getattr(operator, node.attributes["op"]),
                 node.iter_from(Eval()),

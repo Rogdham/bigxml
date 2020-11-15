@@ -3,11 +3,11 @@ from pathlib import Path
 from bigxml import Parser, XMLHandler, xml_handle_element
 
 
-def test_maths_eval():
+def test_comments():
     class Handler(XMLHandler):
         @staticmethod
         @xml_handle_element("comments", "comment")
-        def handle_author(node):
+        def handle_comment(node):
             yield node.text
 
     with (Path(__file__).parent / "comments.xml").open("rb") as stream:
