@@ -11,10 +11,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/).
 
 ### :boom: Breaking changes
 
+- `XMLHandler` has been removed: class handlers don't need to inherit from it anymore
 - `return_from` now returns the last yielded item instead of the handler
 
 ### :rocket: Added
 
+- Several handlers can now be passed to `return_from` / `iter_from`
+- Handlers can now be functions in addition to class instances
 - It is now possible to use directly `@xml_handle_text` in place of `@xml_handle_text()`
 - Python 3.9 support
 

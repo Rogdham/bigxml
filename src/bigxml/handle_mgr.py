@@ -1,3 +1,4 @@
+from bigxml.handler_creator import create_handler
 from bigxml.utils import last_item_or_none
 
 
@@ -7,10 +8,11 @@ class HandleMgr:
     def set_handle(self, handle):
         self._handle_fct = handle
 
-    def iter_from(self, handler):
+    def iter_from(self, *handlers):
         if not self._handle_fct:
             raise RuntimeError("No handle to use")
+        handler = create_handler(*handlers)
         return self._handle_fct(handler)
 
-    def return_from(self, handler):
-        return last_item_or_none(self.iter_from(handler))
+    def return_from(self, *handlers):
+        return last_item_or_none(self.iter_from(*handlers))

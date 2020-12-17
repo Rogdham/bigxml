@@ -3,12 +3,12 @@ import resource
 
 import pytest
 
-from bigxml import Parser, XMLHandler, xml_handle_text
+from bigxml import Parser, xml_handle_text
 
 
 @pytest.fixture
-def infinite_stream():
-    class InfiniteStream(IOBase):
+def big_stream():
+    class BigStream(IOBase):
         def __init__(self, nb_items):
             super().__init__()
             self.buf = b"<root>\n"
@@ -52,30 +52,25 @@ def infinite_stream():
             return self.buf[self.pos - bytes_count : self.pos]
 
     # each entry is about 10Mb
-    assert 10_000_000 < len(InfiniteStream(1).generate_block()) < 11_000_000
+    assert 10_000_000 < len(BigStream(1).generate_block()) < 11_000_000
 
-    return InfiniteStream(100)  # 10Mb * 100 -> 1Gb read
+    return BigStream(100)  # 10Mb * 100 -> 1Gb read
 
 
 # pragma pylint: disable=redefined-outer-name
 
 
-def test_ram_usage(infinite_stream):
-    class Handler(XMLHandler):
-        @staticmethod
-        @xml_handle_text("root", "entry", "nb")
-        def handle_nb(node):
-            yield int(node.text)
+def test_ram_usage(big_stream):
+    @xml_handle_text("root", "entry", "nb")
+    def handler(node):
+        yield int(node.text)
 
-    stream = Parser(infinite_stream).iter_from(Handler())
+    items = Parser(big_stream).iter_from(handler)
 
-    for exp, item in enumerate(stream):
+    for exp, item in enumerate(items):
         assert item == exp
 
 
-def test_ram_usage_no_handler(infinite_stream):
-    def handler(node):  # pylint: disable=unused-argument
-        yield from ()
-
-    stream = Parser(infinite_stream).iter_from(handler)
-    assert list(stream) == []
+def test_ram_usage_no_handler(big_stream):
+    items = Parser(big_stream).iter_from()
+    assert list(items) == []

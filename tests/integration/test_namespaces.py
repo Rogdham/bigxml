@@ -2,11 +2,11 @@ from pathlib import Path
 
 import pytest
 
-from bigxml import Parser, XMLHandler, xml_handle_element
+from bigxml import Parser, xml_handle_element
 
 
 def test_namespaces():
-    class Handler(XMLHandler):
+    class Handler:
 
         #
         # namespaces in element names

@@ -1,6 +1,5 @@
 from io import BytesIO
 from itertools import count
-from unittest.mock import Mock, call
 
 import pytest
 
@@ -10,10 +9,12 @@ from bigxml.parser import Parser
 
 @pytest.fixture
 def handler():
-    mock = Mock()
     return_values = count()
-    mock.side_effect = lambda _: (f"handler-yield-{next(return_values)}",)
-    yield mock
+
+    def handler_fct(node):
+        yield (f"handler-yield-{next(return_values)}", node)
+
+    yield handler_fct
 
 
 def elem(name, *, attributes=None, parents=(), namespace=""):
@@ -45,8 +46,9 @@ def test_root_level(xml, node, handler):  # pylint: disable=redefined-outer-name
     stream = BytesIO(xml)
     parser = Parser(stream)
     assert parser.stream == stream
-    assert list(parser.iter_from(handler)) == ["handler-yield-0"]
-    handler.assert_called_once_with(node)
+    assert list(parser.iter_from(handler)) == [
+        ("handler-yield-0", node),
+    ]
 
 
 elem_f_node = elem("foo", parents=(root_node,))
@@ -111,9 +113,8 @@ def test_contents(xml_contents, nodes, handler):  # pylint: disable=redefined-ou
     parser = Parser(stream)
     assert parser.stream == stream
     assert list(parser.iter_from(root_handler)) == [
-        f"handler-yield-{i}" for i in range(len(nodes))
+        (f"handler-yield-{i}", node) for i, node in enumerate(nodes)
     ]
-    assert handler.call_args_list == [call(node) for node in nodes]
 
 
 def test_out_of_order():

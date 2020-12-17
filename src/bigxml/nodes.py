@@ -7,15 +7,6 @@ from bigxml.handle_mgr import HandleMgr
 from bigxml.utils import extract_namespace_name
 
 
-def _handler_get_text(node):
-    if isinstance(node, XMLText):
-        yield node.text
-    elif isinstance(node, XMLElement):
-        yield from node.iter_from(_handler_get_text)
-    else:  # pragma: no cover
-        raise RuntimeError  # should not happen
-
-
 class XMLElementAttributes(Mapping):
     def __init__(self, attributes):
         self._items = {}  # key -> (alternatives, value)
@@ -59,6 +50,15 @@ class XMLElementAttributes(Mapping):
 
     def __str__(self):
         return str(dict(self))
+
+
+def _handler_get_text(node):
+    if isinstance(node, XMLText):
+        yield node.text
+    elif isinstance(node, XMLElement):
+        yield from node.iter_from(_handler_get_text)
+    else:  # pragma: no cover
+        raise RuntimeError  # should not happen
 
 
 @dataclass

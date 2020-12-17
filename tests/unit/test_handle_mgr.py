@@ -5,46 +5,48 @@ import pytest
 from bigxml.handle_mgr import HandleMgr
 
 
+def handler_a(_node):
+    yield 13
+    yield 37
+
+
+def handler_b(_node):
+    yield 42
+
+
+def handler_c(_node):
+    yield from ()
+
+
+def handle(handler):
+    node = Mock()
+    for item in handler(node):
+        yield f"<{item}>"
+
+
 def test_iter_from_no_handle():
     hmgr = HandleMgr()
     with pytest.raises(RuntimeError):
-        hmgr.iter_from(0)
-
-
-def test_iter_from_handle():
-    hmgr = HandleMgr()
-
-    handle = Mock()
-    handle.side_effect = ((13, 37), (42,))
-    hmgr.set_handle(handle)
-    handle.assert_not_called()
-
-    assert list(hmgr.iter_from(0)) == [13, 37]
-    handle.assert_called_once_with(0)
-
-    assert list(hmgr.iter_from(1)) == [42]
-    handle.assert_called_with(1)
+        hmgr.iter_from(handler_a)
 
 
 def test_return_from_no_handle():
     hmgr = HandleMgr()
     with pytest.raises(RuntimeError):
-        hmgr.return_from(0)
+        hmgr.return_from(handler_a)
+
+
+def test_iter_from_handle():
+    hmgr = HandleMgr()
+    hmgr.set_handle(handle)
+    assert list(hmgr.iter_from(handler_a)) == ["<13>", "<37>"]
+    assert list(hmgr.iter_from(handler_b)) == ["<42>"]
+    assert list(hmgr.iter_from(handler_c)) == []
 
 
 def test_return_from_handle():
     hmgr = HandleMgr()
-
-    handle = Mock()
-    handle.side_effect = ((13, 37), (42,), ())
     hmgr.set_handle(handle)
-    handle.assert_not_called()
-
-    assert hmgr.return_from(0) == 37
-    handle.assert_called_once_with(0)
-
-    assert hmgr.return_from(1) == 42
-    handle.assert_called_with(1)
-
-    assert hmgr.return_from(2) is None
-    handle.assert_called_with(2)
+    assert hmgr.return_from(handler_a) == "<37>"
+    assert hmgr.return_from(handler_b) == "<42>"
+    assert hmgr.return_from(handler_c) is None

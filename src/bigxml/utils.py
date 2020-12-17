@@ -1,4 +1,5 @@
 from collections import deque
+from functools import wraps
 from itertools import chain
 import re
 
@@ -78,3 +79,14 @@ def last_item_or_none(iterable):
         return deque(iterable, maxlen=1)[0]
     except IndexError:
         return None
+
+
+def transform_none_return_value(fct):
+    @wraps(fct)
+    def wrapped(*args, **kwargs):
+        return_value = fct(*args, **kwargs)
+        if return_value is None:
+            return ()  # empty iterable
+        return return_value
+
+    return wrapped
