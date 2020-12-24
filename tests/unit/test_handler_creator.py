@@ -50,6 +50,8 @@ def cases(*args):
             out = list(handler(root))
             if expected_node is None:
                 assert out == []
+            elif expected_text is None:
+                assert out == [expected_node]
             else:
                 assert out == [(expected_text, expected_node)]
 
@@ -148,6 +150,44 @@ def test_invalid_handle(test_create_handler):
 
     # just make sure it does not crash
     test_create_handler(handle_invalid)
+
+
+#
+# syntactic_sugar
+#
+
+
+@cases(
+    (("a",), None, "a"),
+    (("{foo}a",), None, "{foo}a"),
+    (("b",), None, None),
+    (("b", "a"), None, None),
+)
+@pytest.mark.parametrize(
+    "handler",
+    ("a", ("a",), ["a"]),
+    ids=type,
+)
+def test_syntactic_sugar_one_level(test_create_handler, handler):
+    test_create_handler(handler)
+
+
+@cases(
+    (("a",), None, None),
+    (("a", "b"), None, "b"),
+    (("{foo}a", "b"), None, "b"),
+    (("a", "{bar}b"), None, "{bar}b"),
+    (("{foo}a", "{bar}b"), None, "{bar}b"),
+    (("b",), None, None),
+    (("c", "a", "b"), None, None),
+)
+@pytest.mark.parametrize(
+    "handler",
+    (("a", "b"), ["a", "b"]),
+    ids=type,
+)
+def test_syntactic_sugar_two_levels(test_create_handler, handler):
+    test_create_handler(handler)
 
 
 #
@@ -301,9 +341,6 @@ def test_several_catchall_handlers():
         False,
         42,
         b"a",
-        "a",
-        ("a", "b"),
-        ["a", "b"],
         {"a", "b"},
         {"a": lambda _: None},
         object,

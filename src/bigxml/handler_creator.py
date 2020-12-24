@@ -5,6 +5,10 @@ from bigxml.utils import dictify, transform_none_return_value
 _ATTR_MARKER = "_xml_handlers_on"
 
 
+def _handler_identity(node):
+    yield node
+
+
 def _handle_from_leaf(leaf):
     # class
     if isclass(leaf):
@@ -55,8 +59,19 @@ def create_handler(*args):
     for arg in args:
         markers = getattr(arg, _ATTR_MARKER, None)
         if markers is None:
-            handlers_without_markers.append(arg)
+            # syntactic sugar cases
+            if isinstance(arg, str):
+                arg = (arg,)
+            if isinstance(arg, list):
+                arg = tuple(arg)
+            if isinstance(arg, tuple):
+                handlers_with_markers.append((arg, _handler_identity))
+
+            # no markers
+            else:
+                handlers_without_markers.append(arg)
         else:
+            # markers
             for marker in markers:
                 handlers_with_markers.append((marker, arg))
 
