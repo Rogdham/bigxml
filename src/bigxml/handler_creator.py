@@ -1,6 +1,6 @@
 from inspect import getmembers, isclass
 
-from bigxml.utils import dictify, transform_none_return_value
+from bigxml.utils import dictify, get_mandatory_params, transform_none_return_value
 
 _ATTR_MARKER = "_xml_handlers_on"
 
@@ -12,7 +12,19 @@ def _handler_identity(node):
 def _handle_from_leaf(leaf):
     # class
     if isclass(leaf):
-        raise TypeError("Invalid handler type: class")
+        init_mandatory_params = get_mandatory_params(leaf)
+        if len(init_mandatory_params) > 1:
+            raise TypeError(
+                "Invalid class handler: __init__ should have no or one mandatory parameters, got:"
+                f" {', '.join(init_mandatory_params)}"
+            )
+
+        def handle(node):
+            instance = leaf(node) if init_mandatory_params else leaf()
+            sub_handle = transform_none_return_value(_handle_from_leaf(instance))
+            return sub_handle(node)
+
+        return handle
 
     # callable
     if callable(leaf):

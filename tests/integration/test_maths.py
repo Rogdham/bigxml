@@ -27,14 +27,14 @@ def test_maths_eval_list():
         assert list(Parser(stream).iter_from(*handlers)) == [1337]
 
 
-def test_maths_eval_class_instance():
+def test_maths_eval_class():
     class Eval:
         @staticmethod
         @xml_handle_element("expr")
         def handle_expr(node):
             yield reduce(
                 getattr(operator, node.attributes["op"]),
-                node.iter_from(Eval()),
+                node.iter_from(Eval),
             )
 
         @staticmethod
@@ -43,4 +43,4 @@ def test_maths_eval_class_instance():
             yield int(node.text)
 
     with (Path(__file__).parent / "maths.xml").open("rb") as stream:
-        assert list(Parser(stream).iter_from(Eval())) == [1337]
+        assert list(Parser(stream).iter_from(Eval)) == [1337]

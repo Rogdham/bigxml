@@ -1,5 +1,6 @@
 from collections import deque
 from functools import wraps
+from inspect import Parameter, signature
 from itertools import chain
 import re
 
@@ -90,3 +91,18 @@ def transform_none_return_value(fct):
         return return_value
 
     return wrapped
+
+
+def get_mandatory_params(fct):
+    sig = signature(fct)
+    return tuple(
+        param.name
+        for param in sig.parameters.values()
+        if param.kind
+        in (
+            Parameter.POSITIONAL_ONLY,
+            Parameter.POSITIONAL_OR_KEYWORD,
+            Parameter.KEYWORD_ONLY,
+        )
+        and param.default == sig.empty
+    )

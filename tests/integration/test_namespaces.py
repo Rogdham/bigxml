@@ -65,7 +65,7 @@ def test_namespaces():
                 yield ("bbb", "yyy default", node.attributes["yyy"])
 
     with (Path(__file__).parent / "namespaces.xml").open("rb") as stream:
-        assert list(Parser(stream).iter_from(Handler())) == [
+        assert list(Parser(stream).iter_from(Handler)) == [
             ("aaa", "http://example.com/xml/"),
             ("aaa", "http://example.com/xml/aaa"),
             ("aaa_ex", "http://example.com/xml/ex"),

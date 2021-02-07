@@ -21,6 +21,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/).
   - Regular functions
   - `str`/`tuple`/`list` are syntactic sugar for a handler marked with that value,
     which simply yields the node
+  - Classes are instantiated on the fly (if `__init__` has one mandatory parameter,
+    the node is passed during instantiation)
 - It is now possible to use directly `@xml_handle_text` in place of `@xml_handle_text()`
 - Python 3.9 support
 
