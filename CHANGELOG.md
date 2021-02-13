@@ -13,6 +13,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/).
 
 - `XMLHandler` has been removed: class handlers don't need to inherit from it anymore
 - `return_from` now returns the last yielded item instead of the handler
+- `HandleMgr` no longer has the confusing `set_handle` method
 
 ### :rocket: Added
 

@@ -38,7 +38,7 @@ def test_return_from_no_handle():
 
 def test_iter_from_handle():
     hmgr = HandleMgr()
-    hmgr.set_handle(handle)
+    hmgr._handle = handle  # pylint: disable=protected-access
     assert list(hmgr.iter_from(handler_a)) == ["<13>", "<37>"]
     assert list(hmgr.iter_from(handler_b)) == ["<42>"]
     assert list(hmgr.iter_from(handler_c)) == []
@@ -46,7 +46,7 @@ def test_iter_from_handle():
 
 def test_return_from_handle():
     hmgr = HandleMgr()
-    hmgr.set_handle(handle)
+    hmgr._handle = handle  # pylint: disable=protected-access
     assert hmgr.return_from(handler_a) == "<37>"
     assert hmgr.return_from(handler_b) == "<42>"
     assert hmgr.return_from(handler_c) is None

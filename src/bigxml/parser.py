@@ -27,9 +27,8 @@ def _parse(iterator, handler, parents, parent_elem, expected_iteration):
         node = XMLElement(
             name=elem.tag, attributes=XMLElementAttributes(elem.attrib), parents=parents
         )
-        node.set_handle(
-            lambda h: _parse(iterator, h, parents + (node,), elem, iteration)
-        )
+        # pylint: disable=protected-access
+        node._handle = lambda h: _parse(iterator, h, parents + (node,), elem, iteration)
         return node
 
     for action, elem in iterator:
@@ -61,4 +60,4 @@ class Parser(HandleMgr):
     def __init__(self, stream):
         self.stream = stream
         iterator = IterWithRollback(iterparse(stream, ("start", "end")))
-        self.set_handle(lambda h: _parse(iterator, h, (), None, 0))
+        self._handle = lambda h: _parse(iterator, h, (), None, 0)

@@ -44,7 +44,8 @@ def create_nodes(*path, parent=None):
             for child in _children:
                 yield from handler(child)
 
-        node_parent.set_handle(lambda h, c=children: handle(h, c))
+        # pylint: disable=protected-access
+        node_parent._handle = lambda h, c=children: handle(h, c)
 
     return nodes
 

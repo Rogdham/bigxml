@@ -3,16 +3,13 @@ from bigxml.utils import last_item_or_none
 
 
 class HandleMgr:
-    _handle_fct = None
-
-    def set_handle(self, handle):
-        self._handle_fct = handle
+    _handle = None
 
     def iter_from(self, *handlers):
-        if not self._handle_fct:
+        if not self._handle:
             raise RuntimeError("No handle to use")
         handler = create_handler(*handlers)
-        return self._handle_fct(handler)
+        return self._handle(handler)  # pylint: disable=not-callable
 
     def return_from(self, *handlers):
         return last_item_or_none(self.iter_from(*handlers))

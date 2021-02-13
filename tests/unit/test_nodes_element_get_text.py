@@ -18,7 +18,7 @@ def create_element(*children):
             yield from handler(child)
 
     handle.side_effect = side_effect
-    node.set_handle(handle)
+    node._handle = handle  # pylint: disable=protected-access
     return node
 
 
