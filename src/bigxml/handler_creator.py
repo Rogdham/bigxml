@@ -1,8 +1,24 @@
 from inspect import getmembers, isclass
+import warnings
 
-from bigxml.utils import dictify, get_mandatory_params, transform_none_return_value
+from bigxml.utils import (
+    consume,
+    dictify,
+    get_mandatory_params,
+    transform_none_return_value,
+)
 
 _ATTR_MARKER = "_xml_handlers_on"
+CLASS_HANDLER_METHOD_NAME = "xml_handler"
+
+
+def _test_one_mandatory_param(mandatory_params, method_name):
+    if len(mandatory_params) > 1:
+        raise TypeError(
+            f"Invalid class method: {method_name}"
+            " should have no or one mandatory parameters, got:"
+            f" {', '.join(mandatory_params)}"
+        )
 
 
 def _handler_identity(node):
@@ -13,16 +29,38 @@ def _handle_from_leaf(leaf):
     # class
     if isclass(leaf):
         init_mandatory_params = get_mandatory_params(leaf)
-        if len(init_mandatory_params) > 1:
-            raise TypeError(
-                "Invalid class handler: __init__ should have no or one mandatory parameters, got:"
-                f" {', '.join(init_mandatory_params)}"
-            )
+        _test_one_mandatory_param(init_mandatory_params, "__init__")
 
         def handle(node):
             instance = leaf(node) if init_mandatory_params else leaf()
             sub_handle = transform_none_return_value(_handle_from_leaf(instance))
-            return sub_handle(node)
+            items = sub_handle(node)
+
+            wrapper = getattr(instance, CLASS_HANDLER_METHOD_NAME, None)
+            if wrapper is None:
+                return items
+
+            wrapper_mandatory_params = get_mandatory_params(wrapper)
+            _test_one_mandatory_param(
+                wrapper_mandatory_params,
+                CLASS_HANDLER_METHOD_NAME,
+            )
+
+            if wrapper_mandatory_params:
+                return wrapper(items)
+
+            if consume(items):
+                warnings.warn(
+                    (
+                        "Items were yielded by some sub-handler "
+                        f"of class {instance.__class__.__name__}. "
+                        f"Add an argument to {CLASS_HANDLER_METHOD_NAME} "
+                        "to handle them properly."
+                    ),
+                    RuntimeWarning,
+                )
+
+            return wrapper()
 
         return handle
 

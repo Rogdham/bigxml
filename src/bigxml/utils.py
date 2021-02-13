@@ -82,6 +82,16 @@ def last_item_or_none(iterable):
         return None
 
 
+def consume(iterable):
+    iterator = iter(iterable)
+    try:
+        next(iterator)
+    except StopIteration:
+        return False
+    last_item_or_none(iterator)
+    return True
+
+
 def transform_none_return_value(fct):
     @wraps(fct)
     def wrapped(*args, **kwargs):

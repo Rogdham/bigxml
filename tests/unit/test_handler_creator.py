@@ -3,7 +3,7 @@ from unittest.mock import Mock
 
 import pytest
 
-from bigxml.handler_creator import create_handler
+from bigxml.handler_creator import CLASS_HANDLER_METHOD_NAME, create_handler
 from bigxml.handler_marker import xml_handle_element, xml_handle_text
 from bigxml.nodes import XMLElement, XMLElementAttributes, XMLText
 
@@ -326,6 +326,30 @@ def test_deep_marked_class_instances(test_create_handler, instantiate_class):
 
 
 #
+# class instance
+#
+
+
+@cases(
+    (("x", "a"), "0", "a"),
+)
+def test_class_instance_with_handler(test_create_handler):
+    @xml_handle_element("x")
+    class Handler:
+        @xml_handle_element("a")
+        @staticmethod
+        def handle0(node):
+            yield ("0", node)
+
+        def xml_handler(self):
+            raise RuntimeError(self)  # testing that it is not called
+
+    handler = Handler()
+    assert hasattr(handler, CLASS_HANDLER_METHOD_NAME)
+    test_create_handler(handler)
+
+
+#
 # class
 #
 
@@ -432,6 +456,158 @@ def test_class_init_crash():
         list(handler(nodes[0]))
 
     assert str(excinfo.value) == "Something went wrong"
+
+
+def test_class_with_handler():
+    @xml_handle_element("x")
+    class Handler:
+        def __init__(self):
+            self.nodes = []
+
+        @xml_handle_element("a")
+        def handle0(self, node):
+            self.nodes.append(("x", node))
+
+        @xml_handle_element("b")
+        def handle1(self, node):
+            self.nodes.append(("y", node))
+
+        def xml_handler(self):
+            yield ("start", None)
+            for txt, node in self.nodes:
+                yield ("_{}".format(txt), node)
+            yield ("end", None)
+
+    # pylint: disable=unbalanced-tuple-unpacking
+    node_x, node_a = create_nodes("x", "a")
+    _, node_b = create_nodes("b", parent=node_x)
+    # pylint: enable=unbalanced-tuple-unpacking
+
+    handler = create_handler(Handler)
+    assert list(handler(node_x)) == [
+        ("start", None),
+        ("_x", node_a),
+        ("_y", node_b),
+        ("end", None),
+    ]
+
+
+def test_class_with_handler_static_method():
+    @xml_handle_element("x")
+    class Handler:
+        @xml_handle_element("a")
+        @staticmethod
+        def handle0(node):
+            yield ("0", node)  # this creates a warning
+
+        @staticmethod
+        def xml_handler():
+            yield ("end", None)
+
+    nodes = create_nodes("x", "a")
+    handler = create_handler(Handler)
+    with pytest.warns(RuntimeWarning):
+        assert list(handler(nodes[0])) == [("end", None)]
+
+
+def test_class_with_handler_generator():
+    @xml_handle_element("x")
+    class Handler:
+        def __init__(self):
+            self.nodes = []
+
+        @xml_handle_element("a")
+        def handle0(self, node):
+            self.nodes.append(("x", node))
+            yield ("0", node)
+
+        @xml_handle_element("b")
+        def handle1(self, node):
+            self.nodes.append(("y", node))
+            yield ("1", node)
+
+        def xml_handler(self, generator):
+            yield ("start", None)
+            for txt, node in self.nodes:
+                # before consuming the generator, self.nodes is empty
+                # the following line is never run
+                yield ("oops{}".format(txt), node)
+            for txt, node in generator:
+                yield ("h{}".format(txt), node)
+            for txt, node in self.nodes:
+                yield ("_{}".format(txt), node)
+            yield ("end", None)
+
+    # pylint: disable=unbalanced-tuple-unpacking
+    node_x, node_a = create_nodes("x", "a")
+    _, node_b = create_nodes("b", parent=node_x)
+    # pylint: enable=unbalanced-tuple-unpacking
+
+    handler = create_handler(Handler)
+    assert list(handler(node_x)) == [
+        ("start", None),
+        ("h0", node_a),
+        ("h1", node_b),
+        ("_x", node_a),
+        ("_y", node_b),
+        ("end", None),
+    ]
+
+
+def test_class_with_handler_static_method_generator():
+    @xml_handle_element("x")
+    class Handler:
+        @xml_handle_element("a")
+        @staticmethod
+        def handle0(node):
+            yield ("0", node)
+
+        @xml_handle_element("b")
+        @staticmethod
+        def handle1(node):
+            yield ("1", node)
+
+        @staticmethod
+        def xml_handler(generator):
+            yield ("start", None)
+            for txt, node in generator:
+                yield ("h{}".format(txt), node)
+            yield ("end", None)
+
+    # pylint: disable=unbalanced-tuple-unpacking
+    node_x, node_a = create_nodes("x", "a")
+    _, node_b = create_nodes("b", parent=node_x)
+    # pylint: enable=unbalanced-tuple-unpacking
+
+    handler = create_handler(Handler)
+    assert list(handler(node_x)) == [
+        ("start", None),
+        ("h0", node_a),
+        ("h1", node_b),
+        ("end", None),
+    ]
+
+
+def test_class_with_handler_too_many_mandatory_params():
+    @xml_handle_element("x")
+    class Handler:
+        @xml_handle_element("a")
+        @staticmethod
+        def handle0(node):
+            yield ("0", node)
+
+        @staticmethod
+        def xml_handler(generator, extra):
+            for item in generator:
+                yield (extra, item)
+
+    nodes = create_nodes("x", "a")
+    handler = create_handler(Handler)
+    with pytest.raises(TypeError) as excinfo:
+        list(handler(nodes[0]))
+
+    assert "xml_handler should have" in str(excinfo.value)
+    assert "generator, extra" in str(excinfo.value)
 
 
 #
