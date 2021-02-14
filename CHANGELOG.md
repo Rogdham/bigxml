@@ -7,7 +7,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/).
 
 ## [Unreleased]
 
-[unreleased]: https://github.com/rogdham/bigxml/compare/v0.3.0...HEAD
+[unreleased]: https://github.com/rogdham/bigxml/compare/v0.4.0...HEAD
+
+## [0.4.0] - 2021-02-14
+
+[0.4.0]: https://github.com/rogdham/bigxml/compare/v0.3.0...v0.4.0
+
+v0.4.0 is a major refactor in handler types.
 
 ### :boom: Breaking changes
 
