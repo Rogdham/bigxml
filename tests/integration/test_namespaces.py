@@ -1,8 +1,19 @@
-from pathlib import Path
-
 import pytest
 
 from bigxml import Parser, xml_handle_element
+
+XML = b"""
+<root xmlns="http://example.com/xml/"
+    xmlns:ex="http://example.com/xml/ex"
+    xmlns:other="http://example.com/xml/other">
+    <aaa>Nodes inherit namespaces</aaa>
+    <aaa xmlns="http://example.com/xml/aaa">Overriding namespace</aaa>
+    <ex:aaa>Overriding namespace bis</ex:aaa>
+    <bbb uuu="0" ex:vvv="1" xxx="2" ex:xxx="3" other:xxx="4" ex:yyy="5" other:yyy="6">
+        Looking for attributes
+    </bbb>
+</root>
+"""
 
 
 def test_namespaces():
@@ -64,17 +75,16 @@ def test_namespaces():
                 # but you should not rely on it and specify the namespace to use
                 yield ("bbb", "yyy default", node.attributes["yyy"])
 
-    with (Path(__file__).parent / "namespaces.xml").open("rb") as stream:
-        assert list(Parser(stream).iter_from(Handler)) == [
-            ("aaa", "http://example.com/xml/"),
-            ("aaa", "http://example.com/xml/aaa"),
-            ("aaa_ex", "http://example.com/xml/ex"),
-            ("bbb", "uuu default", "0"),
-            ("bbb", "uuu no", "0"),
-            ("bbb", "vvv default", "1"),
-            ("bbb", "vvv specific", "1"),
-            ("bbb", "xxx default", "2"),
-            ("bbb", "xxx no", "2"),
-            ("bbb", "xxx specific", "3"),
-            ("bbb", "yyy default", "5"),
-        ]
+    assert list(Parser(XML).iter_from(Handler)) == [
+        ("aaa", "http://example.com/xml/"),
+        ("aaa", "http://example.com/xml/aaa"),
+        ("aaa_ex", "http://example.com/xml/ex"),
+        ("bbb", "uuu default", "0"),
+        ("bbb", "uuu no", "0"),
+        ("bbb", "vvv default", "1"),
+        ("bbb", "vvv specific", "1"),
+        ("bbb", "xxx default", "2"),
+        ("bbb", "xxx no", "2"),
+        ("bbb", "xxx specific", "3"),
+        ("bbb", "yyy default", "5"),
+    ]

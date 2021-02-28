@@ -9,6 +9,21 @@ and this project adheres to [Semantic Versioning](https://semver.org/).
 
 [unreleased]: https://github.com/rogdham/bigxml/compare/v0.4.0...HEAD
 
+### :boom: Breaking changes
+
+ - `Parser` can not longer be instantiated with a file-like object opened in text mode,
+   nor with a filename
+ - Removed `stream` attribute from `Parser` instances
+
+### :rocket: Added
+
+ - `Parser` can now be instantiated with several streams as arguments: in that case the
+   streams are concatenated: after the end of a stream, data is taken from the next one
+ - More variety in stream types passed as argument of `Parser`:
+   - File-like objects opened in binary mode (was already supported before)
+   - Bytes-like objects (e.g. `bytes` or `bytearray` instances)
+   - Iterable of previous types (recursively)
+
 ## [0.4.0] - 2021-02-14
 
 [0.4.0]: https://github.com/rogdham/bigxml/compare/v0.3.0...v0.4.0

@@ -1,8 +1,29 @@
 from functools import reduce
 import operator
-from pathlib import Path
 
 from bigxml import Parser, xml_handle_element, xml_handle_text
+
+XML = b"""
+<expr op="sub">
+    <expr op="mul">
+        <number>42</number>
+        <expr op="add">
+            <number>13</number>
+            <number>25</number>
+        </expr>
+    </expr>
+    <number>7</number>
+    <expr op="mul">
+        <expr op="add">
+            <number>1</number>
+            <number>3</number>
+            <number>3</number>
+            <number>7</number>
+        </expr>
+        <number>18</number>
+    </expr>
+</expr>
+"""
 
 
 def test_maths_eval_list():
@@ -23,8 +44,7 @@ def test_maths_eval_list():
 
     handlers.append(handle_number)
 
-    with (Path(__file__).parent / "maths.xml").open("rb") as stream:
-        assert list(Parser(stream).iter_from(*handlers)) == [1337]
+    assert list(Parser(XML).iter_from(*handlers)) == [1337]
 
 
 def test_maths_eval_class():
@@ -42,5 +62,4 @@ def test_maths_eval_class():
         def handle_number(node):
             yield int(node.text)
 
-    with (Path(__file__).parent / "maths.xml").open("rb") as stream:
-        assert list(Parser(stream).iter_from(Eval)) == [1337]
+    assert list(Parser(XML).iter_from(Eval)) == [1337]

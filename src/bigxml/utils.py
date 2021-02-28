@@ -116,3 +116,14 @@ def get_mandatory_params(fct):
         )
         and param.default == sig.empty
     )
+
+
+def autostart_generator(fct):
+    @wraps(fct)
+    def wrapped(*args, **kwargs):
+        generator = fct(*args, **kwargs)
+        if next(generator) is not None:
+            raise ValueError("First item yielded by generator not None")
+        return generator
+
+    return wrapped

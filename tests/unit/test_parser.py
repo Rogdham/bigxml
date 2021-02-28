@@ -1,4 +1,3 @@
-from io import BytesIO
 from itertools import count
 
 import pytest
@@ -43,9 +42,7 @@ root_node = elem("root")
     ids=["self-closing", "empty", "with text", "with children", "attributes", "xmlns"],
 )
 def test_root_level(xml, node, handler):  # pylint: disable=redefined-outer-name
-    stream = BytesIO(xml)
-    parser = Parser(stream)
-    assert parser.stream == stream
+    parser = Parser(xml)
     assert list(parser.iter_from(handler)) == [
         ("handler-yield-0", node),
     ]
@@ -109,9 +106,7 @@ def test_contents(xml_contents, nodes, handler):  # pylint: disable=redefined-ou
     def root_handler(node):
         yield from node.iter_from(handler)
 
-    stream = BytesIO(b"<root>%s</root>" % xml_contents)
-    parser = Parser(stream)
-    assert parser.stream == stream
+    parser = Parser(b"<root>", xml_contents, b"</root>")
     assert list(parser.iter_from(root_handler)) == [
         (f"handler-yield-{i}", node) for i, node in enumerate(nodes)
     ]
@@ -124,11 +119,26 @@ def test_out_of_order():
     def root_handler(node):
         yield from node.iter_from(node_handler)
 
-    stream = BytesIO(b"<root><foo>hello</foo><foo>world</foo><foo>!</foo></root>")
-    parser = Parser(stream)
+    parser = Parser(b"<root><foo>hello</foo><foo>world</foo><foo>!</foo></root>")
     nodes = parser.iter_from(root_handler)
     first_node = next(nodes)
     second_node = next(nodes)
     assert second_node.text == "world"
     with pytest.raises(RuntimeError):
         first_node.text  # pylint: disable=pointless-statement
+
+
+def test_many_small_streams(handler):  # pylint: disable=redefined-outer-name
+    xml = b"<root>Hello<foo />World</root>"
+    xml_parts = list(bytes([v]) for v in xml)  # characters one by one
+    assert len(xml_parts) == 30
+
+    nodes = [text_h_node, elem_f_node, text_w_node]
+
+    def root_handler(node):
+        yield from node.iter_from(handler)
+
+    parser = Parser(*xml_parts)
+    assert list(parser.iter_from(root_handler)) == [
+        (f"handler-yield-{i}", node) for i, node in enumerate(nodes)
+    ]
