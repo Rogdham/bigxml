@@ -27,8 +27,8 @@ def test_comments():
     assert next(items) == "Test"
     assert next(items) == "Hello everyone!"
     assert next(items) == (
-        "I've found this quote that I feel you may like: "
-        "The grass is greener where you water it. "
-        "-Neil Barringham "
-        "Feel free to share it!"
+        "I've found this quote that I feel you may like:"
+        " The grass is greener where you water it."
+        " -Neil Barringham"
+        " Feel free to share it!"
     )

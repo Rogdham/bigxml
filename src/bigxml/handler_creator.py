@@ -52,10 +52,10 @@ def _handle_from_leaf(leaf):
             if consume(items):
                 warnings.warn(
                     (
-                        "Items were yielded by some sub-handler "
-                        f"of class {instance.__class__.__name__}. "
-                        f"Add an argument to {CLASS_HANDLER_METHOD_NAME} "
-                        "to handle them properly."
+                        "Items were yielded by some sub-handler"
+                        f" of class {instance.__class__.__name__}."
+                        f" Add an argument to {CLASS_HANDLER_METHOD_NAME}"
+                        " to handle them properly."
                     ),
                     RuntimeWarning,
                 )

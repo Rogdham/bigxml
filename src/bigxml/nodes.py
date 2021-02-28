@@ -27,8 +27,8 @@ class XMLElementAttributes(Mapping):
         if alternatives > 1:
             warnings.warn(
                 (
-                    f"Several alternatives for attribute name '{key}'. "
-                    f"Specify namespace by using '{{namespace}}{key}' as the key."
+                    f"Several alternatives for attribute name '{key}'."
+                    f" Specify namespace by using '{{namespace}}{key}' as the key."
                 ),
                 RuntimeWarning,
             )
