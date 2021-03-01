@@ -7,7 +7,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/).
 
 ## [Unreleased]
 
-[unreleased]: https://github.com/rogdham/bigxml/compare/v0.4.0...HEAD
+[unreleased]: https://github.com/rogdham/bigxml/compare/v0.5.0...HEAD
+
+## [0.5.0] - 2021-03-01
+
+[0.5.0]: https://github.com/rogdham/bigxml/compare/v0.4.0...v0.5.0
+
+v0.5.0 allows more stream types to be parsed.
 
 ### :boom: Breaking changes
 
