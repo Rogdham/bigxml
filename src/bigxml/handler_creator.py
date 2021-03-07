@@ -37,8 +37,11 @@ def _handle_from_leaf(leaf):
             items = sub_handle(node)
 
             wrapper = getattr(instance, CLASS_HANDLER_METHOD_NAME, None)
+            wrapper_exists = wrapper is not None
             if wrapper is None:
-                return items
+
+                def wrapper():
+                    yield instance
 
             wrapper_mandatory_params = get_mandatory_params(wrapper)
             _test_one_mandatory_param(
@@ -50,15 +53,21 @@ def _handle_from_leaf(leaf):
                 return wrapper(items)
 
             if consume(items):
-                warnings.warn(
-                    (
-                        "Items were yielded by some sub-handler"
-                        f" of class {instance.__class__.__name__}."
-                        f" Add an argument to {CLASS_HANDLER_METHOD_NAME}"
-                        " to handle them properly."
-                    ),
-                    RuntimeWarning,
+                warning_msg = (
+                    "Items were yielded by some sub-handler"
+                    f" of class {instance.__class__.__name__}."
                 )
+                if wrapper_exists:
+                    warning_msg += (
+                        f" Add an argument to the {CLASS_HANDLER_METHOD_NAME}"
+                        " method to handle them properly."
+                    )
+                else:
+                    warning_msg += (
+                        f" Create a {CLASS_HANDLER_METHOD_NAME}"
+                        " method to handle them properly."
+                    )
+                warnings.warn(warning_msg, RuntimeWarning)
 
             return wrapper()
 

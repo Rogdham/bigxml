@@ -62,4 +62,8 @@ def test_maths_eval_class():
         def handle_number(node):
             yield int(node.text)
 
+        @staticmethod
+        def xml_handler(generator):
+            yield from generator
+
     assert list(Parser(XML).iter_from(Eval)) == [1337]

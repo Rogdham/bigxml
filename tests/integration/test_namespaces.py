@@ -75,6 +75,10 @@ def test_namespaces():
                 # but you should not rely on it and specify the namespace to use
                 yield ("bbb", "yyy default", node.attributes["yyy"])
 
+        @staticmethod
+        def xml_handler(generator):
+            yield from generator
+
     assert list(Parser(XML).iter_from(Handler)) == [
         ("aaa", "http://example.com/xml/"),
         ("aaa", "http://example.com/xml/aaa"),

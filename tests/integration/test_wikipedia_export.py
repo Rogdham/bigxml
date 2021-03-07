@@ -20,11 +20,6 @@ def test_wikipedia_export():
         def handle_date(self, node):
             self.date = datetime.strptime(node.text, "%Y-%m-%dT%H:%M:%SZ")
 
-        def xml_handler(self):
-            # at this point the <revision> tag is fully parsed
-            # yield the Revision instance
-            yield self
-
     with LZMAFile(Path(__file__).parent / "wikipedia_python_export.xml.xz") as stream:
         items = list(Parser(stream).iter_from(Revision))
         assert len(items) == 1000

@@ -260,6 +260,10 @@ def test_class_instance(test_create_handler, instantiate_class):
         def handle5(node):
             yield ("5", node)
 
+        @staticmethod
+        def xml_handler(generator):
+            yield from generator
+
     handler = Handler() if instantiate_class else Handler
     test_create_handler(handler)
 
@@ -281,6 +285,10 @@ def test_marked_class_instance(test_create_handler, instantiate_class):
         @staticmethod
         def handle0(node):
             yield ("0", node)
+
+        @staticmethod
+        def xml_handler(generator):
+            yield from generator
 
     handler = Handler() if instantiate_class else Handler
     test_create_handler(handler)
@@ -308,6 +316,10 @@ def test_deep_marked_class_instances(test_create_handler, instantiate_class):
         def handle0(node):
             yield ("0", node)
 
+        @staticmethod
+        def xml_handler(generator):
+            yield from generator
+
     @xml_handle_element("y1")
     class DeepHandler1:
         @xml_handle_element("a")
@@ -315,12 +327,20 @@ def test_deep_marked_class_instances(test_create_handler, instantiate_class):
         def handle1(node):
             yield ("1", node)
 
+        @staticmethod
+        def xml_handler(generator):
+            yield from generator
+
     @xml_handle_element("x")
     class Handler:
         deep_handler0 = DeepHandler0()
 
         def __init__(self):
             self.deep_handler1 = DeepHandler1()
+
+        @staticmethod
+        def xml_handler(generator):
+            yield from generator
 
     handler = Handler() if instantiate_class else Handler
     test_create_handler(handler)
@@ -355,21 +375,60 @@ def test_class_instance_with_handler(test_create_handler):
 #
 
 
-def test_class_init():
-    @xml_handle_element("x", "y")
-    class Handler:
-        init_nb = 0
+@pytest.mark.parametrize("init_mandatory", (False, True))
+@pytest.mark.parametrize("init_optional", (False, True))
+def test_class_init(init_mandatory, init_optional):
+    if init_mandatory:
 
-        def __init__(self, node):
-            self.init_nb = Handler.init_nb
-            Handler.init_nb += 1
-            self.root = node
-            self.seen_nodes = 0
+        if init_optional:
 
-        @xml_handle_element("a", "b")
-        def handle0(self, node):
-            yield (self.init_nb, self.root, self.seen_nodes, node)
-            self.seen_nodes += 1
+            @xml_handle_element("x", "y")
+            class Handler:
+                def __init__(self, node, answer=42):
+                    self.seen = []
+                    self.root = node
+                    self.answer = answer
+
+                @xml_handle_element("a", "b")
+                def handle0(self, node):
+                    self.seen.append(node)
+
+        else:
+
+            @xml_handle_element("x", "y")
+            class Handler:
+                def __init__(self, node):
+                    self.seen = []
+                    self.root = node
+
+                @xml_handle_element("a", "b")
+                def handle0(self, node):
+                    self.seen.append(node)
+
+    else:
+
+        if init_optional:
+
+            @xml_handle_element("x", "y")
+            class Handler:
+                def __init__(self, answer=42):
+                    self.seen = []
+                    self.answer = answer
+
+                @xml_handle_element("a", "b")
+                def handle0(self, node):
+                    self.seen.append(node)
+
+        else:
+
+            @xml_handle_element("x", "y")
+            class Handler:
+                def __init__(self):
+                    self.seen = []
+
+                @xml_handle_element("a", "b")
+                def handle0(self, node):
+                    self.seen.append(node)
 
     #   x -> y0 -> a0 -> b0
     #                 -> b1
@@ -389,44 +448,17 @@ def test_class_init():
     # pylint: enable=unbalanced-tuple-unpacking
 
     handler = create_handler(Handler)
-    assert list(handler(node_x)) == [
-        (0, node_y0, 0, node_b0),
-        (0, node_y0, 1, node_b1),
-        (0, node_y0, 2, node_b2),
-        (1, node_y1, 0, node_b3),
-    ]
-    assert Handler.init_nb == 2
-
-
-def test_class_init_no_mandatory_parameters():
-    @xml_handle_element("x")
-    class Handler:
-        def __init__(self, answer=42):
-            self.answer = answer
-
-        @xml_handle_element("a")
-        def handle0(self, node):
-            yield ("0", self.answer, node)
-
-    nodes = create_nodes("x", "a")
-    handler = create_handler(Handler)
-    assert list(handler(nodes[0])) == [("0", 42, nodes[1])]
-
-
-def test_class_init_one_mandatory_parameter():
-    @xml_handle_element("x")
-    class Handler:
-        def __init__(self, node, answer=42):
-            self.node = node
-            self.answer = answer
-
-        @xml_handle_element("a")
-        def handle0(self, node):
-            yield ("0", self.node, self.answer, node)
-
-    nodes = create_nodes("x", "a")
-    handler = create_handler(Handler)
-    assert list(handler(nodes[0])) == [("0", nodes[0], 42, nodes[1])]
+    items = list(handler(node_x))
+    assert all(isinstance(item, Handler) for item in items)
+    assert len(items) == 2
+    assert items[0].seen == [node_b0, node_b1, node_b2]
+    assert items[1].seen == [node_b3]
+    if init_mandatory:
+        assert items[0].root == node_y0
+        assert items[1].root == node_y1
+    if init_optional:
+        assert items[0].answer == 42
+        assert items[1].answer == 42
 
 
 def test_class_init_two_mandatory_parameters():
@@ -491,6 +523,22 @@ def test_class_with_handler():
         ("_y", node_b),
         ("end", None),
     ]
+
+
+def test_class_no_handler_warning():
+    @xml_handle_element("x")
+    class Handler:
+        @xml_handle_element("a")
+        @staticmethod
+        def handle0(node):
+            yield ("0", node)  # this creates a warning
+
+    nodes = create_nodes("x", "a")
+    handler = create_handler(Handler)
+    with pytest.warns(RuntimeWarning):
+        items = list(handler(nodes[0]))
+    assert len(items) == 1
+    assert isinstance(items[0], Handler)
 
 
 def test_class_with_handler_static_method():
