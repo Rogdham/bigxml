@@ -14,6 +14,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/).
  - Classes as handlers without a `xml_handler` method now yield the instance instead of
    items yielded by sub-handlers
 
+### :house: Internal
+
+ - Test against some XML attacks
+
 ## [0.5.0] - 2021-03-01
 
 [0.5.0]: https://github.com/rogdham/bigxml/compare/v0.4.0...v0.5.0
