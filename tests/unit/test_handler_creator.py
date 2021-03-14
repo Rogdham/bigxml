@@ -375,6 +375,18 @@ def test_class_instance_with_handler(test_create_handler):
 #
 
 
+def test_class_without_sub_handler():
+    @xml_handle_element("x")
+    class Handler:
+        pass
+
+    nodes = create_nodes("x", "y")
+    handler = create_handler(Handler)
+    items = list(handler(nodes[0]))
+    assert len(items) == 1
+    assert isinstance(items[0], Handler)
+
+
 @pytest.mark.parametrize("init_mandatory", (False, True))
 @pytest.mark.parametrize("init_optional", (False, True))
 def test_class_init(init_mandatory, init_optional):

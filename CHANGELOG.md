@@ -14,6 +14,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/).
  - Classes as handlers without a `xml_handler` method now yield the instance instead of
    items yielded by sub-handlers
 
+### :bug: Fixes
+
+- An exception was raised when using a class handlers without any sub-handler attributes
+
 ### :house: Internal
 
  - Test against some XML attacks

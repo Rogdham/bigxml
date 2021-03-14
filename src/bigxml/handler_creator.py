@@ -33,8 +33,12 @@ def _handle_from_leaf(leaf):
 
         def handle(node):
             instance = leaf(node) if init_mandatory_params else leaf()
-            sub_handle = transform_none_return_value(_handle_from_leaf(instance))
-            items = sub_handle(node)
+            try:
+                sub_handle = transform_none_return_value(_handle_from_leaf(instance))
+                items = sub_handle(node)
+            except TypeError:
+                # no marker on public attributes
+                items = ()  # empty iterable
 
             wrapper = getattr(instance, CLASS_HANDLER_METHOD_NAME, None)
             wrapper_exists = wrapper is not None
@@ -77,7 +81,7 @@ def _handle_from_leaf(leaf):
     if callable(leaf):
         return leaf
 
-    # object with markers on public methods
+    # object with markers on public attributes
     handlers_with_markers = []
     for handler_name, handler in getmembers(leaf):
         if handler_name.startswith("__"):
