@@ -1,3 +1,4 @@
+from dataclasses import is_dataclass
 from inspect import getmembers, isclass
 import warnings
 
@@ -29,7 +30,14 @@ def _handle_from_leaf(leaf):
     # class
     if isclass(leaf):
         init_mandatory_params = get_mandatory_params(leaf)
-        _test_one_mandatory_param(init_mandatory_params, "__init__")
+        try:
+            _test_one_mandatory_param(init_mandatory_params, "__init__")
+        except TypeError as ex:
+            if is_dataclass(leaf):
+                raise TypeError(
+                    f"{ex}. Add a default value for dataclass fields."
+                ) from ex
+            raise
 
         def handle(node):
             instance = leaf(node) if init_mandatory_params else leaf()

@@ -1,3 +1,4 @@
+from dataclasses import dataclass
 from functools import partial
 from unittest.mock import Mock
 
@@ -487,6 +488,24 @@ def test_class_init_two_mandatory_parameters():
 
     assert "__init__ should have" in str(excinfo.value)
     assert "node, answer" in str(excinfo.value)
+    assert "Add a default value for dataclass fields" not in str(excinfo.value)
+
+
+def test_dataclass_init_two_mandatory_parameters():
+    @xml_handle_element("x")
+    @dataclass
+    class Handler:
+        node: XMLElement
+        answer: int
+
+    nodes = create_nodes("x", "a")
+    handler = create_handler(Handler)
+    with pytest.raises(TypeError) as excinfo:
+        list(handler(nodes[0]))
+
+    assert "__init__ should have" in str(excinfo.value)
+    assert "node, answer" in str(excinfo.value)
+    assert "Add a default value for dataclass fields" in str(excinfo.value)
 
 
 def test_class_init_crash():

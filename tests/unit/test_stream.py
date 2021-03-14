@@ -61,7 +61,9 @@ class IntIO(IOBase):
     (
         pytest.param("abcdef", "Convert it to a bytes-like object", id="str"),
         pytest.param(
-            StringIO("abcdef"), "For files objects, open in binary mode", id="StringIO"
+            StringIO("abcdef"),
+            "Stream read method returned a str, not a bytes-like object",
+            id="StringIO",
         ),
         pytest.param(["abcdef"], "Convert it to a bytes-like object", id="list[str]"),
         pytest.param(("abcdef",), "Convert it to a bytes-like object", id="tuple[str]"),

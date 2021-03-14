@@ -27,8 +27,7 @@ def _flatten_stream(stream):
                 if isinstance(data, str):
                     raise TypeError(
                         "Stream read method returned a str, not a bytes-like object."
-                        " For files objects, open in binary mode."
-                        " Else, you can try using codecs.getwriter."
+                        " Open file objects in binary mode."
                     ) from ex
                 raise TypeError(
                     "Stream read method did not return a byte-like object:"
