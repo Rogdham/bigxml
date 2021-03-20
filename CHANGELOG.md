@@ -21,6 +21,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/).
 ### :house: Internal
 
  - Test against some XML attacks
+ - Tests are now run in Python Development Mode
  - Update `defusedxml` dependency
 
 ## [0.5.0] - 2021-03-01
