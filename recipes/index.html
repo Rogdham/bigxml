@@ -1,0 +1,423 @@
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <meta name="author" content="Rogdham">
+  <link rel="canonical" href="https://bigxml.rogdham.net/recipes/">
+  <link rel="shortcut icon" href="../img/favicon.ico">
+  <title>Recipes - BigXML</title>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Lato:400,700|Roboto+Slab:400,700|Inconsolata:400,700" />
+
+  <link rel="stylesheet" href="../css/theme.css" />
+  <link rel="stylesheet" href="../css/theme_extra.css" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/styles/github.min.css" />
+  <link href="../css/extra.css" rel="stylesheet" />
+  
+  <script>
+    // Current page data
+    var mkdocs_page_name = "Recipes";
+    var mkdocs_page_input_path = "recipes.md";
+    var mkdocs_page_url = "/recipes/";
+  </script>
+  
+  <script src="../js/jquery-2.1.1.min.js" defer></script>
+  <script src="../js/modernizr-2.8.3.min.js" defer></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/highlight.min.js"></script>
+  <script>hljs.initHighlightingOnLoad();</script> 
+  
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+  <div class="wy-grid-for-nav">
+
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side stickynav">
+    <div class="wy-side-scroll">
+      <div class="wy-side-nav-search">
+        <a href=".." class="icon icon-home"> BigXML</a>
+        <div role="search">
+  <form id ="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" title="Type search term here" />
+  </form>
+</div>
+      </div>
+
+      <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+                <ul>
+                    <li class="toctree-l1"><a class="reference internal" href="..">Home</a>
+                    </li>
+                </ul>
+                <p class="caption"><span class="caption-text">User guide</span></p>
+                <ul class="current">
+                    <li class="toctree-l1"><a class="reference internal" href="../quickstart/">Quickstart</a>
+                    </li>
+                    <li class="toctree-l1 current"><a class="reference internal current" href="./">Recipes</a>
+    <ul class="current">
+    <li class="toctree-l2"><a class="reference internal" href="#requests">Working with Requests</a>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#dataclass">Dataclasses</a>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#yield-in-init">Yielding data in a class __init__</a>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#no-root">Streams without root</a>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#infinite-streams">Infinite streams</a>
+    </li>
+    </ul>
+                    </li>
+                    <li class="toctree-l1"><a class="reference internal" href="../encodings/">Encodings</a>
+                    </li>
+                    <li class="toctree-l1"><a class="reference internal" href="../namespaces/">Namespaces</a>
+                    </li>
+                    <li class="toctree-l1"><a class="reference internal" href="../faq/">FAQ</a>
+                    </li>
+                </ul>
+                <p class="caption"><span class="caption-text">API reference</span></p>
+                <ul>
+                    <li class="toctree-l1"><a class="reference internal" href="../parser/">Parser</a>
+                    </li>
+                    <li class="toctree-l1"><a class="reference internal" href="../streams/">Streams</a>
+                    </li>
+                    <li class="toctree-l1"><a class="reference internal" href="../handlers/">Handlers</a>
+                    </li>
+                    <li class="toctree-l1"><a class="reference internal" href="../decorators/">Decorators</a>
+                    </li>
+                    <li class="toctree-l1"><a class="reference internal" href="../nodes/">Nodes</a>
+                    </li>
+                </ul>
+                <p class="caption"><span class="caption-text">External Links</span></p>
+                <ul>
+                    <li class="toctree-l1"><a class="" href="https://github.com/rogdham/bigxml/blob/master/CHANGELOG.md">Changelog</a>
+                    </li>
+                    <li class="toctree-l1"><a class="" href="https://github.com/rogdham/bigxml/issues">Issue tracker</a>
+                    </li>
+                    <li class="toctree-l1"><a class="" href="https://github.com/rogdham/bigxml">BigXML @ GitHub</a>
+                    </li>
+                    <li class="toctree-l1"><a class="" href="https://pypi.org/project/bigxml">BigXML @ PyPI</a>
+                    </li>
+                </ul>
+      </div>
+    </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" role="navigation" aria-label="top navigation">
+        <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+        <a href="..">BigXML</a>
+      </nav>
+
+      
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="breadcrumbs navigation">
+  <ul class="wy-breadcrumbs">
+    <li><a href="..">Docs</a> &raquo;</li>
+    
+      
+        
+          <li>User guide &raquo;</li>
+        
+      
+    
+    <li>Recipes</li>
+    <li class="wy-breadcrumbs-aside">
+      
+        <a href="https://github.com/rogdham/bigxml/edit/master/docs/recipes.md"
+          class="icon icon-github"> Edit on GitHub</a>
+      
+    </li>
+  </ul>
+  
+  <hr/>
+</div>
+          <div role="main">
+            <div class="section">
+              
+                <h1 id="recipes">Recipes</h1>
+<h2 id="requests">Working with <em>Requests</em></h2>
+<p><a href="https://requests.readthedocs.io/"><em>Requests</em></a> is a library that simplifies making HTTP requests.</p>
+<p>It is easy to stream an XML response from a server and parse it on the fly:</p>
+<ul>
+<li>When creating the request, specify <a href="https://requests.readthedocs.io/en/master/api/#requests.request"><code>stream=True</code></a> so that the
+  content is downloaded as needed if the server supports it;</li>
+<li>Instead of getting the content from the response at once, use
+  <a href="https://requests.readthedocs.io/en/master/api/#requests.Response.iter_content"><code>Response.iter_content</code></a> to iterate over the response
+  data in chunks.</li>
+</ul>
+<!---->
+
+<pre class="codehilite"><code class="language-python">&gt;&gt;&gt; @xml_handle_element(&quot;root&quot;, &quot;item&quot;)
+... def handler(node):
+...     yield node.text
+
+&gt;&gt;&gt; response = requests.get(&quot;https://www.example.com/placeholder.xml&quot;, stream=True)
+&gt;&gt;&gt; parser = Parser(response.iter_content(1 &lt;&lt; 14))
+
+&gt;&gt;&gt; for item in parser.iter_from(handler):
+...     print(item)
+This example shows parsing in streaming with Requests.
+It works quite well!
+</code></pre>
+
+<div class="admonition note">
+<p class="admonition-title">Performance optimizations</p>
+<p>The number passed to <code>Response.iter_content</code> is the chunk size, which is the maximum
+number of bytes that will be obtained at a time. This specific value of <code>1 &lt;&lt; 14</code> is
+the one used under the hood by <em>BigXML</em>'s parsing library. Although any size would
+work, use anything between 1kb and 1Mb for best results.</p>
+</div>
+<h2 id="dataclass">Dataclasses</h2>
+<p>Although not mandatory, using a <a href="https://docs.python.org/3/library/dataclasses.html">dataclass</a> may seem natural to hold the parsed data:</p>
+<pre class="codehilite"><code class="language-xml">&lt;users&gt;
+    &lt;user id=&quot;13&quot;&gt;
+        &lt;firstname&gt;Alice&lt;/firstname&gt;
+        &lt;lastname&gt;Cooper&lt;/lastname&gt;
+    &lt;/user&gt;
+    &lt;user id=&quot;37&quot;&gt;
+        &lt;firstname&gt;Bob&lt;/firstname&gt;
+        &lt;lastname&gt;Marley&lt;/lastname&gt;
+    &lt;/user&gt;
+    &lt;user id=&quot;42&quot;&gt;
+        &lt;firstname&gt;Carol&lt;/firstname&gt;
+    &lt;/user&gt;
+&lt;/users&gt;
+</code></pre>
+
+<!---->
+
+<pre class="codehilite"><code class="language-python">&gt;&gt;&gt; from dataclasses import dataclass
+
+&gt;&gt;&gt; @xml_handle_element(&quot;users&quot;, &quot;user&quot;)
+... @dataclass
+... class User:
+...     firstname: str = 'N/A'
+...     lastname: str = 'N/A'
+...
+...     @xml_handle_element(&quot;firstname&quot;)
+...     def handle_firstname(self, node):
+...         self.firstname = node.text
+...
+...     @xml_handle_element(&quot;lastname&quot;)
+...     def handle_lastname(self, node):
+...         self.lastname = node.text
+
+&gt;&gt;&gt; with open(&quot;users.xml&quot;, &quot;rb&quot;) as stream:
+...     for user in Parser(stream).iter_from(User):
+...         print(user)
+User(firstname='Alice', lastname='Cooper')
+User(firstname='Bob', lastname='Marley')
+User(firstname='Carol', lastname='N/A')
+</code></pre>
+
+<div class="admonition warning">
+<p class="admonition-title">Warning</p>
+<p>All fields of the dataclass must have a default value.</p>
+</div>
+<p>If you need to get information from the node handled by the dataclass, you can do so in
+the <code>__post_init__</code> method:</p>
+<pre class="codehilite"><code class="language-python">&gt;&gt;&gt; from dataclasses import dataclass, InitVar
+
+&gt;&gt;&gt; @xml_handle_element(&quot;users&quot;, &quot;user&quot;)
+... @dataclass
+... class User:
+...     node: InitVar
+...     id: int = 0
+...     firstname: str = 'N/A'
+...     lastname: str = 'N/A'
+...
+...     def __post_init__(self, node):
+...         self.id = int(node.attributes['id'])
+...
+...     @xml_handle_element(&quot;firstname&quot;)
+...     def handle_firstname(self, node):
+...         self.firstname = node.text
+...
+...     @xml_handle_element(&quot;lastname&quot;)
+...     def handle_lastname(self, node):
+...         self.lastname = node.text
+
+&gt;&gt;&gt; with open(&quot;users.xml&quot;, &quot;rb&quot;) as stream:
+...     for user in Parser(stream).iter_from(User):
+...         print(user)
+User(id=13, firstname='Alice', lastname='Cooper')
+User(id=37, firstname='Bob', lastname='Marley')
+User(id=42, firstname='Carol', lastname='N/A')
+</code></pre>
+
+<div class="admonition warning">
+<p class="admonition-title">Warning</p>
+<p>The <code>node</code> attribute is an <code>InitVar</code>, so that it is passed to <code>__post_init__</code> but
+not stored in class attributes. It must be the only mandatory field, since the class
+is automatically instantiated with only one argument (the node). For more details,
+see <a href="../handlers/#classes">class handlers</a>.</p>
+</div>
+<h2 id="yield-in-init">Yielding data in a class <code>__init__</code></h2>
+<p>If you use a <a href="../handlers/#classes">class handler</a>, you may want to yield some data when
+the class starts or ends to parse nodes. Of course, it is not possible to use the
+<code>yield</code> keyword in <code>__init__</code>:</p>
+<pre class="codehilite"><code class="language-python">&gt;&gt;&gt; @xml_handle_element(&quot;root&quot;, &quot;cart&quot;)
+... class Cart:
+...     def __init__(self, node):
+...         yield f&quot;START cart parsing for user {node.attributes['user']}&quot;
+
+&gt;&gt;&gt; with open(&quot;carts.xml&quot;, &quot;rb&quot;) as stream:
+...     for item in Parser(stream).iter_from(Cart):
+...         print(item)
+Traceback (most recent call last):
+    ...
+TypeError: __init__() should return None...
+</code></pre>
+
+<p>Instead, you can define a custom <code>xml_handler</code> method:</p>
+<pre class="codehilite"><code class="language-python">&gt;&gt;&gt; @xml_handle_element(&quot;root&quot;, &quot;cart&quot;)
+... class Cart:
+...     def __init__(self, node):
+...         self.user = node.attributes[&quot;user&quot;]
+...
+...     @xml_handle_element(&quot;product&quot;)
+...     def handle_product(self, node):
+...         yield f&quot;product: {node.text}&quot;
+...
+...     def xml_handler(self, items):
+...         yield f&quot;START cart parsing for user {self.user}&quot;
+...         yield from items
+...         yield f&quot;END cart parsing for user {self.user}&quot;
+
+&gt;&gt;&gt; with open(&quot;carts.xml&quot;, &quot;rb&quot;) as stream:
+...     for item in Parser(stream).iter_from(Cart):
+...         print(item)
+START cart parsing for user Alice
+product: 9781846975769
+product: 9780008322052
+END cart parsing for user Alice
+START cart parsing for user Bob
+product: 9780008117498
+product: 9780340960196
+product: 9780099580485
+END cart parsing for user Bob
+</code></pre>
+
+<h2 id="no-root">Streams without root</h2>
+<p>In some cases, you may be parsing a stream of XML elements that follow each other
+without starting with a common root.</p>
+<p>For example, let's say a software outputs the following log file:</p>
+<pre class="codehilite"><code class="language-xml">&lt;log level=&quot;WARN&quot;&gt;Main reactor overheat&lt;/log&gt;
+&lt;log level=&quot;INFO&quot;&gt;Starting emergency coolers&lt;/log&gt;
+&lt;log level=&quot;DEBUG&quot;&gt;Cooler 4 is online&lt;/log&gt;
+&lt;log level=&quot;DEBUG&quot;&gt;Cooler 2 is online&lt;/log&gt;
+&lt;log level=&quot;INFO&quot;&gt;Main reactor temperature is back to an acceptable level&lt;/log&gt;
+</code></pre>
+
+<p>We can just wrap the stream in an XML element:</p>
+<pre class="codehilite"><code class="language-python">&gt;&gt;&gt; @xml_handle_element(&quot;root&quot;, &quot;log&quot;)
+... def handler(node):
+...     yield f&quot;{node.attributes['level']:5} {node.text}&quot;
+
+&gt;&gt;&gt; with open(&quot;log.xml&quot;, &quot;rb&quot;) as stream:
+...     parser = Parser(b&quot;&lt;root&gt;&quot;, stream, b&quot;&lt;/root&gt;&quot;)
+...     for item in parser.iter_from(handler):
+...         print(item)
+WARN  Main reactor overheat
+INFO  Starting emergency coolers
+DEBUG Cooler 4 is online
+DEBUG Cooler 2 is online
+INFO  Main reactor temperature is back to an acceptable level
+</code></pre>
+
+<h2 id="infinite-streams">Infinite streams</h2>
+<p>Infinite streams are supported through file-like objects and iterables.</p>
+<p>Here is an example using an infinite generator function as a stream:</p>
+<pre class="codehilite"><code class="language-python">&gt;&gt;&gt; def collatz_generator(value):
+...     yield b&quot;&lt;root&gt;&quot;
+...     while True:
+...         yield b&quot;&lt;item&gt;%d&lt;/item&gt;&quot; % value
+...         if value % 2:
+...             value = 3 * value + 1
+...         else:
+...             value //= 2
+
+&gt;&gt;&gt; stream = collatz_generator(42)
+
+&gt;&gt;&gt; @xml_handle_element(&quot;root&quot;, &quot;item&quot;)
+... def handler(node):
+...     yield int(node.text)
+
+&gt;&gt;&gt; items = Parser(stream).iter_from(handler)
+&gt;&gt;&gt; for _ in range(12):
+...     print(next(items))
+42
+21
+64
+32
+16
+8
+4
+2
+1
+4
+2
+1
+</code></pre>
+              
+            </div>
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="../encodings/" class="btn btn-neutral float-right" title="Encodings">Next <span class="icon icon-circle-arrow-right"></span></a>
+      
+      
+        <a href="../quickstart/" class="btn btn-neutral" title="Quickstart"><span class="icon icon-circle-arrow-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <!-- Copyright etc -->
+    
+  </div>
+
+  Built with <a href="https://www.mkdocs.org/">MkDocs</a> using a <a href="https://github.com/snide/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>.
+</footer>
+      
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+
+  <div class="rst-versions" role="note" aria-label="versions">
+    <span class="rst-current-version" data-toggle="rst-current-version">
+      
+          <a href="https://github.com/rogdham/bigxml/" class="fa fa-github" style="float: left; color: #fcfcfc"> GitHub</a>
+      
+      
+        <span><a href="../quickstart/" style="color: #fcfcfc;">&laquo; Previous</a></span>
+      
+      
+        <span style="margin-left: 15px"><a href="../encodings/" style="color: #fcfcfc">Next &raquo;</a></span>
+      
+    </span>
+</div>
+    <script>var base_url = '..';</script>
+    <script src="../js/theme.js" defer></script>
+      <script src="../search/main.js" defer></script>
+    <script defer>
+        window.onload = function () {
+            SphinxRtdTheme.Navigation.enable(true);
+        };
+    </script>
+
+</body>
+</html>

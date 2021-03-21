@@ -1,0 +1,408 @@
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <meta name="author" content="Rogdham">
+  <link rel="canonical" href="https://bigxml.rogdham.net/handlers/">
+  <link rel="shortcut icon" href="../img/favicon.ico">
+  <title>Handlers - BigXML</title>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Lato:400,700|Roboto+Slab:400,700|Inconsolata:400,700" />
+
+  <link rel="stylesheet" href="../css/theme.css" />
+  <link rel="stylesheet" href="../css/theme_extra.css" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/styles/github.min.css" />
+  <link href="../css/extra.css" rel="stylesheet" />
+  
+  <script>
+    // Current page data
+    var mkdocs_page_name = "Handlers";
+    var mkdocs_page_input_path = "handlers.md";
+    var mkdocs_page_url = "/handlers/";
+  </script>
+  
+  <script src="../js/jquery-2.1.1.min.js" defer></script>
+  <script src="../js/modernizr-2.8.3.min.js" defer></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/highlight.min.js"></script>
+  <script>hljs.initHighlightingOnLoad();</script> 
+  
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+  <div class="wy-grid-for-nav">
+
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side stickynav">
+    <div class="wy-side-scroll">
+      <div class="wy-side-nav-search">
+        <a href=".." class="icon icon-home"> BigXML</a>
+        <div role="search">
+  <form id ="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" title="Type search term here" />
+  </form>
+</div>
+      </div>
+
+      <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+                <ul>
+                    <li class="toctree-l1"><a class="reference internal" href="..">Home</a>
+                    </li>
+                </ul>
+                <p class="caption"><span class="caption-text">User guide</span></p>
+                <ul>
+                    <li class="toctree-l1"><a class="reference internal" href="../quickstart/">Quickstart</a>
+                    </li>
+                    <li class="toctree-l1"><a class="reference internal" href="../recipes/">Recipes</a>
+                    </li>
+                    <li class="toctree-l1"><a class="reference internal" href="../encodings/">Encodings</a>
+                    </li>
+                    <li class="toctree-l1"><a class="reference internal" href="../namespaces/">Namespaces</a>
+                    </li>
+                    <li class="toctree-l1"><a class="reference internal" href="../faq/">FAQ</a>
+                    </li>
+                </ul>
+                <p class="caption"><span class="caption-text">API reference</span></p>
+                <ul class="current">
+                    <li class="toctree-l1"><a class="reference internal" href="../parser/">Parser</a>
+                    </li>
+                    <li class="toctree-l1"><a class="reference internal" href="../streams/">Streams</a>
+                    </li>
+                    <li class="toctree-l1 current"><a class="reference internal current" href="./">Handlers</a>
+    <ul class="current">
+    <li class="toctree-l2"><a class="reference internal" href="#functions">Functions</a>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#classes">Classes</a>
+        <ul>
+    <li class="toctree-l3"><a class="reference internal" href="#class-instantiation">Class instantiation</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#class-methods-as-sub-handlers">Class methods as sub-handlers</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#changing-yielded-items">Changing yielded items</a>
+    </li>
+        </ul>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#syntactic-sugar">Syntactic sugar</a>
+    </li>
+    </ul>
+                    </li>
+                    <li class="toctree-l1"><a class="reference internal" href="../decorators/">Decorators</a>
+                    </li>
+                    <li class="toctree-l1"><a class="reference internal" href="../nodes/">Nodes</a>
+                    </li>
+                </ul>
+                <p class="caption"><span class="caption-text">External Links</span></p>
+                <ul>
+                    <li class="toctree-l1"><a class="" href="https://github.com/rogdham/bigxml/blob/master/CHANGELOG.md">Changelog</a>
+                    </li>
+                    <li class="toctree-l1"><a class="" href="https://github.com/rogdham/bigxml/issues">Issue tracker</a>
+                    </li>
+                    <li class="toctree-l1"><a class="" href="https://github.com/rogdham/bigxml">BigXML @ GitHub</a>
+                    </li>
+                    <li class="toctree-l1"><a class="" href="https://pypi.org/project/bigxml">BigXML @ PyPI</a>
+                    </li>
+                </ul>
+      </div>
+    </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" role="navigation" aria-label="top navigation">
+        <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+        <a href="..">BigXML</a>
+      </nav>
+
+      
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="breadcrumbs navigation">
+  <ul class="wy-breadcrumbs">
+    <li><a href="..">Docs</a> &raquo;</li>
+    
+      
+        
+          <li>API reference &raquo;</li>
+        
+      
+    
+    <li>Handlers</li>
+    <li class="wy-breadcrumbs-aside">
+      
+        <a href="https://github.com/rogdham/bigxml/edit/master/docs/handlers.md"
+          class="icon icon-github"> Edit on GitHub</a>
+      
+    </li>
+  </ul>
+  
+  <hr/>
+</div>
+          <div role="main">
+            <div class="section">
+              
+                <h1 id="handlers">Handlers</h1>
+<p>The methods <code>iter_from</code> and <code>return_from</code> take <em>handlers</em> as arguments.</p>
+<h2 id="functions">Functions</h2>
+<p>A handler can be a generator function taking a <em>node</em> as an argument.</p>
+<p>Such functions are usually decorated with <code>xml_handle_element</code> or <code>xml_handle_text</code>, to
+restrict the type of nodes they are called with.</p>
+<pre class="codehilite"><code class="language-xml">&lt;inventory&gt;
+    &lt;book&gt;9780261103573&lt;/book&gt;
+    &lt;lego ean=&quot;5702014975200&quot;&gt;79005&lt;/lego&gt;
+    &lt;dvd&gt;0883929452996&lt;/dvd&gt;
+&lt;/inventory&gt;
+</code></pre>
+
+<!---->
+
+<pre class="codehilite"><code class="language-python">&gt;&gt;&gt; @xml_handle_element(&quot;inventory&quot;, &quot;book&quot;)
+... @xml_handle_element(&quot;inventory&quot;, &quot;dvd&quot;)
+... def handle_ean(node):
+...     yield (node.text, node.name)
+
+&gt;&gt;&gt; @xml_handle_element(&quot;inventory&quot;, &quot;lego&quot;)
+... def handle_lego(node):
+...     yield (node.attributes[&quot;ean&quot;], &quot;toy&quot;)
+
+&gt;&gt;&gt; with open(&quot;inventory.xml&quot;, &quot;rb&quot;) as stream:
+...     for ean, kind in Parser(stream).iter_from(handle_ean, handle_lego):
+...         print(f&quot;{ean} ({kind})&quot;)
+9780261103573 (book)
+5702014975200 (toy)
+0883929452996 (dvd)
+</code></pre>
+
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>To handle different kind of nodes, the same function can be decorated several times
+with <code>xml_handle_element</code> or <code>xml_handle_text</code> as shown above.</p>
+</div>
+<h2 id="classes">Classes</h2>
+<p>Passing a class as a handler is a good way to group the handling of a node and its
+children.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>Although not mandatory, using a <a href="https://docs.python.org/3/library/dataclasses.html">dataclass</a> sometimes feels quite natural. See
+<a href="../recipes/#dataclass">this recipe</a> for more information on this use case.</p>
+</div>
+<p>Let's parse the following XML file:</p>
+<pre class="codehilite"><code class="language-xml">&lt;root&gt;
+    &lt;cart user=&quot;Alice&quot;&gt;
+        &lt;product price=&quot;7.35&quot;&gt;9781846975769&lt;/product&gt;
+        &lt;product price=&quot;2.12&quot;&gt;9780008322052&lt;/product&gt;
+    &lt;/cart&gt;
+    &lt;cart user=&quot;Bob&quot;&gt;
+        &lt;product price=&quot;4.99&quot;&gt;9780008117498&lt;/product&gt;
+        &lt;product price=&quot;8.14&quot;&gt;9780340960196&lt;/product&gt;
+        &lt;product price=&quot;7.37&quot;&gt;9780099580485&lt;/product&gt;
+    &lt;/cart&gt;
+&lt;/root&gt;
+</code></pre>
+
+<h3 id="class-instantiation">Class instantiation</h3>
+<p>The class is instantiated automatically when a matching node is encountered:</p>
+<pre class="codehilite"><code class="language-python">&gt;&gt;&gt; @xml_handle_element(&quot;root&quot;, &quot;cart&quot;)
+... class Cart:
+...     pass
+
+&gt;&gt;&gt; with open(&quot;carts.xml&quot;, &quot;rb&quot;) as stream:
+...     for instance in Parser(stream).iter_from(Cart):
+...         print(instance)
+&lt;__main__.Cart object...&gt;
+&lt;__main__.Cart object...&gt;
+</code></pre>
+
+<p>If your class has an <code>__init__</code> method taking one mandatory parameter as argument, that
+argument is supplied with the encountered node:</p>
+<pre class="codehilite"><code class="language-python">&gt;&gt;&gt; @xml_handle_element(&quot;root&quot;, &quot;cart&quot;)
+... class Cart:
+...     def __init__(self, node):
+...         self.user = node.attributes[&quot;user&quot;]
+
+&gt;&gt;&gt; with open(&quot;carts.xml&quot;, &quot;rb&quot;) as stream:
+...     for instance in Parser(stream).iter_from(Cart):
+...         print(f&quot;{instance} for user {instance.user}&quot;)
+&lt;__main__.Cart object...&gt; for user Alice
+&lt;__main__.Cart object...&gt; for user Bob
+</code></pre>
+
+<h3 id="class-methods-as-sub-handlers">Class methods as sub-handlers</h3>
+<p>The methods decorated with <code>xml_handle_element</code> or <code>xml_handle_text</code> are used as
+sub-handlers:</p>
+<pre class="codehilite"><code class="language-python">&gt;&gt;&gt; @xml_handle_element(&quot;root&quot;, &quot;cart&quot;)
+... class Cart:
+...     def __init__(self):
+...         self.price = 0.0
+...
+...     @xml_handle_element(&quot;product&quot;)
+...     def handle_product(self, node):
+...         self.price += float(node.attributes[&quot;price&quot;])
+
+&gt;&gt;&gt; with open(&quot;carts.xml&quot;, &quot;rb&quot;) as stream:
+...     for instance in Parser(stream).iter_from(Cart):
+...         print(f&quot;{instance} total {instance.price:.2f}&quot;)
+&lt;__main__.Cart object...&gt; total 9.47
+&lt;__main__.Cart object...&gt; total 20.50
+</code></pre>
+
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>If such a class method yields some items, they are ignored and a warning message is
+issued. This behavior can be changed as explained below.</p>
+</div>
+<h3 id="changing-yielded-items">Changing yielded items</h3>
+<p>As seen above, the class handler yields the class instance. This default behavior can be
+changed by implementing an <code>xml_handler</code> method:</p>
+<pre class="codehilite"><code class="language-python">&gt;&gt;&gt; @xml_handle_element(&quot;root&quot;, &quot;cart&quot;)
+... class Cart:
+...     def __init__(self, node):
+...         self.user = node.attributes[&quot;user&quot;]
+...         self.price = 0.0
+...
+...     @xml_handle_element(&quot;product&quot;)
+...     def handle_product(self, node):
+...         self.price += float(node.attributes[&quot;price&quot;])
+...
+...     def xml_handler(self):
+...         yield (self.user, self.price)
+
+&gt;&gt;&gt; with open(&quot;carts.xml&quot;, &quot;rb&quot;) as stream:
+...     for user, price in Parser(stream).iter_from(Cart):
+...         print(f&quot;{user} total {price:.2f}&quot;)
+Alice total 9.47
+Bob total 20.50
+</code></pre>
+
+<p>You can add a single mandatory parameter to <code>xml_handler</code>. In that case, it will be an
+iterable whose items are yielded by the sub-handlers.</p>
+<p>We can rewrite a previous example to leverage this behavior:</p>
+<pre class="codehilite"><code class="language-python">&gt;&gt;&gt; @xml_handle_element(&quot;root&quot;, &quot;cart&quot;)
+... class Cart:
+...     @xml_handle_element(&quot;product&quot;)
+...     def handle_product(self, node):
+...         yield float(node.attributes[&quot;price&quot;])
+...
+...     def xml_handler(self, iterable):
+...         yield sum(iterable)
+
+&gt;&gt;&gt; with open(&quot;carts.xml&quot;, &quot;rb&quot;) as stream:
+...     for price in Parser(stream).iter_from(Cart):
+...         print(price)
+9.47
+20.50
+</code></pre>
+
+<div class="admonition warning">
+<p class="admonition-title">Warning</p>
+<p>The children of the node handled by the class instance are parsed as the same time
+as the iterable is being iterated over. It is up to you to consume the iterable and
+consider the side-effects your methods may have.</p>
+</div>
+<div class="admonition tip">
+<p class="admonition-title">See also</p>
+<ul>
+<li><a href="../recipes/#yield-in-init">Read this recipe</a> if you want to yield some items in
+  the <code>__init__</code> method</li>
+<li><a href="../recipes/#dataclass">Another recipe</a> discusses usage with <a href="https://docs.python.org/3/library/dataclasses.html">dataclasses</a></li>
+</ul>
+</div>
+<h2 id="syntactic-sugar">Syntactic sugar</h2>
+<p>To avoid creating a handler that simply yields the node, the following handler types are
+available:</p>
+<dl>
+<dt><code>tuple</code> of <code>str</code> / <code>list</code> of <code>str</code></dt>
+<dd>
+<p><code>("html", "body", "p")</code> is equivalent to the following handler:</p>
+<pre class="codehilite"><code class="language-python">@xml_handle_element(&quot;html&quot;, &quot;body&quot;, &quot;p&quot;)
+def handler(node):
+    yield node
+</code></pre>
+
+</dd>
+<dt><code>str</code></dt>
+<dd>
+<p><code>"p"</code> is equivalent to <code>["p"]</code> or the following handler:</p>
+<pre class="codehilite"><code class="language-python">@xml_handle_element(&quot;p&quot;)
+def handler(node):
+    yield node
+</code></pre>
+
+</dd>
+</dl>
+<p>This allows to quickly iterate over a specific type of children of the current node:</p>
+<pre class="codehilite"><code class="language-python">&gt;&gt;&gt; @xml_handle_element(&quot;root&quot;, &quot;cart&quot;)
+... def handler(node):
+...     yield (
+...         node.attributes[&quot;user&quot;],
+...         sum(
+...             float(subnode.attributes[&quot;price&quot;])
+...             for subnode in node.iter_from(&quot;product&quot;)
+...         )
+...     )
+
+&gt;&gt;&gt; with open(&quot;carts.xml&quot;, &quot;rb&quot;) as stream:
+...     for user, price in Parser(stream).iter_from(handler):
+...         print(f&quot;{user} total {price:.2f}&quot;)
+Alice total 9.47
+Bob total 20.50
+</code></pre>
+              
+            </div>
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="../decorators/" class="btn btn-neutral float-right" title="Decorators">Next <span class="icon icon-circle-arrow-right"></span></a>
+      
+      
+        <a href="../streams/" class="btn btn-neutral" title="Streams"><span class="icon icon-circle-arrow-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <!-- Copyright etc -->
+    
+  </div>
+
+  Built with <a href="https://www.mkdocs.org/">MkDocs</a> using a <a href="https://github.com/snide/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>.
+</footer>
+      
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+
+  <div class="rst-versions" role="note" aria-label="versions">
+    <span class="rst-current-version" data-toggle="rst-current-version">
+      
+          <a href="https://github.com/rogdham/bigxml/" class="fa fa-github" style="float: left; color: #fcfcfc"> GitHub</a>
+      
+      
+        <span><a href="../streams/" style="color: #fcfcfc;">&laquo; Previous</a></span>
+      
+      
+        <span style="margin-left: 15px"><a href="../decorators/" style="color: #fcfcfc">Next &raquo;</a></span>
+      
+    </span>
+</div>
+    <script>var base_url = '..';</script>
+    <script src="../js/theme.js" defer></script>
+      <script src="../search/main.js" defer></script>
+    <script defer>
+        window.onload = function () {
+            SphinxRtdTheme.Navigation.enable(true);
+        };
+    </script>
+
+</body>
+</html>

@@ -1,0 +1,248 @@
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <meta name="author" content="Rogdham">
+  <link rel="canonical" href="https://bigxml.rogdham.net/encodings/">
+  <link rel="shortcut icon" href="../img/favicon.ico">
+  <title>Encodings - BigXML</title>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Lato:400,700|Roboto+Slab:400,700|Inconsolata:400,700" />
+
+  <link rel="stylesheet" href="../css/theme.css" />
+  <link rel="stylesheet" href="../css/theme_extra.css" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/styles/github.min.css" />
+  <link href="../css/extra.css" rel="stylesheet" />
+  
+  <script>
+    // Current page data
+    var mkdocs_page_name = "Encodings";
+    var mkdocs_page_input_path = "encodings.md";
+    var mkdocs_page_url = "/encodings/";
+  </script>
+  
+  <script src="../js/jquery-2.1.1.min.js" defer></script>
+  <script src="../js/modernizr-2.8.3.min.js" defer></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/highlight.min.js"></script>
+  <script>hljs.initHighlightingOnLoad();</script> 
+  
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+  <div class="wy-grid-for-nav">
+
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side stickynav">
+    <div class="wy-side-scroll">
+      <div class="wy-side-nav-search">
+        <a href=".." class="icon icon-home"> BigXML</a>
+        <div role="search">
+  <form id ="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" title="Type search term here" />
+  </form>
+</div>
+      </div>
+
+      <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+                <ul>
+                    <li class="toctree-l1"><a class="reference internal" href="..">Home</a>
+                    </li>
+                </ul>
+                <p class="caption"><span class="caption-text">User guide</span></p>
+                <ul class="current">
+                    <li class="toctree-l1"><a class="reference internal" href="../quickstart/">Quickstart</a>
+                    </li>
+                    <li class="toctree-l1"><a class="reference internal" href="../recipes/">Recipes</a>
+                    </li>
+                    <li class="toctree-l1 current"><a class="reference internal current" href="./">Encodings</a>
+    <ul class="current">
+    <li class="toctree-l2"><a class="reference internal" href="#wrong-encoding">Wrong encoding</a>
+    </li>
+    </ul>
+                    </li>
+                    <li class="toctree-l1"><a class="reference internal" href="../namespaces/">Namespaces</a>
+                    </li>
+                    <li class="toctree-l1"><a class="reference internal" href="../faq/">FAQ</a>
+                    </li>
+                </ul>
+                <p class="caption"><span class="caption-text">API reference</span></p>
+                <ul>
+                    <li class="toctree-l1"><a class="reference internal" href="../parser/">Parser</a>
+                    </li>
+                    <li class="toctree-l1"><a class="reference internal" href="../streams/">Streams</a>
+                    </li>
+                    <li class="toctree-l1"><a class="reference internal" href="../handlers/">Handlers</a>
+                    </li>
+                    <li class="toctree-l1"><a class="reference internal" href="../decorators/">Decorators</a>
+                    </li>
+                    <li class="toctree-l1"><a class="reference internal" href="../nodes/">Nodes</a>
+                    </li>
+                </ul>
+                <p class="caption"><span class="caption-text">External Links</span></p>
+                <ul>
+                    <li class="toctree-l1"><a class="" href="https://github.com/rogdham/bigxml/blob/master/CHANGELOG.md">Changelog</a>
+                    </li>
+                    <li class="toctree-l1"><a class="" href="https://github.com/rogdham/bigxml/issues">Issue tracker</a>
+                    </li>
+                    <li class="toctree-l1"><a class="" href="https://github.com/rogdham/bigxml">BigXML @ GitHub</a>
+                    </li>
+                    <li class="toctree-l1"><a class="" href="https://pypi.org/project/bigxml">BigXML @ PyPI</a>
+                    </li>
+                </ul>
+      </div>
+    </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" role="navigation" aria-label="top navigation">
+        <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+        <a href="..">BigXML</a>
+      </nav>
+
+      
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="breadcrumbs navigation">
+  <ul class="wy-breadcrumbs">
+    <li><a href="..">Docs</a> &raquo;</li>
+    
+      
+        
+          <li>User guide &raquo;</li>
+        
+      
+    
+    <li>Encodings</li>
+    <li class="wy-breadcrumbs-aside">
+      
+        <a href="https://github.com/rogdham/bigxml/edit/master/docs/encodings.md"
+          class="icon icon-github"> Edit on GitHub</a>
+      
+    </li>
+  </ul>
+  
+  <hr/>
+</div>
+          <div role="main">
+            <div class="section">
+              
+                <h1 id="stream-encodings">Stream encodings</h1>
+<p>The <a href="../streams/">streams</a> passed to <code>Parser</code> are expected to be <code>bytes</code>-oriented.</p>
+<p>The decoding is performed according to the
+<a href="https://www.w3.org/TR/xml/#charencoding">XML specification</a>, i.e. based on the
+<code>encoding</code> attribute of the XML declaration:</p>
+<pre class="codehilite"><code class="language-xml">&lt;?xml version='1.0' encoding='ISO-8859-1'?&gt;
+</code></pre>
+
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>The XML declaration is optional for UTF-8 and UTF-16 encodings.</p>
+</div>
+<h2 id="wrong-encoding">Wrong encoding</h2>
+<p>Sometimes, the encoding of the stream to parse does not match the one specified in the
+XML declaration.</p>
+<pre class="codehilite"><code class="language-python">&gt;&gt;&gt; @xml_handle_element(&quot;root&quot;)
+... def handler(node):
+...     yield node.text
+
+&gt;&gt;&gt; stream_bytes = b&quot;&lt;root&gt;\xe0\xe9\xef\xf4\xf9&lt;/root&gt;&quot;  # ISO-8859-1
+
+&gt;&gt;&gt; Parser(stream_bytes).return_from(handler)
+Traceback (most recent call last):
+    ...
+xml.etree.ElementTree.ParseError: not well-formed (invalid token)...
+</code></pre>
+
+<p>If you know that there is no XML declaration, you can add one before the stream:</p>
+<pre class="codehilite"><code class="language-python">&gt;&gt;&gt; Parser(
+...    &quot;&lt;?xml version='1.0' encoding='ISO-8859-1'?&gt;&quot;.encode(&quot;ISO-8859-1&quot;),
+...    stream_bytes,
+... ).return_from(handler)
+'àéïôù'
+</code></pre>
+
+<p>But if the XML declaration is already here, you will need to change the encoding of your
+stream manually. For <code>bytes</code> instances, decode then encode:</p>
+<pre class="codehilite"><code class="language-python">&gt;&gt;&gt; stream_bytes_with_xml_declaration = (
+...     b&quot;&lt;?xml version='1.0' encoding='UTF-8'?&gt;&quot;  # wrong encoding specified
+...     b&quot;&lt;root&gt;\xe0\xe9\xef\xf4\xf9&lt;/root&gt;&quot;       # ISO-8859-1
+... )
+
+&gt;&gt;&gt; Parser(
+...     stream_bytes_with_xml_declaration.decode(&quot;ISO-8859-1&quot;).encode(&quot;UTF-8&quot;),
+... ).return_from(handler)
+'àéïôù'
+</code></pre>
+
+<p>For file-like objects, use <code>codecs.EncodedFile</code>:</p>
+<pre class="codehilite"><code class="language-python">&gt;&gt;&gt; import io
+&gt;&gt;&gt; stream_file = io.BytesIO(stream_bytes_with_xml_declaration)
+
+&gt;&gt;&gt; import codecs
+&gt;&gt;&gt; Parser(
+...     codecs.EncodedFile(stream_file, &quot;UTF-8&quot;, &quot;ISO-8859-1&quot;),
+... ).return_from(handler)
+'àéïôù'
+</code></pre>
+              
+            </div>
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="../namespaces/" class="btn btn-neutral float-right" title="Namespaces">Next <span class="icon icon-circle-arrow-right"></span></a>
+      
+      
+        <a href="../recipes/" class="btn btn-neutral" title="Recipes"><span class="icon icon-circle-arrow-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <!-- Copyright etc -->
+    
+  </div>
+
+  Built with <a href="https://www.mkdocs.org/">MkDocs</a> using a <a href="https://github.com/snide/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>.
+</footer>
+      
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+
+  <div class="rst-versions" role="note" aria-label="versions">
+    <span class="rst-current-version" data-toggle="rst-current-version">
+      
+          <a href="https://github.com/rogdham/bigxml/" class="fa fa-github" style="float: left; color: #fcfcfc"> GitHub</a>
+      
+      
+        <span><a href="../recipes/" style="color: #fcfcfc;">&laquo; Previous</a></span>
+      
+      
+        <span style="margin-left: 15px"><a href="../namespaces/" style="color: #fcfcfc">Next &raquo;</a></span>
+      
+    </span>
+</div>
+    <script>var base_url = '..';</script>
+    <script src="../js/theme.js" defer></script>
+      <script src="../search/main.js" defer></script>
+    <script defer>
+        window.onload = function () {
+            SphinxRtdTheme.Navigation.enable(true);
+        };
+    </script>
+
+</body>
+</html>

@@ -1,0 +1,342 @@
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <meta name="author" content="Rogdham">
+  <link rel="canonical" href="https://bigxml.rogdham.net/namespaces/">
+  <link rel="shortcut icon" href="../img/favicon.ico">
+  <title>Namespaces - BigXML</title>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Lato:400,700|Roboto+Slab:400,700|Inconsolata:400,700" />
+
+  <link rel="stylesheet" href="../css/theme.css" />
+  <link rel="stylesheet" href="../css/theme_extra.css" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/styles/github.min.css" />
+  <link href="../css/extra.css" rel="stylesheet" />
+  
+  <script>
+    // Current page data
+    var mkdocs_page_name = "Namespaces";
+    var mkdocs_page_input_path = "namespaces.md";
+    var mkdocs_page_url = "/namespaces/";
+  </script>
+  
+  <script src="../js/jquery-2.1.1.min.js" defer></script>
+  <script src="../js/modernizr-2.8.3.min.js" defer></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/highlight.min.js"></script>
+  <script>hljs.initHighlightingOnLoad();</script> 
+  
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+  <div class="wy-grid-for-nav">
+
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side stickynav">
+    <div class="wy-side-scroll">
+      <div class="wy-side-nav-search">
+        <a href=".." class="icon icon-home"> BigXML</a>
+        <div role="search">
+  <form id ="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" title="Type search term here" />
+  </form>
+</div>
+      </div>
+
+      <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+                <ul>
+                    <li class="toctree-l1"><a class="reference internal" href="..">Home</a>
+                    </li>
+                </ul>
+                <p class="caption"><span class="caption-text">User guide</span></p>
+                <ul class="current">
+                    <li class="toctree-l1"><a class="reference internal" href="../quickstart/">Quickstart</a>
+                    </li>
+                    <li class="toctree-l1"><a class="reference internal" href="../recipes/">Recipes</a>
+                    </li>
+                    <li class="toctree-l1"><a class="reference internal" href="../encodings/">Encodings</a>
+                    </li>
+                    <li class="toctree-l1 current"><a class="reference internal current" href="./">Namespaces</a>
+    <ul class="current">
+    <li class="toctree-l2"><a class="reference internal" href="#general-case">General case</a>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#namespaced-elements">Namespaced elements</a>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#namespaced-attributes">Namespaced attributes</a>
+    </li>
+    </ul>
+                    </li>
+                    <li class="toctree-l1"><a class="reference internal" href="../faq/">FAQ</a>
+                    </li>
+                </ul>
+                <p class="caption"><span class="caption-text">API reference</span></p>
+                <ul>
+                    <li class="toctree-l1"><a class="reference internal" href="../parser/">Parser</a>
+                    </li>
+                    <li class="toctree-l1"><a class="reference internal" href="../streams/">Streams</a>
+                    </li>
+                    <li class="toctree-l1"><a class="reference internal" href="../handlers/">Handlers</a>
+                    </li>
+                    <li class="toctree-l1"><a class="reference internal" href="../decorators/">Decorators</a>
+                    </li>
+                    <li class="toctree-l1"><a class="reference internal" href="../nodes/">Nodes</a>
+                    </li>
+                </ul>
+                <p class="caption"><span class="caption-text">External Links</span></p>
+                <ul>
+                    <li class="toctree-l1"><a class="" href="https://github.com/rogdham/bigxml/blob/master/CHANGELOG.md">Changelog</a>
+                    </li>
+                    <li class="toctree-l1"><a class="" href="https://github.com/rogdham/bigxml/issues">Issue tracker</a>
+                    </li>
+                    <li class="toctree-l1"><a class="" href="https://github.com/rogdham/bigxml">BigXML @ GitHub</a>
+                    </li>
+                    <li class="toctree-l1"><a class="" href="https://pypi.org/project/bigxml">BigXML @ PyPI</a>
+                    </li>
+                </ul>
+      </div>
+    </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" role="navigation" aria-label="top navigation">
+        <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+        <a href="..">BigXML</a>
+      </nav>
+
+      
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="breadcrumbs navigation">
+  <ul class="wy-breadcrumbs">
+    <li><a href="..">Docs</a> &raquo;</li>
+    
+      
+        
+          <li>User guide &raquo;</li>
+        
+      
+    
+    <li>Namespaces</li>
+    <li class="wy-breadcrumbs-aside">
+      
+        <a href="https://github.com/rogdham/bigxml/edit/master/docs/namespaces.md"
+          class="icon icon-github"> Edit on GitHub</a>
+      
+    </li>
+  </ul>
+  
+  <hr/>
+</div>
+          <div role="main">
+            <div class="section">
+              
+                <h1 id="namespaces">Namespaces</h1>
+<p>In XML, namespaces allow to differentiate between elements or attributes that would have
+the same name otherwise.</p>
+<h2 id="general-case">General case</h2>
+<p>In most cases, you don't want to care about namespaces when parsing some XML.</p>
+<p>When you see <code>foo:bar</code> in XML elements or attributes, do as if the <code>foo:</code> prefix was not
+here, and everything should work as expected:</p>
+<pre class="codehilite"><code class="language-xml">&lt;root xmlns:xs=&quot;http://example.com/xml/schema&quot;&gt;
+    &lt;xs:item xs:type=&quot;text&quot;&gt;Hello, world!&lt;/xs:item&gt;
+&lt;/root&gt;
+</code></pre>
+
+<!---->
+
+<pre class="codehilite"><code class="language-python">&gt;&gt;&gt; @xml_handle_element(&quot;root&quot;, &quot;item&quot;)
+... def handler(node):
+...     yield (node.attributes[&quot;type&quot;], node.text)
+
+&gt;&gt;&gt; with open(&quot;hello_ns.xml&quot;, &quot;rb&quot;) as f:
+...    Parser(f).return_from(handler)
+('text', 'Hello, world!')
+</code></pre>
+
+<h2 id="namespaced-elements">Namespaced elements</h2>
+<p>If you want to differentiate between XML elements with the same name but different
+namespaces, you need to mention namespaces in the handlers using the
+<a href="http://www.jclark.com/xml/xmlns.htm">Clark notation</a>.</p>
+<p>When parsing an XML element of name <code>bar</code> and namespace <code>http://example.com/xml/schema</code>,
+<em>BigXML</em> looks for a handler in the following order:</p>
+<ol>
+<li><code>{http://example.com/xml/schema}bar</code>: a handler for the specific namespace</li>
+<li><code>bar</code>: a handler that does not specify the namespace</li>
+<li>No handler is used, the element is ignored</li>
+</ol>
+<div class="admonition tip">
+<p class="admonition-title">Tip</p>
+<p>To match only XML elements of name <code>bar</code> that do not have any namespace, use the following: <code>{}bar</code>.</p>
+</div>
+<p>Example:</p>
+<pre class="codehilite"><code class="language-xml">&lt;root
+    xmlns=&quot;http://example.com/xml/purple&quot;
+    xmlns:blue=&quot;http://example.com/xml/blue&quot;
+    xmlns:red=&quot;http://example.com/xml/red&quot;&gt;
+        &lt;blue:item&gt;Blue&lt;/blue:item&gt;
+        &lt;item xmlns=&quot;http://example.com/xml/blue&quot;&gt;Also blue&lt;/item&gt;
+        &lt;red:item&gt;Red&lt;/red:item&gt;
+        &lt;item&gt;Purple&lt;/item&gt;
+&lt;/root&gt;
+</code></pre>
+
+<!---->
+
+<pre class="codehilite"><code class="language-python">&gt;&gt;&gt; @xml_handle_element(&quot;root&quot;, &quot;item&quot;)
+... def handler_default(node):
+...     yield (&quot;default&quot;, node.text)
+
+&gt;&gt;&gt; @xml_handle_element(&quot;root&quot;, &quot;{}item&quot;)
+... def handler_nothing(node):
+...     yield (&quot;nothing&quot;, node.text)
+
+&gt;&gt;&gt; @xml_handle_element(&quot;root&quot;, &quot;{http://example.com/xml/blue}item&quot;)
+... def handler_blue(node):
+...     yield (&quot;blue&quot;, node.text)
+
+&gt;&gt;&gt; @xml_handle_element(&quot;root&quot;, &quot;{http://example.com/xml/purple}item&quot;)
+... def handler_purple(node):
+...     yield (&quot;purple&quot;, node.text)
+
+&gt;&gt;&gt; with open(&quot;colors.xml&quot;, &quot;rb&quot;) as f:
+...    for item in Parser(f).iter_from(
+...        handler_default,
+...        handler_nothing,
+...        handler_blue,
+...        handler_purple,
+...    ):
+...        print(item)
+('blue', 'Blue')
+('blue', 'Also blue')
+('default', 'Red')
+('purple', 'Purple')
+</code></pre>
+
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>In the example above, <code>handler_purple</code> is used instead of <code>handler_nothing</code> for the item <code>Purple</code> because a default namespace has been attached to <code>&lt;root&gt;</code> with the attribute <code>xmlns</code>.</p>
+</div>
+<h2 id="namespaced-attributes">Namespaced attributes</h2>
+<p>When accessing the attributes of a node, you can use one of the following keys:</p>
+<ul>
+<li><code>{http://example.com/xml/schema}bar</code> to get the attribute <code>bar</code> with the namespace
+  <code>http://example.com/xml/schema</code>;</li>
+<li><code>{}bar</code> to get the attribute <code>bar</code> without any namespace;</li>
+<li><code>bar</code> to get an attribute <code>bar</code> of any namespace.</li>
+</ul>
+<div class="admonition warning">
+<p class="admonition-title">Warning</p>
+<p>The <code>bar</code> syntax always returns the attribute <code>bar</code> without any namespace if it exists.</p>
+<p>However, if such an attribute does not exist but several attributes <code>bar</code> with
+various namespaces do exist, one of them will be returned. In that case, which
+attribute is returned is not guaranteed, and a warning is emitted accordingly.</p>
+</div>
+<p>Example:</p>
+<pre class="codehilite"><code class="language-xml">&lt;root
+    xmlns=&quot;http://example.com/xml/purple&quot;
+    xmlns:blue=&quot;http://example.com/xml/blue&quot;
+    xmlns:red=&quot;http://example.com/xml/red&quot;&gt;
+        &lt;item color=&quot;Green&quot;&gt;Case 0&lt;/item&gt;
+        &lt;item blue:color=&quot;Blue&quot;&gt;Case 1&lt;/item&gt;
+        &lt;item red:color=&quot;Red&quot;&gt;Case 2&lt;/item&gt;
+        &lt;item color=&quot;Green&quot; blue:color=&quot;Blue&quot; red:color=&quot;Red&quot;&gt;Case 3&lt;/item&gt;
+&lt;/root&gt;
+</code></pre>
+
+<!---->
+
+<pre class="codehilite"><code class="language-python">&gt;&gt;&gt; @xml_handle_element(&quot;root&quot;, &quot;item&quot;)
+... def handler(node):
+...     yield node.text
+...     yield (&quot;default ns&quot;, node.attributes[&quot;color&quot;])
+...     yield (&quot;no ns&quot;, node.attributes.get(&quot;{}color&quot;))
+...     yield (&quot;blue ns&quot;, node.attributes.get(&quot;{http://example.com/xml/blue}color&quot;))
+
+&gt;&gt;&gt; with open(&quot;attributes_ns.xml&quot;, &quot;rb&quot;) as f:
+...    for item in Parser(f).iter_from(handler):
+...        print(item)
+Case 0
+('default ns', 'Green')
+('no ns', 'Green')
+('blue ns', None)
+Case 1
+('default ns', 'Blue')
+('no ns', None)
+('blue ns', 'Blue')
+Case 2
+('default ns', 'Red')
+('no ns', None)
+('blue ns', None)
+Case 3
+('default ns', 'Green')
+('no ns', 'Green')
+('blue ns', 'Blue')
+</code></pre>
+
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>Contrary to XML elements, no default namespace apply to attributes: in the example,
+<code>Green</code> is matched by <code>{}color</code> instead of <code>{http://example.com/xml/purple}color</code>.</p>
+</div>
+              
+            </div>
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="../faq/" class="btn btn-neutral float-right" title="FAQ">Next <span class="icon icon-circle-arrow-right"></span></a>
+      
+      
+        <a href="../encodings/" class="btn btn-neutral" title="Encodings"><span class="icon icon-circle-arrow-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <!-- Copyright etc -->
+    
+  </div>
+
+  Built with <a href="https://www.mkdocs.org/">MkDocs</a> using a <a href="https://github.com/snide/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>.
+</footer>
+      
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+
+  <div class="rst-versions" role="note" aria-label="versions">
+    <span class="rst-current-version" data-toggle="rst-current-version">
+      
+          <a href="https://github.com/rogdham/bigxml/" class="fa fa-github" style="float: left; color: #fcfcfc"> GitHub</a>
+      
+      
+        <span><a href="../encodings/" style="color: #fcfcfc;">&laquo; Previous</a></span>
+      
+      
+        <span style="margin-left: 15px"><a href="../faq/" style="color: #fcfcfc">Next &raquo;</a></span>
+      
+    </span>
+</div>
+    <script>var base_url = '..';</script>
+    <script src="../js/theme.js" defer></script>
+      <script src="../search/main.js" defer></script>
+    <script defer>
+        window.onload = function () {
+            SphinxRtdTheme.Navigation.enable(true);
+        };
+    </script>
+
+</body>
+</html>

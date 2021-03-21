@@ -1,0 +1,57 @@
+.section h1 {
+  text-align: center;
+}
+.section h2 {
+  margin-top: 48px;
+}
+.section p:not(.admonition-title) + ul {
+  margin-top: -24px;
+}
+.section p + pre {
+  margin-top: -12px;
+}
+.section ul pre {
+  line-height: initial;
+  margin-top: 6px;
+}
+.section dd p + pre {
+  line-height: initial;
+  margin-top: -6px;
+}
+.section .admonition ul:last-child {
+  margin-bottom: 0;
+}
+
+.home-header {
+  display: flex;
+  align-items: baseline;
+  justify-content: center;
+  margin: 64px 0;
+}
+@media (max-width: 900px) {
+  .home-header {
+    flex-direction: column;
+  }
+}
+.home-header * {
+  margin: 0 !important;
+}
+.home-header .description {
+  font-family: "Roboto Slab","ff-tisa-web-pro","Georgia",Arial,sans-serif;
+  font-style: italic;
+  padding: 0 16px;
+}
+
+.wy-menu > .caption {
+  text-align: center;
+}
+.wy-menu > ul {
+  margin-bottom: 32px;
+}
+
+footer {
+  visibility: hidden;
+}
+footer div {
+  visibility: visible;
+}
