@@ -22,7 +22,7 @@ adheres to [Semantic Versioning](https://semver.org/).
 
 ### :memo: Documentation
 
-- Add detailed documentation
+- Add detailed documentation, available online at <https://bigxml.rogdham.net/>
 
 ### :house: Internal
 

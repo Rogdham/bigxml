@@ -8,7 +8,7 @@ Parse big xml files and streams with ease
 
 ---
 
-[:book: Documentation](./docs/)&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;[:page_with_curl: Changelog](./CHANGELOG.md)
+[:book: Documentation](https://bigxml.rogdham.net/)&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;[:page_with_curl: Changelog](./CHANGELOG.md)
 
 </div>
 

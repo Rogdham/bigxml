@@ -103,3 +103,21 @@ jobs:
         uses: pypa/gh-action-pypi-publish@master
         with:
           password: ${{ secrets.pypi_password }}
+
+  deploy-docs:
+    needs: [docs, publish]
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - name: Restore build artifacts
+        uses: actions/download-artifact@v2
+        with:
+          name: docs
+          path: dist
+      - name: Extract docs
+        run: tar xf dist/docs.tar.gz
+      - name: Deploy docs
+        uses: JamesIves/github-pages-deploy-action@4.1.0
+        with:
+          branch: gh-pages
+          folder: docs
