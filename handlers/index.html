@@ -178,16 +178,16 @@ restrict the type of nodes they are called with.</p>
 
 <div class="admonition note">
 <p class="admonition-title">Note</p>
-<p>To handle different kind of nodes, the same function can be decorated several times
-with <code>xml_handle_element</code> or <code>xml_handle_text</code> as shown above.</p>
+<p>To handle different kind of nodes at once, the same function can be decorated
+several times with <code>xml_handle_element</code> or <code>xml_handle_text</code> as shown above.</p>
 </div>
 <h2 id="classes">Classes</h2>
 <p>Passing a class as a handler is a good way to group the handling of a node and its
 children.</p>
 <div class="admonition note">
 <p class="admonition-title">Note</p>
-<p>Although not mandatory, using a <a href="https://docs.python.org/3/library/dataclasses.html">dataclass</a> sometimes feels quite natural. See
-<a href="../recipes/#dataclass">this recipe</a> for more information on this use case.</p>
+<p>Although not mandatory, using a <a href="https://docs.python.org/3/library/dataclasses.html">dataclass</a> feels quite natural in most cases. See
+<a href="../recipes/#dataclass">this recipe</a> for more information.</p>
 </div>
 <p>Let's parse the following XML file:</p>
 <pre class="codehilite"><code class="language-xml">&lt;root&gt;
@@ -325,7 +325,7 @@ def handler(node):
 </dd>
 <dt><code>str</code></dt>
 <dd>
-<p><code>"p"</code> is equivalent to <code>["p"]</code> or the following handler:</p>
+<p><code>"p"</code> is equivalent to <code>["p"]</code> or to the following handler:</p>
 <pre class="codehilite"><code class="language-python">@xml_handle_element(&quot;p&quot;)
 def handler(node):
     yield node

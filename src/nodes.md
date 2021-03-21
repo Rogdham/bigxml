@@ -16,27 +16,27 @@ The XML document above has two nodes:
 
 `name`
 
-: The name of the element, without the [namespace]
+: The name of the element, without the [namespace].
 
 `namespace`
 
-: The namespace of the element (or an empty string if no [namespace])
+: The namespace of the element (or an empty string if no [namespace]).
 
 `attributes`
 
-: The attributes of the node as a `dict`-like object
+: The attributes of the node as a `dict`-like object.
 
 `parents`
 
-: All parents of the node, in order, as a `tuple` of `XMLElement` instances
+: All parents of the node, in order, as a `tuple` of `XMLElement` instances.
 
 `iter_from`, `return_from`
 
-: Methods to handle the children of the node, [same as `Parser` instances](parser.md)
+: Methods to handle the children of the node, [same as `Parser` instances](parser.md).
 
 `text`
 
-: A property to get a `str` representation of the text of the node
+: A property to get a `str` representation of the text of the node.
 
     !!! Warning
 
@@ -51,8 +51,8 @@ The XML document above has two nodes:
 
 `text`
 
-: The text of the node
+: The text of the node.
 
 `parents`
 
-: All parents of the node, in order, as a `tuple` of `XMLElement` instances
+: All parents of the node, in order, as a `tuple` of `XMLElement` instances.

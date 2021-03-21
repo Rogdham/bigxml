@@ -54,7 +54,7 @@ Any iterable whose items are _streams_: lists, generators, etc.
     >>> Parser(stream).return_from(handler)
     'Hello, world!'
 
-Examples include:
+More examples:
 
 - [HTTP streaming with _Requests_](recipes.md#requests)
 - [Infinite stream](recipes.md#infinite-streams)

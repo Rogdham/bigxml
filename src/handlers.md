@@ -37,8 +37,8 @@ restrict the type of nodes they are called with.
 
 !!! Note
 
-    To handle different kind of nodes, the same function can be decorated several times
-    with `xml_handle_element` or `xml_handle_text` as shown above.
+    To handle different kind of nodes at once, the same function can be decorated
+    several times with `xml_handle_element` or `xml_handle_text` as shown above.
 
 ## Classes
 
@@ -47,8 +47,8 @@ children.
 
 !!! Note
 
-    Although not mandatory, using a [dataclass] sometimes feels quite natural. See
-    [this recipe](recipes.md#dataclass) for more information on this use case.
+    Although not mandatory, using a [dataclass] feels quite natural in most cases. See
+    [this recipe](recipes.md#dataclass) for more information.
 
 [dataclass]: https://docs.python.org/3/library/dataclasses.html
 
@@ -199,7 +199,7 @@ available:
 
 `str`
 
-: `"p"` is equivalent to `["p"]` or the following handler:
+: `"p"` is equivalent to `["p"]` or to the following handler:
 
         :::python
         @xml_handle_element("p")

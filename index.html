@@ -155,13 +155,13 @@ use if you don't want to run out of memory.</p>
 <h2 id="philosophy">Philosophy</h2>
 <p>Because it needs to be able to handle big files, <em>BigXML</em> parses the input streams in on
 pass. This means that once an XML element has been seen, you cannot go back to it. In
-other words, all computation for a node need to be performed when it is encountered.</p>
+other words, all computations for a node need to be performed when it is encountered.</p>
 <p>This library borrows ideas from event-based programming. Conceptually, you can define
 handlers that will react to XML elements with specific names. <em>BigXML</em> will then
 dispatch the nodes of the stream being parsed to the good handlers.</p>
-<p>As the XML document is parsed, handler of deeper nodes may yield some piece of
+<p>As the XML document is parsed, handlers of deeper nodes may yield some piece of
 information that will be gathered by parent handlers. At the end of the day, this
-produces a single generator that will be handled by your application.</p>
+produces a single iterable that will be handled by your application.</p>
 <div class="admonition tip">
 <p class="admonition-title">Tip</p>
 <p>Think big and never go backward, or you will get
@@ -175,7 +175,7 @@ produces a single generator that will be handled by your application.</p>
 <h2 id="status-of-the-project">Status of the project</h2>
 <p><em>BigXML</em> is currently in <strong>beta</strong>. It is well tested, and the API should not change
 drastically but breaking changes may still occur in future releases. Changes are well
-detailed in the <a href="https://github.com/Rogdham/bigxml/blob/master/CHANGELOG.md">changelog</a> and the version numbering follow <a href="https://semver.org/">semver</a>.</p>
+detailed in the <a href="https://github.com/Rogdham/bigxml/blob/master/CHANGELOG.md">changelog</a>, and the version numbering follow <a href="https://semver.org/">semver</a>.</p>
               
             </div>
           </div>
@@ -231,5 +231,5 @@ detailed in the <a href="https://github.com/Rogdham/bigxml/blob/master/CHANGELOG
 
 <!--
 MkDocs version : 1.1.2
-Build Date UTC : 2021-03-21 19:05:23.780370+00:00
+Build Date UTC : 2021-03-21 20:00:11.503580+00:00
 -->

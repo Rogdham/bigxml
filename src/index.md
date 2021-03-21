@@ -26,15 +26,15 @@ This is where the _BigXML_ library shines:
 
 Because it needs to be able to handle big files, _BigXML_ parses the input streams in on
 pass. This means that once an XML element has been seen, you cannot go back to it. In
-other words, all computation for a node need to be performed when it is encountered.
+other words, all computations for a node need to be performed when it is encountered.
 
 This library borrows ideas from event-based programming. Conceptually, you can define
 handlers that will react to XML elements with specific names. _BigXML_ will then
 dispatch the nodes of the stream being parsed to the good handlers.
 
-As the XML document is parsed, handler of deeper nodes may yield some piece of
+As the XML document is parsed, handlers of deeper nodes may yield some piece of
 information that will be gathered by parent handlers. At the end of the day, this
-produces a single generator that will be handled by your application.
+produces a single iterable that will be handled by your application.
 
 !!! Tip
 
@@ -52,7 +52,7 @@ Install _BigXML_ with pip:
 
 _BigXML_ is currently in **beta**. It is well tested, and the API should not change
 drastically but breaking changes may still occur in future releases. Changes are well
-detailed in the [changelog] and the version numbering follow [semver].
+detailed in the [changelog], and the version numbering follow [semver].
 
 [changelog]: https://github.com/Rogdham/bigxml/blob/master/CHANGELOG.md
 [semver]: https://semver.org/

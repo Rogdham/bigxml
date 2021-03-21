@@ -5,11 +5,10 @@ functions or classes [handlers](handlers.md).
 
 They differ in the type of node to handle:
 
-- `xml_handle_element` is for XML elements, and pass an
-  [`XMLElement` instance](nodes.md#xmlelement) to the decorated function
-
-- `xml_handle_text` is for character data (i.e. text), and pass an
-  [`XMLText` instance](nodes.md#xmltext) to the decorated function
+- `xml_handle_element` is for XML elements, and passes an
+  [`XMLElement` instance](nodes.md#xmlelement) to the decorated function;
+- `xml_handle_text` is for character data (i.e. text), and passes an
+  [`XMLText` instance](nodes.md#xmltext) to the decorated function.
 
 <!---->
 

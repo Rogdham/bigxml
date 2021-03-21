@@ -3,11 +3,11 @@
 ## What does opening a file in binary mode means? {: #parse-file-binary }
 
 By default, when you call `open("filename.xml")`, the file is open in text mode. In this
-mode, the contents of the file are returned as strings: the bytes are decoded on the
-fly.
+mode, the content of the file is returned as a string: the bytes are decoded on the fly.
 
 However, _BigXML_ needs `bytes`-oriented [streams](streams.md), so you need to open the
-file in binary mode by explicitly specifying it: `open("filename.xml", "rb")`.
+file in binary mode by explicitly specifying it with an extra parameter:
+`open("filename.xml", "rb")`.
 
     :::xml filename=hello.xml
     <root>Hello, world!</root>
@@ -60,9 +60,9 @@ Just convert `str` into `bytes` using `.encode` or `codecs.encode`:
 
 ## I keep getting the following exception: Tried to access a node out of order {: #exnodes-out-of-order-exception }
 
-Each byte of the XML streams is only read once. This exception occurs when you try to
+Each byte of the XML streams is only read once. An exception occurs when you try to
 perform an action that would need to go backward in the streams. For more details,
-[read the philosophy paragraph](index.md#philosophy).
+[read the philosophy behind the design of _BigXML_](index.md#philosophy).
 
 Usually, the issue can be solved by following these principles:
 
@@ -71,7 +71,7 @@ Usually, the issue can be solved by following these principles:
 - The `text` property of a `XMLElement` node needs to access all its children, so using
   it prevents you from calling `iter_from` and `return_from` on the same node.
 
-For example, consider the following problematic code:
+For example, consider the following piece of code:
 
     :::xml filename=user.xml
     <user>
@@ -121,7 +121,7 @@ Instead, we need to consider the `firstname` and `lastname` children at the same
     ...    Parser(f).return_from(handle_user)
     'Alice Cooper'
 
-The code above is hardly readable, you probably want to use a
+The code above is hardly readable; you probably want to use a
 [class handler](handlers.md#classes) instead:
 
     :::python

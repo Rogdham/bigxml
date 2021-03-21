@@ -1,8 +1,8 @@
 # Quickstart
 
-Let's get started by parsing the [atom feed] of the [XKCD comic][xkcd atom], that should
-look similar to the following (which has been sightly modified for demonstration
-purposes):
+Let's get started by parsing the [atom feed] of the [XKCD comic][xkcd atom], which
+should look similar to the following (some small modifications have been made for
+demonstration purposes):
 
     :::xml filename=atom.xml
     <?xml version="1.0" encoding="utf-8"?>
@@ -40,14 +40,14 @@ purposes):
 [atom feed]: https://en.wikipedia.org/wiki/Atom_(Web_standard)
 [xkcd atom]: https://xkcd.com/atom.xml
 
-For this tutorial, save that into a `atom.xml` file (we will learn to parse HTTP
+For this tutorial, save that into an `atom.xml` file (we will learn to parse HTTP
 responses in streaming later). Make sure you have
 [_BigXML_ installed](index.md#installation) so that you can follow along.
 
 ## Getting nodes and data
 
 Say we want to get the comics' titles. To do so, we will create a handler function. We
-pass the path to the `title` XML elements we are interested in as argument of the
+pass the path to the `title` XML elements we are interested in as arguments of the
 `xml_handle_element` decorator:
 
     :::python
@@ -72,7 +72,7 @@ yielded by the handler:
 
 ## Accessing attributes
 
-Now, we will get the link to the comics. This time, we are interested in the value of
+Now, we will get the links to the comics. This time, we are interested in the value of
 the `href` attribute of the `link` elements:
 
     :::python
@@ -80,7 +80,7 @@ the `href` attribute of the `link` elements:
     ... def handler(node):
     ...     yield node.attributes["href"]
 
-The rest of the code works as expected:
+The rest of the code works as you would expect:
 
     :::python
     >>> with open("atom.xml", "rb") as f:
@@ -93,11 +93,11 @@ The rest of the code works as expected:
 
 ## Combining handlers
 
-But what if we want both title and links?
+But what if we want both titles and links?
 
 We can do the following:
 
-- Create handlers for `title` and `link` children of a `entry` element;
+- Create handlers for `title` and `link` children of an `entry` element;
 - Call those two handlers from a third handler that takes care of `entry` elements.
 
 <!---->
@@ -147,7 +147,7 @@ between titles and links of comics, because all we get from calling
 is for which title.
 
 Ideally, we would like to group each entry into an object to be able to work on it.
-Using [`dataclasses`][dataclass] is quite natural to do so:
+Using [dataclasses][dataclass] is a natural development:
 
 [dataclass]: https://docs.python.org/3/library/dataclasses.html
 

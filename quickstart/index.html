@@ -137,9 +137,9 @@
             <div class="section">
               
                 <h1 id="quickstart">Quickstart</h1>
-<p>Let's get started by parsing the <a href="https://en.wikipedia.org/wiki/Atom_(Web_standard)">atom feed</a> of the <a href="https://xkcd.com/atom.xml">XKCD comic</a>, that should
-look similar to the following (which has been sightly modified for demonstration
-purposes):</p>
+<p>Let's get started by parsing the <a href="https://en.wikipedia.org/wiki/Atom_(Web_standard)">atom feed</a> of the <a href="https://xkcd.com/atom.xml">XKCD comic</a>, which
+should look similar to the following (some small modifications have been made for
+demonstration purposes):</p>
 <pre class="codehilite"><code class="language-xml">&lt;?xml version=&quot;1.0&quot; encoding=&quot;utf-8&quot;?&gt;
 &lt;feed xmlns=&quot;http://www.w3.org/2005/Atom&quot; xml:lang=&quot;en&quot;&gt;
     &lt;title&gt;xkcd.com&lt;/title&gt;
@@ -173,12 +173,12 @@ purposes):</p>
 &lt;/feed&gt;
 </code></pre>
 
-<p>For this tutorial, save that into a <code>atom.xml</code> file (we will learn to parse HTTP
+<p>For this tutorial, save that into an <code>atom.xml</code> file (we will learn to parse HTTP
 responses in streaming later). Make sure you have
 <a href="..#installation"><em>BigXML</em> installed</a> so that you can follow along.</p>
 <h2 id="getting-nodes-and-data">Getting nodes and data</h2>
 <p>Say we want to get the comics' titles. To do so, we will create a handler function. We
-pass the path to the <code>title</code> XML elements we are interested in as argument of the
+pass the path to the <code>title</code> XML elements we are interested in as arguments of the
 <code>xml_handle_element</code> decorator:</p>
 <pre class="codehilite"><code class="language-python">&gt;&gt;&gt; @xml_handle_element(&quot;feed&quot;, &quot;entry&quot;, &quot;title&quot;)
 ... def handler(node):
@@ -199,14 +199,14 @@ Circles
 </code></pre>
 
 <h2 id="accessing-attributes">Accessing attributes</h2>
-<p>Now, we will get the link to the comics. This time, we are interested in the value of
+<p>Now, we will get the links to the comics. This time, we are interested in the value of
 the <code>href</code> attribute of the <code>link</code> elements:</p>
 <pre class="codehilite"><code class="language-python">&gt;&gt;&gt; @xml_handle_element(&quot;feed&quot;, &quot;entry&quot;, &quot;link&quot;)
 ... def handler(node):
 ...     yield node.attributes[&quot;href&quot;]
 </code></pre>
 
-<p>The rest of the code works as expected:</p>
+<p>The rest of the code works as you would expect:</p>
 <pre class="codehilite"><code class="language-python">&gt;&gt;&gt; with open(&quot;atom.xml&quot;, &quot;rb&quot;) as f:
 ...     for item in Parser(f).iter_from(handler):
 ...         print(item)
@@ -217,10 +217,10 @@ https://xkcd.com/2436/
 </code></pre>
 
 <h2 id="combining-handlers">Combining handlers</h2>
-<p>But what if we want both title and links?</p>
+<p>But what if we want both titles and links?</p>
 <p>We can do the following:</p>
 <ul>
-<li>Create handlers for <code>title</code> and <code>link</code> children of a <code>entry</code> element;</li>
+<li>Create handlers for <code>title</code> and <code>link</code> children of an <code>entry</code> element;</li>
 <li>Call those two handlers from a third handler that takes care of <code>entry</code> elements.</li>
 </ul>
 <!---->
@@ -269,7 +269,7 @@ between titles and links of comics, because all we get from calling
 <code>Parser(f).iter_from(handle_entry)</code> are strings. Also, it is not easy to see which link
 is for which title.</p>
 <p>Ideally, we would like to group each entry into an object to be able to work on it.
-Using <a href="https://docs.python.org/3/library/dataclasses.html"><code>dataclasses</code></a> is quite natural to do so:</p>
+Using <a href="https://docs.python.org/3/library/dataclasses.html">dataclasses</a> is a natural development:</p>
 <pre class="codehilite"><code class="language-python">&gt;&gt;&gt; from dataclasses import dataclass
 
 &gt;&gt;&gt; @xml_handle_element(&quot;feed&quot;, &quot;entry&quot;)

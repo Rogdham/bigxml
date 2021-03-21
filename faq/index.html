@@ -141,10 +141,10 @@
                 <h1 id="frequently-asked-questions">Frequently Asked Questions</h1>
 <h2 id="parse-file-binary">What does opening a file in binary mode means?</h2>
 <p>By default, when you call <code>open("filename.xml")</code>, the file is open in text mode. In this
-mode, the contents of the file are returned as strings: the bytes are decoded on the
-fly.</p>
+mode, the content of the file is returned as a string: the bytes are decoded on the fly.</p>
 <p>However, <em>BigXML</em> needs <code>bytes</code>-oriented <a href="../streams/">streams</a>, so you need to open the
-file in binary mode by explicitly specifying it: <code>open("filename.xml", "rb")</code>.</p>
+file in binary mode by explicitly specifying it with an extra parameter:
+<code>open("filename.xml", "rb")</code>.</p>
 <pre class="codehilite"><code class="language-xml">&lt;root&gt;Hello, world!&lt;/root&gt;
 </code></pre>
 
@@ -193,9 +193,9 @@ TypeError: Invalid stream type: str.
 <p>Read the error message!</p>
 </div>
 <h2 id="exnodes-out-of-order-exception">I keep getting the following exception: Tried to access a node out of order</h2>
-<p>Each byte of the XML streams is only read once. This exception occurs when you try to
+<p>Each byte of the XML streams is only read once. An exception occurs when you try to
 perform an action that would need to go backward in the streams. For more details,
-<a href="..#philosophy">read the philosophy paragraph</a>.</p>
+<a href="..#philosophy">read the philosophy behind the design of <em>BigXML</em></a>.</p>
 <p>Usually, the issue can be solved by following these principles:</p>
 <ul>
 <li>Consider that all children of a node must be processed in one pass;</li>
@@ -203,7 +203,7 @@ perform an action that would need to go backward in the streams. For more detail
 <li>The <code>text</code> property of a <code>XMLElement</code> node needs to access all its children, so using
   it prevents you from calling <code>iter_from</code> and <code>return_from</code> on the same node.</li>
 </ul>
-<p>For example, consider the following problematic code:</p>
+<p>For example, consider the following piece of code:</p>
 <pre class="codehilite"><code class="language-xml">&lt;user&gt;
     &lt;firstname&gt;Alice&lt;/firstname&gt;
     &lt;lastname&gt;Cooper&lt;/lastname&gt;
@@ -251,7 +251,7 @@ RuntimeError: Tried to access a node out of order
 'Alice Cooper'
 </code></pre>
 
-<p>The code above is hardly readable, you probably want to use a
+<p>The code above is hardly readable; you probably want to use a
 <a href="../handlers/#classes">class handler</a> instead:</p>
 <pre class="codehilite"><code class="language-python">&gt;&gt;&gt; from dataclasses import dataclass
 
