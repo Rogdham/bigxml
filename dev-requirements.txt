@@ -16,3 +16,6 @@ isort
 # publish
 setuptools_scm
 wheel
+
+# docs
+mkdocs

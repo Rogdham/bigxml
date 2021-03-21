@@ -2,7 +2,6 @@
   "files.exclude": {
     "env": true,
     "**/__pycache__": true,
-    "build": true,
     ".eggs": true,
     "**/*.egg-info": true,
     ".coverage": true,

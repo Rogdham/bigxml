@@ -48,6 +48,27 @@ jobs:
       - name: Run format
         run: tox -e format
 
+  docs:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - name: Setup Python
+        uses: actions/setup-python@v2
+        with:
+          python-version: 3.9
+      - name: Install dependencies
+        run: pip install tox
+      - name: Run docs
+        run: |
+          tox -e docs
+          mkdir -p dist
+          tar czf dist/docs.tar.gz -C build docs
+      - name: Save docs artifacts
+        uses: actions/upload-artifact@v2
+        with:
+          name: docs
+          path: dist/docs.tar.gz
+
   build:
     needs: [tests, lint, format]
     runs-on: ubuntu-latest

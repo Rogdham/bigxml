@@ -5,9 +5,16 @@ import pytest
 
 
 def pytest_collection_modifyitems(items):
+    root = Path(__file__).parent.parent
     for item in items:
-        dirname = Path(item.fspath).parent.name
-        item.add_marker(getattr(pytest.mark, dirname))
+        relative = Path(item.fspath).parent.relative_to(root)
+        if relative.parent.name == "docs":
+            mark = "docs"
+        elif relative.parent.name == "tests":
+            mark = relative.name
+        else:
+            raise NotImplementedError
+        item.add_marker(getattr(pytest.mark, mark))
 
 
 # skipping some files due to syntax not yet supported

@@ -20,6 +20,10 @@ adheres to [Semantic Versioning](https://semver.org/).
 - Fix an error in some Python version for class handlers extending some builtins without
   redefining `__init__`
 
+### :memo: Documentation
+
+- Add detailed documentation
+
 ### :house: Internal
 
 - Test against some XML attacks

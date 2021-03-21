@@ -1,0 +1,36 @@
+site_name: BigXML
+site_description: Parse big xml files and streams with ease
+site_author: Rogdham
+repo_url: https://github.com/rogdham/bigxml
+site_url: https://bigxml.rogdham.net/
+docs_dir: src
+site_dir: ../build/docs
+nav:
+  - Home: index.md
+  - User guide:
+      - Quickstart: quickstart.md
+      - Recipes: recipes.md
+      - Encodings: encodings.md
+      - Namespaces: namespaces.md
+      - FAQ: faq.md
+  - API reference:
+      - Parser: parser.md
+      - Streams: streams.md
+      - Handlers: handlers.md
+      - Decorators: decorators.md
+      - Nodes: nodes.md
+  - External Links:
+      - Changelog: https://github.com/rogdham/bigxml/blob/master/CHANGELOG.md
+      - Issue tracker: https://github.com/rogdham/bigxml/issues
+      - BigXML @ GitHub: https://github.com/rogdham/bigxml
+      - BigXML @ PyPI: https://pypi.org/project/bigxml
+theme: readthedocs
+extra_css:
+  - css/extra.css
+markdown_extensions:
+  - admonition
+  - attr_list
+  - codehilite
+  - def_list
+  - md_in_html
+strict: true
