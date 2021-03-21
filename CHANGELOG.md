@@ -2,8 +2,8 @@
 
 All notable changes to this project will be documented in this file.
 
-The format is based on [Keep a Changelog](https://keepachangelog.com/),
-and this project adheres to [Semantic Versioning](https://semver.org/).
+The format is based on [Keep a Changelog](https://keepachangelog.com/), and this project
+adheres to [Semantic Versioning](https://semver.org/).
 
 ## [Unreleased]
 
@@ -11,8 +11,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/).
 
 ### :boom: Breaking changes
 
- - Classes as handlers without a `xml_handler` method now yield the instance instead of
-   items yielded by sub-handlers
+- Classes as handlers without a `xml_handler` method now yield the instance instead of
+  items yielded by sub-handlers
 
 ### :bug: Fixes
 
@@ -22,9 +22,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/).
 
 ### :house: Internal
 
- - Test against some XML attacks
- - Tests are now run in Python Development Mode
- - Update `defusedxml` dependency
+- Test against some XML attacks
+- Tests are now run in Python Development Mode
+- Update `defusedxml` dependency
 
 ## [0.5.0] - 2021-03-01
 
@@ -34,18 +34,18 @@ v0.5.0 allows more stream types to be parsed.
 
 ### :boom: Breaking changes
 
- - `Parser` can not longer be instantiated with a file-like object opened in text mode,
-   nor with a filename
- - Removed `stream` attribute from `Parser` instances
+- `Parser` can not longer be instantiated with a file-like object opened in text mode,
+  nor with a filename
+- Removed `stream` attribute from `Parser` instances
 
 ### :rocket: Added
 
- - `Parser` can now be instantiated with several streams as arguments: in that case the
-   streams are concatenated: after the end of a stream, data is taken from the next one
- - More variety in stream types passed as argument of `Parser`:
-   - File-like objects opened in binary mode (was already supported before)
-   - Bytes-like objects (e.g. `bytes` or `bytearray` instances)
-   - Iterable of previous types (recursively)
+- `Parser` can now be instantiated with several streams as arguments: in that case the
+  streams are concatenated: after the end of a stream, data is taken from the next one
+- More variety in stream types passed as argument of `Parser`:
+  - File-like objects opened in binary mode (was already supported before)
+  - Bytes-like objects (e.g. `bytes` or `bytearray` instances)
+  - Iterable of previous types (recursively)
 
 ## [0.4.0] - 2021-02-14
 
@@ -64,11 +64,11 @@ v0.4.0 is a major refactor in handler types.
 - Several handlers can now be passed to `return_from` / `iter_from`
 - More handler variety:
   - Regular functions
-  - `str`/`tuple`/`list` are syntactic sugar for a handler marked with that value,
-    which simply yields the node
-  - Classes are instantiated on the fly (if `__init__` has one mandatory parameter,
-    the node is passed during instantiation); in that case, a `xml_handler` method can
-    be defined to customize the way yielded items are handled
+  - `str`/`tuple`/`list` are syntactic sugar for a handler marked with that value, which
+    simply yields the node
+  - Classes are instantiated on the fly (if `__init__` has one mandatory parameter, the
+    node is passed during instantiation); in that case, a `xml_handler` method can be
+    defined to customize the way yielded items are handled
 - It is now possible to use directly `@xml_handle_text` in place of `@xml_handle_text()`
 - Python 3.9 support
 
@@ -91,35 +91,35 @@ v0.3.0 improves namespace support.
 
 ### :bug: Fixes
 
-- Fix `xml_handle_*` when wrapping `staticmethod` (other way around was already
-  working properly)
+- Fix `xml_handle_*` when wrapping `staticmethod` (other way around was already working
+  properly)
 
 ## [0.2.0] - 2020-09-06
 
 [0.2.0]: https://github.com/rogdham/bigxml/compare/v0.1.0...v0.2.0
 
-v0.2.0 changes the API to makes `iter_from` and `return_from` methods
-available on both `Parser` and `XMLElement` instances.
+v0.2.0 changes the API to makes `iter_from` and `return_from` methods available on both
+`Parser` and `XMLElement` instances.
 
 ### :boom: Breaking changes
 
 - `XMLElement`'s `handle` method is renamed to `iter_from`
-- The `parse` function has been removed in favour of the new `Parser` class;
-  use `Parser(stream).iter_from(handler)` instead of `parse(stream, handler)`
+- The `parse` function has been removed in favour of the new `Parser` class; use
+  `Parser(stream).iter_from(handler)` instead of `parse(stream, handler)`
 
 ### :rocket: Added
 
-- `XMLElement` now has a `text` property
-  to walk through all children and gather texts regardless of the tags
-- `XMLElement` new `return_from` method
-  can be used when there are no items yielded by the handler
+- `XMLElement` now has a `text` property to walk through all children and gather texts
+  regardless of the tags
+- `XMLElement` new `return_from` method can be used when there are no items yielded by
+  the handler
 - PyPy support
 
 ### :bug: Fixes
 
-- An exception is now raised when a node is accessed out of order;
-  this avoids inconsistent behaviors in some cases,
-  and replaces the obscure `No handle to use` exception in other cases
+- An exception is now raised when a node is accessed out of order; this avoids
+  inconsistent behaviors in some cases, and replaces the obscure `No handle to use`
+  exception in other cases
 
 ### :memo: Documentation
 

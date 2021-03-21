@@ -15,6 +15,7 @@
   "editor.tabSize": 4,
   "files.insertFinalNewline": true,
   "[markdown]": {
+    "editor.defaultFormatter": "esbenp.prettier-vscode",
     "editor.rulers": [88],
     "editor.wordWrap": "on",
     "editor.wordWrapColumn": 88
@@ -23,6 +24,10 @@
     "editor.codeActionsOnSave": {
       "source.organizeImports": true
     }
+  },
+  "[yaml]": {
+    "editor.defaultFormatter": "esbenp.prettier-vscode",
+    "editor.tabSize": 2
   },
   "python.envFile": "${workspaceFolder}/.vscode/env",
   "python.formatting.provider": "black",
