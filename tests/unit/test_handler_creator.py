@@ -690,6 +690,28 @@ def test_class_with_handler_too_many_mandatory_params():
     assert "generator, extra" in str(excinfo.value)
 
 
+def test_class_extends_builtin_str_without_init():
+    @xml_handle_element("x")
+    class Handler(str):
+        pass
+
+    nodes = create_nodes("x", "a")
+    handler = create_handler(Handler)
+    assert list(handler(nodes[0])) == [""]
+
+
+def test_class_extends_builtin_list_without_init():
+    @xml_handle_element("x")
+    class Handler(list):
+        @xml_handle_element("a")
+        def handle0(self, node):
+            self.append(node)
+
+    nodes = create_nodes("x", "a")
+    handler = create_handler(Handler)
+    assert list(handler(nodes[0])) == [[nodes[1]]]
+
+
 #
 # Invalid handler
 #

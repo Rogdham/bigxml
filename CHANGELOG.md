@@ -17,6 +17,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/).
 ### :bug: Fixes
 
 - An exception was raised when using a class handlers without any sub-handler attributes
+- Fix an error in some Python version for class handlers extending some builtins without
+  redefining `__init__`
 
 ### :house: Internal
 

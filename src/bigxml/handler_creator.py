@@ -29,7 +29,10 @@ def _handler_identity(node):
 def _handle_from_leaf(leaf):
     # class
     if isclass(leaf):
-        init_mandatory_params = get_mandatory_params(leaf)
+        try:
+            init_mandatory_params = get_mandatory_params(leaf)
+        except ValueError:
+            init_mandatory_params = ()  # probably a built-in
         try:
             _test_one_mandatory_param(init_mandatory_params, "__init__")
         except TypeError as ex:
