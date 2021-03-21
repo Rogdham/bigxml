@@ -115,9 +115,9 @@ jobs:
           name: docs
           path: dist
       - name: Extract docs
-        run: tar xf dist/docs.tar.gz
+        run: tar xf dist/docs.tar.gz -C dist
       - name: Deploy docs
         uses: JamesIves/github-pages-deploy-action@4.1.0
         with:
           branch: gh-pages
-          folder: docs
+          folder: dist/docs

@@ -5,6 +5,14 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/), and this project
 adheres to [Semantic Versioning](https://semver.org/).
 
+## [Unreleased]
+
+[unreleased]: https://github.com/rogdham/bigxml/compare/v0.6.0...HEAD
+
+### :house: Internal
+
+- Don't deploy src dir for docs
+
 ## [0.6.0] - 2021-03-21
 
 [0.6.0]: https://github.com/rogdham/bigxml/compare/v0.5.0...v0.6.0
