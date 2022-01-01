@@ -48,6 +48,20 @@ Install _BigXML_ with pip:
     :::sh
     $ python -m pip install bigxml
 
+### Python version support
+
+As a general rule, all Python versions that are both [released and still officially
+supported][python-versions] are supported by `bigxml` and tested against (both CPython
+and PyPy implementations).
+
+Moreover, Python 3.6 is currently supported as well, but may be dropped in future
+releases.
+
+If you have other use cases or find issues with some Python versions, feel free to
+[open a ticket](https://github.com/Rogdham/bigxml/issues/new)!
+
+[python-versions]: https://devguide.python.org/#status-of-python-branches
+
 ## Status of the project
 
 _BigXML_ is currently in **beta**. It is well tested, and the API should not change

@@ -15,6 +15,7 @@ adheres to [Semantic Versioning](https://semver.org/).
 - Fix minor issues found by automated tools
 - Add tests for CPython 3.10 and PyPy 3.8
 - Use CPython 3.10 for misc. tests
+- Clarify which Python versions are supported in docs
 
 ## [0.6.0] - 2021-03-21
 
