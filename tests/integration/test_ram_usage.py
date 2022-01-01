@@ -47,4 +47,4 @@ def test_with_handler():
 
 def test_no_handler():
     items = Parser(big_stream()).iter_from()
-    assert list(items) == []
+    assert not list(items)

@@ -6,7 +6,7 @@ demonstration purposes):
 
     :::xml filename=atom.xml
     <?xml version="1.0" encoding="utf-8"?>
-    <feed xmlns="http://www.w3.org/2005/Atom" xml:lang="en">
+    <feed xmlns="https://www.w3.org/2005/Atom" xml:lang="en">
         <title>xkcd.com</title>
         <link href="https://xkcd.com/" rel="alternate"></link>
         <id>https://xkcd.com/</id>

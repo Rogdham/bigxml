@@ -3,11 +3,11 @@ import pytest
 from bigxml import Parser, xml_handle_element
 
 XML = b"""
-<root xmlns="http://example.com/xml/"
-    xmlns:ex="http://example.com/xml/ex"
-    xmlns:other="http://example.com/xml/other">
+<root xmlns="https://example.com/xml/"
+    xmlns:ex="https://example.com/xml/ex"
+    xmlns:other="https://example.com/xml/other">
     <aaa>Nodes inherit namespaces</aaa>
-    <aaa xmlns="http://example.com/xml/aaa">Overriding namespace</aaa>
+    <aaa xmlns="https://example.com/xml/aaa">Overriding namespace</aaa>
     <ex:aaa>Overriding namespace bis</ex:aaa>
     <bbb uuu="0" ex:vvv="1" xxx="2" ex:xxx="3" other:xxx="4" ex:yyy="5" other:yyy="6">
         Looking for attributes
@@ -31,7 +31,7 @@ def test_namespaces():
 
         # using `{...}aaa` overrides `aaa` handler
         @staticmethod
-        @xml_handle_element("root", "{http://example.com/xml/ex}aaa")
+        @xml_handle_element("root", "{https://example.com/xml/ex}aaa")
         def handle_aaa_ex(node):
             yield ("aaa_ex", node.namespace)
 
@@ -58,7 +58,7 @@ def test_namespaces():
             yield (
                 "bbb",
                 "vvv specific",
-                node.attributes["{http://example.com/xml/ex}vvv"],
+                node.attributes["{https://example.com/xml/ex}vvv"],
             )
             # `name` prefers to get no namespace when possible
             yield ("bbb", "xxx default", node.attributes["xxx"])  # -> 2
@@ -66,7 +66,7 @@ def test_namespaces():
             yield (
                 "bbb",
                 "xxx specific",
-                node.attributes["{http://example.com/xml/ex}xxx"],
+                node.attributes["{https://example.com/xml/ex}xxx"],
             )
             # note that a warning is emitted if there are attributes with various
             # namespaces but none without namespace
@@ -80,9 +80,9 @@ def test_namespaces():
             yield from generator
 
     assert list(Parser(XML).iter_from(Handler)) == [
-        ("aaa", "http://example.com/xml/"),
-        ("aaa", "http://example.com/xml/aaa"),
-        ("aaa_ex", "http://example.com/xml/ex"),
+        ("aaa", "https://example.com/xml/"),
+        ("aaa", "https://example.com/xml/aaa"),
+        ("aaa_ex", "https://example.com/xml/ex"),
         ("bbb", "uuu default", "0"),
         ("bbb", "uuu no", "0"),
         ("bbb", "vvv default", "1"),

@@ -24,7 +24,7 @@ It is easy to stream an XML response from a server and parse it on the fly:
     ... def handler(node):
     ...     yield node.text
 
-    >>> response = requests.get("https://www.example.com/placeholder.xml", stream=True)
+    >>> response = requests.get("https://example.com/placeholder.xml", stream=True)
     >>> parser = Parser(response.iter_content(1 << 14))
 
     >>> for item in parser.iter_from(handler):

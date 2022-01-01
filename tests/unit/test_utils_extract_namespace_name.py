@@ -6,8 +6,8 @@ def test_no_namespace():
 
 
 def test_namespace():
-    assert extract_namespace_name("{http://example.com/xml/}foo") == (
-        "http://example.com/xml/",
+    assert extract_namespace_name("{https://example.com/xml/}foo") == (
+        "https://example.com/xml/",
         "foo",
     )
 

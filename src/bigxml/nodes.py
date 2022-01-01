@@ -35,8 +35,8 @@ class XMLElementAttributes(Mapping):
         return value
 
     def __iter__(self):
-        for key in self._items:
-            if key.startswith("{") and self._items[key][0] == -1:
+        for key, value in self._items.items():
+            if key.startswith("{") and value[0] == -1:
                 if key.startswith("{}"):
                     yield key[2:]
                 else:

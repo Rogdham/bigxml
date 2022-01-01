@@ -41,12 +41,14 @@ def create_nodes(*path, parent=None):
             pass
 
         # create handle
-        def handle(handler, _children):
+        def handle(
+            handler, _children=children
+        ):  # pylint: disable=dangerous-default-value
             for child in _children:
                 yield from handler(child)
 
         # pylint: disable=protected-access
-        node_parent._handle = lambda h, c=children: handle(h, c)
+        node_parent._handle = handle
 
     return nodes
 
@@ -65,7 +67,7 @@ def cases(*args):
             handler = create_handler(*handles)
             out = list(handler(root))
             if expected_node is None:
-                assert out == []
+                assert not out
             elif expected_text is None:
                 assert out == [expected_node]
             else:
@@ -89,7 +91,7 @@ def cases(*args):
 def test_no_handlers():
     handler = create_handler()
     node = Mock()
-    assert list(handler(node)) == []
+    assert not list(handler(node))
 
 
 #
@@ -539,7 +541,7 @@ def test_class_with_handler():
         def xml_handler(self):
             yield ("start", None)
             for txt, node in self.nodes:
-                yield ("_{}".format(txt), node)
+                yield (f"_{txt}", node)
             yield ("end", None)
 
     # pylint: disable=unbalanced-tuple-unpacking
@@ -611,11 +613,11 @@ def test_class_with_handler_generator():
             for txt, node in self.nodes:
                 # before consuming the generator, self.nodes is empty
                 # the following line is never run
-                yield ("oops{}".format(txt), node)
+                yield (f"oops{txt}", node)
             for txt, node in generator:
-                yield ("h{}".format(txt), node)
+                yield (f"h{txt}", node)
             for txt, node in self.nodes:
-                yield ("_{}".format(txt), node)
+                yield (f"_{txt}", node)
             yield ("end", None)
 
     # pylint: disable=unbalanced-tuple-unpacking
@@ -651,7 +653,7 @@ def test_class_with_handler_static_method_generator():
         def xml_handler(generator):
             yield ("start", None)
             for txt, node in generator:
-                yield ("h{}".format(txt), node)
+                yield (f"h{txt}", node)
             yield ("end", None)
 
     # pylint: disable=unbalanced-tuple-unpacking

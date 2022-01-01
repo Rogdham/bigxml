@@ -9,27 +9,27 @@ from bigxml.utils import get_mandatory_params
 
 
 def fct0():
-    pass
+    pass  # for tests
 
 
 def fct1(arg0):
-    pass
+    pass  # for tests
 
 
 def fct2(arg0, arg1, arg2):
-    pass
+    pass  # for tests
 
 
 def fct3(arg0=13, arg1=37, arg2=42):
-    pass
+    pass  # for tests
 
 
 def fct4(arg0, /, arg1, *, arg2, arg3=3):
-    pass
+    pass  # for tests
 
 
 def fct5(arg0, /, arg1, *arg2, arg3, arg4=4, **arg5):
-    pass
+    pass  # for tests
 
 
 def fct6(
@@ -41,7 +41,7 @@ def fct6(
     arg4: int = 4,
     **arg5: List[int],
 ):
-    pass
+    pass  # for tests
 
 
 # pylint: enable=unused-argument

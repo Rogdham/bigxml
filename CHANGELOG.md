@@ -12,6 +12,7 @@ adheres to [Semantic Versioning](https://semver.org/).
 ### :house: Internal
 
 - Don't deploy src dir for docs
+- Fix minor issues found by automated tools
 
 ## [0.6.0] - 2021-03-21
 

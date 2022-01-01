@@ -11,7 +11,7 @@ When you see `foo:bar` in XML elements or attributes, do as if the `foo:` prefix
 here, and everything should work as expected:
 
     :::xml filename=hello_ns.xml
-    <root xmlns:xs="http://example.com/xml/schema">
+    <root xmlns:xs="https://example.com/xml/schema">
         <xs:item xs:type="text">Hello, world!</xs:item>
     </root>
 
@@ -32,10 +32,10 @@ If you want to differentiate between XML elements with the same name but differe
 namespaces, you need to mention namespaces in the handlers using the
 [Clark notation](http://www.jclark.com/xml/xmlns.htm).
 
-When parsing an XML element of name `bar` and namespace `http://example.com/xml/schema`,
-_BigXML_ looks for a handler in the following order:
+When parsing an XML element of name `bar` and namespace
+`https://example.com/xml/schema`, _BigXML_ looks for a handler in the following order:
 
-1. `{http://example.com/xml/schema}bar`: a handler for the specific namespace
+1. `{https://example.com/xml/schema}bar`: a handler for the specific namespace
 2. `bar`: a handler that does not specify the namespace
 3. No handler is used, the element is ignored
 
@@ -47,11 +47,11 @@ Example:
 
     :::xml filename=colors.xml
     <root
-        xmlns="http://example.com/xml/purple"
-        xmlns:blue="http://example.com/xml/blue"
-        xmlns:red="http://example.com/xml/red">
+        xmlns="https://example.com/xml/purple"
+        xmlns:blue="https://example.com/xml/blue"
+        xmlns:red="https://example.com/xml/red">
             <blue:item>Blue</blue:item>
-            <item xmlns="http://example.com/xml/blue">Also blue</item>
+            <item xmlns="https://example.com/xml/blue">Also blue</item>
             <red:item>Red</red:item>
             <item>Purple</item>
     </root>
@@ -67,11 +67,11 @@ Example:
     ... def handler_nothing(node):
     ...     yield ("nothing", node.text)
 
-    >>> @xml_handle_element("root", "{http://example.com/xml/blue}item")
+    >>> @xml_handle_element("root", "{https://example.com/xml/blue}item")
     ... def handler_blue(node):
     ...     yield ("blue", node.text)
 
-    >>> @xml_handle_element("root", "{http://example.com/xml/purple}item")
+    >>> @xml_handle_element("root", "{https://example.com/xml/purple}item")
     ... def handler_purple(node):
     ...     yield ("purple", node.text)
 
@@ -96,8 +96,8 @@ Example:
 
 When accessing the attributes of a node, you can use one of the following keys:
 
-- `{http://example.com/xml/schema}bar` to get the attribute `bar` with the namespace
-  `http://example.com/xml/schema`;
+- `{https://example.com/xml/schema}bar` to get the attribute `bar` with the namespace
+  `https://example.com/xml/schema`;
 - `{}bar` to get the attribute `bar` without any namespace;
 - `bar` to get an attribute `bar` of any namespace.
 
@@ -113,9 +113,9 @@ Example:
 
     :::xml filename=attributes_ns.xml
     <root
-        xmlns="http://example.com/xml/purple"
-        xmlns:blue="http://example.com/xml/blue"
-        xmlns:red="http://example.com/xml/red">
+        xmlns="https://example.com/xml/purple"
+        xmlns:blue="https://example.com/xml/blue"
+        xmlns:red="https://example.com/xml/red">
             <item color="Green">Case 0</item>
             <item blue:color="Blue">Case 1</item>
             <item red:color="Red">Case 2</item>
@@ -130,7 +130,7 @@ Example:
     ...     yield node.text
     ...     yield ("default ns", node.attributes["color"])
     ...     yield ("no ns", node.attributes.get("{}color"))
-    ...     yield ("blue ns", node.attributes.get("{http://example.com/xml/blue}color"))
+    ...     yield ("blue ns", node.attributes.get("{https://example.com/xml/blue}color"))
 
     >>> with open("attributes_ns.xml", "rb") as f:
     ...    for item in Parser(f).iter_from(handler):
@@ -155,4 +155,4 @@ Example:
 !!! Note
 
     Contrary to XML elements, no default namespace apply to attributes: in the example,
-    `Green` is matched by `{}color` instead of `{http://example.com/xml/purple}color`.
+    `Green` is matched by `{}color` instead of `{https://example.com/xml/purple}color`.

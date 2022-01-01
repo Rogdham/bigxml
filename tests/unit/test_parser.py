@@ -35,8 +35,8 @@ root_node = elem("root")
             elem("root", attributes={"abc": "def", "ghi": "klm"}),
         ],
         [
-            b"<root xmlns='http://www.example.com/xml/' />",
-            elem("root", namespace="http://www.example.com/xml/"),
+            b"<root xmlns='https://example.com/xml/' />",
+            elem("root", namespace="https://example.com/xml/"),
         ],
     ],
     ids=["self-closing", "empty", "with text", "with children", "attributes", "xmlns"],

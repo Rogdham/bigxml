@@ -71,7 +71,7 @@ def handler_get_text(node):
         pytest.param(
             (
                 b"<!DOCTYPE foobar [\n"
-                b'    <!ENTITY a SYSTEM "http://www.example.com/">\n'
+                b'    <!ENTITY a SYSTEM "https://example.com/">\n'
                 b"]>\n"
                 b"<root>&a;</root>\n"
             ),
