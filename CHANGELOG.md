@@ -16,6 +16,7 @@ adheres to [Semantic Versioning](https://semver.org/).
 - Add tests for CPython 3.10 and PyPy 3.8
 - Use CPython 3.10 for misc. tests
 - Clarify which Python versions are supported in docs
+- Update `dataclasses` dependency (Python 3.6 only)
 
 ## [0.6.0] - 2021-03-21
 
