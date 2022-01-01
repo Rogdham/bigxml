@@ -13,6 +13,8 @@ adheres to [Semantic Versioning](https://semver.org/).
 
 - Don't deploy src dir for docs
 - Fix minor issues found by automated tools
+- Add tests for CPython 3.10 and PyPy 3.8
+- Use CPython 3.10 for misc. tests
 
 ## [0.6.0] - 2021-03-21
 
