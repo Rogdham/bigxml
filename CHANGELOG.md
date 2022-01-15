@@ -11,6 +11,7 @@ adheres to [Semantic Versioning](https://semver.org/).
 
 ### :rocket: Added
 
+- Don't use upper bound constraints on dependencies
 - Specify the Python versions required in package metadata
 
 ### :house: Internal
