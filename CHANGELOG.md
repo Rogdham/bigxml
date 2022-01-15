@@ -5,9 +5,11 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/), and this project
 adheres to [Semantic Versioning](https://semver.org/).
 
-## [Unreleased]
+## [0.7.0] - 2022-01-15
 
-[unreleased]: https://github.com/rogdham/bigxml/compare/v0.6.1...HEAD
+[0.7.0]: https://github.com/rogdham/bigxml/compare/v0.6.1...v0.7.0
+
+v0.7.0 improves dependencies requirements.
 
 ### :rocket: Added
 
