@@ -9,6 +9,10 @@ adheres to [Semantic Versioning](https://semver.org/).
 
 [unreleased]: https://github.com/rogdham/bigxml/compare/v0.6.1...HEAD
 
+### :rocket: Added
+
+- Specify the Python versions required in package metadata
+
 ### :house: Internal
 
 - Improving memory consumption tests by using `tracemalloc` instead of `resource`
