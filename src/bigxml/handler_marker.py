@@ -1,4 +1,4 @@
-from bigxml.handler_creator import _ATTR_MARKER
+from bigxml.marks import add_mark
 from bigxml.nodes import XMLText
 
 
@@ -14,8 +14,7 @@ def xml_handle_element(*args):
             # xml_handle_element(staticmethod(...)) needs special care
             markable = markable.__func__
 
-        markers = getattr(markable, _ATTR_MARKER, ())
-        setattr(markable, _ATTR_MARKER, markers + (tuple(args),))
+        add_mark(markable, tuple(args))
 
         return obj
 

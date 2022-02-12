@@ -14,9 +14,15 @@ adheres to [Semantic Versioning](https://semver.org/).
 - Fix an edge case when a class decorated with `xml_handle_text` has an attribute
   decorated with `xml_handle_element`
 
+### :rocket: Added
+
+- Sanity check on `xml_handler` method of class handlers for returned values (`None` or
+  an iterable)
+
 ### :house: Internal
 
 - Add tests for PyPy 3.9
+- Refactor handler creator code
 
 ## [0.7.0] - 2022-01-15
 

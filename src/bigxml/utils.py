@@ -1,41 +1,7 @@
 from collections import deque
 from functools import wraps
 from inspect import Parameter, signature
-from itertools import chain
 import re
-
-
-def dictify(*items):
-    final_dict = {}
-    for parts, item in chain(*items):
-        if not parts:
-            raise TypeError("Empty part")
-        if isinstance(item, dict):
-            raise TypeError("Items cannot be dict instances")
-
-        current_dict = final_dict
-        current_path = []
-
-        # go to deeper dict
-        for part in parts[:-1]:
-            current_path.append(part)
-            if part in current_dict:
-                if not isinstance(current_dict[part], dict):
-                    raise TypeError(
-                        f"{current_path} is set to item: {current_dict[part]}"
-                    )
-            else:
-                current_dict[part] = {}
-            current_dict = current_dict[part]
-
-        # add item
-        part = parts[-1]
-        current_path.append(part)
-        if part in current_dict:
-            raise TypeError(f"{current_path} already exists: {current_dict[part]}")
-        current_dict[part] = item
-
-    return final_dict
 
 
 class IterWithRollback:
@@ -91,19 +57,22 @@ def consume(iterable):
     return True
 
 
-def transform_none_return_value(fct):
+def transform_to_iterator(fct):
     @wraps(fct)
     def wrapped(*args, **kwargs):
         return_value = fct(*args, **kwargs)
         if return_value is None:
-            return ()  # empty iterable
-        return return_value
+            return iter(())  # empty iterator
+        return iter(return_value)
 
     return wrapped
 
 
 def get_mandatory_params(fct):
-    sig = signature(fct)
+    try:
+        sig = signature(fct)
+    except (ValueError, TypeError):
+        return ()  # e.g. for built-in
     return tuple(
         param.name
         for param in sig.parameters.values()

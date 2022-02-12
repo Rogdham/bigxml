@@ -1,4 +1,3 @@
-from inspect import signature
 from typing import List
 
 import pytest
@@ -57,8 +56,10 @@ def fct6(
         (fct4, ("arg0", "arg1", "arg2")),
         (fct5, ("arg0", "arg1", "arg3")),
         (fct6, ("arg0", "arg1", "arg3")),
+        (int, ()),
+        (dict, ()),
     ),
-    ids=lambda x: str(signature(x) if callable(x) else x),
+    ids=lambda x: str(x.__name__ if callable(x) else x),
 )
 def test_mandatory_params(fct, expected):
     assert get_mandatory_params(fct) == expected

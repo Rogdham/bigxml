@@ -1,6 +1,7 @@
 import pytest
 
-from bigxml.handler_marker import _ATTR_MARKER, xml_handle_element, xml_handle_text
+from bigxml.handler_marker import xml_handle_element, xml_handle_text
+from bigxml.marks import get_marks
 from bigxml.nodes import XMLText
 
 
@@ -9,7 +10,7 @@ def test_one_maker_element():
     def fct(arg):
         return arg * 6
 
-    assert getattr(fct, _ATTR_MARKER, None) == (("abc", "def"),)
+    assert get_marks(fct) == (("abc", "def"),)
     assert fct(7) == 42
 
 
@@ -23,7 +24,7 @@ def test_one_maker_element_on_method():
             return arg * self.multiplier
 
     instance = Klass(6)
-    assert getattr(instance.method, _ATTR_MARKER, None) == (("abc", "def"),)
+    assert get_marks(instance.method) == (("abc", "def"),)
     assert instance.method(7) == 42
 
 
@@ -34,7 +35,7 @@ def test_one_maker_element_on_static_method():
         def method(arg):
             return arg * 6
 
-    assert getattr(Klass.method, _ATTR_MARKER, None) == (("abc", "def"),)
+    assert get_marks(Klass.method) == (("abc", "def"),)
     assert Klass.method(7) == 42
 
 
@@ -45,7 +46,7 @@ def test_one_maker_element_on_method_before_staticmethod():
         def method(arg):
             return arg * 6
 
-    assert getattr(Klass.method, _ATTR_MARKER, None) == (("abc", "def"),)
+    assert get_marks(Klass.method) == (("abc", "def"),)
     assert Klass.method(7) == 42
 
 
@@ -56,7 +57,7 @@ def test_several_maker_element():
     def fct(arg):
         return arg * 6
 
-    assert getattr(fct, _ATTR_MARKER, None) == (
+    assert get_marks(fct) == (
         ("klm", "opq", "rst"),
         ("ghi",),
         ("abc", "def"),
@@ -77,7 +78,7 @@ def test_one_marker_text_no_call():
     def fct(arg):
         return arg * 6
 
-    assert getattr(fct, _ATTR_MARKER, None) == ((XMLText.name,),)
+    assert get_marks(fct) == ((XMLText.name,),)
     assert fct(7) == 42
 
 
@@ -86,7 +87,7 @@ def test_one_marker_text_no_args():
     def fct(arg):
         return arg * 6
 
-    assert getattr(fct, _ATTR_MARKER, None) == ((XMLText.name,),)
+    assert get_marks(fct) == ((XMLText.name,),)
     assert fct(7) == 42
 
 
@@ -95,7 +96,7 @@ def test_one_marker_text_args():
     def fct(arg):
         return arg * 6
 
-    assert getattr(fct, _ATTR_MARKER, None) == (
+    assert get_marks(fct) == (
         (
             "abc",
             "def",
@@ -112,7 +113,7 @@ def test_mixed_markers():
     def fct(arg):
         return arg * 6
 
-    assert getattr(fct, _ATTR_MARKER, None) == (
+    assert get_marks(fct) == (
         ("klm", "opq", "rst"),
         ("ghi", XMLText.name),
         ("abc", "def"),

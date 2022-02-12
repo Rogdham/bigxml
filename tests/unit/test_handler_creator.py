@@ -459,7 +459,7 @@ def test_class_init(init_mandatory, init_optional):
     _, node_a0, node_b0 = create_nodes("{a0}a", "{b0}b", parent=node_y0)
     _, node_b1 = create_nodes("{b1}b", parent=node_a0)
     _, _, node_b2 = create_nodes("{a1}a", "{b2}b", parent=node_y0)
-    _, node_y1, _, node_b3 = create_nodes("{n1}y", "{a2}a", "{b3}b", parent=node_x)
+    _, node_y1, _, node_b3 = create_nodes("{y1}y", "{a2}a", "{b3}b", parent=node_x)
     # pylint: enable=unbalanced-tuple-unpacking
 
     handler = create_handler(Handler)
@@ -719,6 +719,21 @@ def test_class_with_handler_too_many_mandatory_params():
 
     assert "xml_handler should have" in str(excinfo.value)
     assert "generator, extra" in str(excinfo.value)
+
+
+def test_class_with_handler_invalid_returned_value():
+    @xml_handle_element("x")
+    class Handler:
+        @staticmethod
+        def xml_handler():
+            return 42
+
+    nodes = create_nodes("x", "a")
+    handler = create_handler(Handler)
+    with pytest.raises(TypeError) as excinfo:
+        next(handler(nodes[0]))
+
+    assert "xml_handler should have returned None or an iterable" in str(excinfo.value)
 
 
 def test_class_extends_builtin_str_without_init():

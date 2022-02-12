@@ -1,175 +1,182 @@
 from dataclasses import is_dataclass
 from inspect import getmembers, isclass
+from typing import Dict, Iterable, Tuple
 import warnings
 
-from bigxml.utils import (
-    consume,
-    dictify,
-    get_mandatory_params,
-    transform_none_return_value,
-)
+from bigxml.marks import get_marks, has_marks
+from bigxml.utils import consume, get_mandatory_params, transform_to_iterator
 
-_ATTR_MARKER = "_xml_handlers_on"
 CLASS_HANDLER_METHOD_NAME = "xml_handler"
 
 
-def _test_one_mandatory_param(mandatory_params, method_name):
+def _assert_one_mandatory_param(mandatory_params, klass, method_name):
     if len(mandatory_params) > 1:
         raise TypeError(
-            f"Invalid class method: {method_name}"
+            f"Invalid class method: {klass.__name__}.{method_name}"
             " should have no or one mandatory parameters, got:"
             f" {', '.join(mandatory_params)}"
         )
+
+
+def _assert_iterable_or_none(item, klass, method_name):
+    if item is None or isinstance(item, Iterable):
+        return item
+    raise TypeError(
+        f"Invalid_class method: {klass.__name__}.{method_name}"
+        " should have returned None or an iterable"
+    )
 
 
 def _handler_identity(node):
     yield node
 
 
-def _handle_from_leaf(leaf):
-    # class
-    if isclass(leaf):
+class _HandlerTree:
+    def __init__(self, path=()):
+        self.path: Tuple[str, ...] = path
+        self.children: Dict[str, "_HandlerTree"] = {}
+        self.handler = None
+
+    def add_handler(self, path, handler, ignore_direct_marks):
+        # marked
+        marks = () if ignore_direct_marks else get_marks(handler)
+        if marks:
+            for mark in marks:
+                self.add_handler(path + mark, handler, True)
+            return
+
+        # callable
+        if callable(handler):
+            self.add_handler_callable(path, handler)
+            return
+
+        # object with marks
+        found = False
+        for handler_name, sub_handler in getmembers(handler):
+            if handler_name.startswith("__"):
+                continue
+            for sub_path in get_marks(sub_handler):
+                self.add_handler(path + sub_path, sub_handler, True)
+                found = True
+        if found:
+            return
+
+        # syntactic sugar
+        if isinstance(handler, str):
+            handler = (handler,)
+        if isinstance(handler, list):
+            handler = tuple(handler)
+        if isinstance(handler, tuple):
+            self.add_handler(path + handler, _handler_identity, False)
+            return
+
+        # other types
+        raise TypeError(f"Invalid handler type: {type(handler).__name__}")
+
+    def add_handler_callable(self, path, handler):
+        if self.handler:
+            raise TypeError(f"{self.path}: catchall handler exists: {self.handler}")
+        if path:
+            if path[0] not in self.children:
+                self.children[path[0]] = _HandlerTree(self.path + (path[0],))
+            self.children[path[0]].add_handler(path[1:], handler, True)
+        elif self.children:
+            raise TypeError(f"{self.path}: handlers exist: {self.children}")
+        else:
+            self.handler = handler
+
+    @transform_to_iterator
+    def handle(self, node):
+        if self.handler:
+            if isclass(self.handler):
+                return self._handle_from_class(self.handler, node)
+            return self.handler(node)
+
+        child = None
+        namespace = getattr(node, "namespace", None)
+        if namespace is not None:
+            child = self.children.get(f"{{{namespace}}}{node.name}")
+        if child is None:
+            child = self.children.get(node.name)
+        if child is not None:
+            if child.handler:
+                return child.handle(node)
+            if hasattr(node, "iter_from"):
+                # it would have been better to test for isinstance(node, XMLElement)
+                return node.iter_from(child.handle)
+        return None
+
+    @staticmethod
+    def _handle_from_class(klass, node):
+        # instantiate class
+        init_mandatory_params = get_mandatory_params(klass)
         try:
-            init_mandatory_params = get_mandatory_params(leaf)
-        except ValueError:
-            init_mandatory_params = ()  # probably a built-in
-        try:
-            _test_one_mandatory_param(init_mandatory_params, "__init__")
+            _assert_one_mandatory_param(init_mandatory_params, klass, "__init__")
         except TypeError as ex:
-            if is_dataclass(leaf):
+            if is_dataclass(klass):
                 raise TypeError(
                     f"{ex}. Add a default value for dataclass fields."
                 ) from ex
             raise
+        instance = klass(node) if init_mandatory_params else klass()
 
-        def handle(node):
-            instance = leaf(node) if init_mandatory_params else leaf()
-            try:
-                sub_handle = transform_none_return_value(_handle_from_leaf(instance))
-                items = sub_handle(node)
-            except TypeError:
-                # no marker on public attributes
-                items = ()  # empty iterable
+        # create handler tree
+        sub_tree = _HandlerTree()
+        items = ()  # empty iterable
+        try:
+            sub_tree.add_handler((), instance, True)
+        except TypeError:
+            pass  # no marks on public attributes
+        else:
+            if has_marks(klass):
+                if hasattr(node, "iter_from"):
+                    # it would have been better to test for isinstance(node, XMLElement)
+                    items = node.iter_from(sub_tree.handle)
+            else:
+                items = sub_tree.handle(node)
 
-            wrapper = getattr(instance, CLASS_HANDLER_METHOD_NAME, None)
-            wrapper_exists = wrapper is not None
-            if wrapper is None:
-
-                def wrapper():
-                    yield instance
-
+        # handle custom handler method
+        wrapper = getattr(instance, CLASS_HANDLER_METHOD_NAME, None)
+        if wrapper is not None:
             wrapper_mandatory_params = get_mandatory_params(wrapper)
-            _test_one_mandatory_param(
+            _assert_one_mandatory_param(
                 wrapper_mandatory_params,
+                klass,
                 CLASS_HANDLER_METHOD_NAME,
             )
-
             if wrapper_mandatory_params:
-                return wrapper(items)
-
-            if consume(items):
-                warning_msg = (
-                    "Items were yielded by some sub-handler"
-                    f" of class {instance.__class__.__name__}."
+                return _assert_iterable_or_none(
+                    wrapper(items), klass, CLASS_HANDLER_METHOD_NAME
                 )
-                if wrapper_exists:
-                    warning_msg += (
-                        f" Add an argument to the {CLASS_HANDLER_METHOD_NAME}"
-                        " method to handle them properly."
-                    )
-                else:
-                    warning_msg += (
-                        f" Create a {CLASS_HANDLER_METHOD_NAME}"
-                        " method to handle them properly."
-                    )
-                warnings.warn(warning_msg, RuntimeWarning)
 
-            return wrapper()
-
-        return handle
-
-    # callable
-    if callable(leaf):
-        return leaf
-
-    # object with markers on public attributes
-    handlers_with_markers = []
-    for handler_name, handler in getmembers(leaf):
-        if handler_name.startswith("__"):
-            continue
-        for marker in getattr(handler, _ATTR_MARKER, ()):
-            handlers_with_markers.append((marker, handler))
-    if handlers_with_markers:
-        handler = _handler_from_tree(dictify(handlers_with_markers))
-        if hasattr(leaf, _ATTR_MARKER):
-            return (
-                lambda node: node.iter_from(handler)
-                if hasattr(node, "iter_from")
-                else None
+        # no custom wrapper or custom wrapper does not handle items
+        # warn if some items have been yielded by sub-handlers
+        # because they are being completely ignored
+        if consume(items):
+            warning_msg = (
+                "Items were yielded by some sub-handler"
+                f" of class {instance.__class__.__name__}."
             )
-        return handler
-
-    raise TypeError(f"Invalid handler type: {type(leaf).__name__}")
-
-
-def _handler_from_tree(handler_dict):
-    def handle(node):
-        handler = None
-        if hasattr(node, "namespace"):
-            handler = handler_dict.get(f"{{{node.namespace}}}{node.name}")
-        if handler is None:
-            handler = handler_dict.get(node.name)
-        if handler is not None:
-            if isinstance(handler, dict):
-                if hasattr(node, "iter_from"):
-                    sub_handler = _handler_from_tree(handler)
-                    return node.iter_from(sub_handler)
+            if wrapper is None:
+                warning_msg += (
+                    f" Add an argument to the {CLASS_HANDLER_METHOD_NAME}"
+                    " method to handle them properly."
+                )
             else:
-                return _handle_from_leaf(handler)(node)
-        return None
+                warning_msg += (
+                    f" Create a {CLASS_HANDLER_METHOD_NAME}"
+                    " method to handle them properly."
+                )
+            warnings.warn(warning_msg, RuntimeWarning)
 
-    return handle
+        if wrapper is None:
+            # no custom wrapper: only yield instance
+            return (instance,)
+        return _assert_iterable_or_none(wrapper(), klass, CLASS_HANDLER_METHOD_NAME)
 
 
 def create_handler(*args):
-    handlers_with_markers = []
-    handlers_without_markers = []
+    handler_tree = _HandlerTree()
     for arg in args:
-        markers = getattr(arg, _ATTR_MARKER, None)
-        if markers is None:
-            # syntactic sugar cases
-            if isinstance(arg, str):
-                arg = (arg,)
-            if isinstance(arg, list):
-                arg = tuple(arg)
-            if isinstance(arg, tuple):
-                handlers_with_markers.append((arg, _handler_identity))
-
-            # no markers
-            else:
-                handlers_without_markers.append(arg)
-        else:
-            # markers
-            for marker in markers:
-                handlers_with_markers.append((marker, arg))
-
-    if handlers_without_markers:
-        # both handlers with and without markers
-        if handlers_with_markers:
-            raise TypeError("Catchall handler with other non-catchall handlers")
-
-        # multiple handlers without markers
-        if len(handlers_without_markers) > 1:
-            raise TypeError("Several catchall handlers")
-
-        # only one handler without markers
-        leaf = handlers_without_markers[0]
-        handler = _handle_from_leaf(leaf)
-
-    else:
-        # only handlers with markers
-        tree = dictify(handlers_with_markers)
-        handler = _handler_from_tree(tree)
-
-    # if handler returns None, makes it return empty iterable instead
-    return transform_none_return_value(handler)
+        handler_tree.add_handler((), arg, False)
+    return handler_tree.handle
