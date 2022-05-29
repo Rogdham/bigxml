@@ -53,12 +53,20 @@ def test_rollback():
 
 def test_rollback_called_twice():
     i = IterWithRollback("abcd")
+    assert i.iteration == 0
     assert next(i) == "a"
+    assert i.iteration == 1
     assert next(i) == "b"
+    assert i.iteration == 2
     i.rollback()
+    assert i.iteration == 1
     i.rollback()
+    assert i.iteration == 1
     assert next(i) == "b"
+    assert i.iteration == 2
     assert next(i) == "c"
+    assert i.iteration == 3
     assert next(i) == "d"
+    assert i.iteration == 4
     with pytest.raises(StopIteration):
         next(i)
