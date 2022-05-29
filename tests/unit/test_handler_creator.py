@@ -450,7 +450,7 @@ def test_class_init(init_mandatory, init_optional):
     #           -> a1 -> b2
     #     -> y1 -> a2 -> b3
     #
-    # Handler should be instanciated on y0 and y1
+    # Handler should be instantiated on y0 and y1
     #
     # the use of namespaces below is to avoid e.g. node_y0==node_y1
     #
@@ -474,6 +474,35 @@ def test_class_init(init_mandatory, init_optional):
     if init_optional:
         assert items[0].answer == 42
         assert items[1].answer == 42
+
+
+def test_class_init_text_node():
+    @xml_handle_text("x", "y0")
+    @xml_handle_element("x", "y1")
+    class Handler:
+        def __init__(self, node):
+            self.root = node
+            self.node = None
+
+        @xml_handle_text
+        def handle0(self, node):
+            self.node = node
+
+    #   x -> y0 -> :text:
+    #     -> y1 -> z
+    # pylint: disable=unbalanced-tuple-unpacking
+    node_x, _, node_txt0 = create_nodes("x", "y0", ":text:")
+    _, node_y1, node_txt1 = create_nodes("y1", ":text:", parent=node_x)
+    # pylint: enable=unbalanced-tuple-unpacking
+
+    handler = create_handler(Handler)
+    items = list(handler(node_x))
+    assert all(isinstance(item, Handler) for item in items)
+    assert len(items) == 2
+    assert items[0].root == node_txt0
+    assert items[0].node is None
+    assert items[1].root == node_y1
+    assert items[1].node == node_txt1
 
 
 def test_class_init_two_mandatory_parameters():

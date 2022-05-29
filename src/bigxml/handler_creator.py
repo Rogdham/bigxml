@@ -102,7 +102,11 @@ def _handle_from_leaf(leaf):
     if handlers_with_markers:
         handler = _handler_from_tree(dictify(handlers_with_markers))
         if hasattr(leaf, _ATTR_MARKER):
-            return lambda node: node.iter_from(handler)
+            return (
+                lambda node: node.iter_from(handler)
+                if hasattr(node, "iter_from")
+                else None
+            )
         return handler
 
     raise TypeError(f"Invalid handler type: {type(leaf).__name__}")
