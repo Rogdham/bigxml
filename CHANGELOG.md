@@ -14,6 +14,10 @@ adheres to [Semantic Versioning](https://semver.org/).
 - Fix an edge case when a class decorated with `xml_handle_text` has an attribute
   decorated with `xml_handle_element`
 
+### :house: Internal
+
+- Add tests for PyPy 3.9
+
 ## [0.7.0] - 2022-01-15
 
 [0.7.0]: https://github.com/rogdham/bigxml/compare/v0.6.1...v0.7.0
