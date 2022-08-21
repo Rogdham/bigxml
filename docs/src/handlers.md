@@ -149,7 +149,7 @@ changed by implementing an `xml_handler` method:
     Bob total 20.50
 
 You can add a single mandatory parameter to `xml_handler`. In that case, it will be an
-iterable whose items are yielded by the sub-handlers.
+iterator whose items are yielded by the sub-handlers.
 
 We can rewrite a previous example to leverage this behavior:
 
@@ -160,8 +160,8 @@ We can rewrite a previous example to leverage this behavior:
     ...     def handle_product(self, node):
     ...         yield float(node.attributes["price"])
     ...
-    ...     def xml_handler(self, iterable):
-    ...         yield sum(iterable)
+    ...     def xml_handler(self, iterator):
+    ...         yield sum(iterator)
 
     >>> with open("carts.xml", "rb") as stream:
     ...     for price in Parser(stream).iter_from(Cart):
@@ -172,7 +172,7 @@ We can rewrite a previous example to leverage this behavior:
 !!! Warning
 
     The children of the node handled by the class instance are parsed as the same time
-    as the iterable is being iterated over. It is up to you to consume the iterable and
+    as the iterator is being iterated over. It is up to you to consume the iterator and
     consider the side-effects your methods may have.
 
 !!! Tip "See also"

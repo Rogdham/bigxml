@@ -1,10 +1,12 @@
+from typing import Iterator
+
 from defusedxml import EntitiesForbidden
 import pytest
 
-from bigxml import Parser
+from bigxml import Parser, XMLText
 
 
-def handler_get_text(node):
+def handler_get_text(node: XMLText) -> Iterator[str]:
     yield node.text
 
 
@@ -88,6 +90,6 @@ def handler_get_text(node):
         ),
     ),
 )
-def test_external_entities(xml):
+def test_external_entities(xml: bytes) -> None:
     with pytest.raises(EntitiesForbidden):
         Parser(xml).return_from(handler_get_text)

@@ -12,6 +12,7 @@ nav:
       - Recipes: recipes.md
       - Encodings: encodings.md
       - Namespaces: namespaces.md
+      - Typing: typing.md
       - FAQ: faq.md
   - API reference:
       - Parser: parser.md

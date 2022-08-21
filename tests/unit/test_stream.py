@@ -1,18 +1,20 @@
 from io import BytesIO, IOBase, StringIO
 from string import ascii_lowercase
+from typing import Iterator, Optional, Tuple, cast
 
 import pytest
 
 from bigxml.stream import StreamChain
+from bigxml.typing import Streamable
 
 
-def test_no_stream():
+def test_no_stream() -> None:
     stream = StreamChain()
     assert stream.readable() is True
     assert stream.read(42) == b""
 
 
-def abcdef_generator():
+def abcdef_generator() -> Iterator[bytes]:
     yield b"abcdef"
 
 
@@ -30,29 +32,29 @@ def abcdef_generator():
     ),
     ids=type,
 )
-def test_types(stream):
+def test_types(stream: Streamable) -> None:
     stream = StreamChain(stream)
     assert stream.read(42) == b"abcdef"
     assert stream.read(42) == b""
 
 
-def abcdef_str_generator():
+def abcdef_str_generator() -> Iterator[str]:
     yield "abcdef"
 
 
 class IntIO(IOBase):
     @staticmethod
-    def read(size):
+    def read(size: Optional[int]) -> int:
         assert isinstance(size, int)
         assert size >= 0
         return 42
 
     @staticmethod
-    def readable():
+    def readable() -> bool:
         return True
 
     @staticmethod
-    def __repr__():
+    def __repr__() -> str:
         return "IntIO()"
 
 
@@ -86,20 +88,20 @@ class IntIO(IOBase):
         ),
     ),
 )
-def test_types_invalid(stream, err_message):
-    stream = StreamChain(stream)
+def test_types_invalid(stream: object, err_message: str) -> None:
+    stream = StreamChain(cast(Streamable, stream))
     with pytest.raises(TypeError) as excinfo:
         stream.read(42)
 
     assert err_message in str(excinfo.value)
 
 
-def op_qr_generator():
+def op_qr_generator() -> Iterator[bytes]:
     yield b"op"
     yield b"qr"
 
 
-def test_chain_types():
+def test_chain_types() -> None:
     stream = StreamChain(
         b"ab",
         bytearray(b"cd"),
@@ -122,7 +124,7 @@ def test_chain_types():
     assert stream.read(42) == b""
 
 
-def test_skip_empty_values():
+def test_skip_empty_values() -> None:
     stream = StreamChain(b"", b"", b"abc", b"", b"", b"def", b"", b"ghi", b"")
     assert stream.read(42) == b"abc"
     assert stream.read(42) == b"def"
@@ -130,7 +132,7 @@ def test_skip_empty_values():
     assert stream.read(42) == b""
 
 
-def test_stream_part_above_read_size():
+def test_stream_part_above_read_size() -> None:
     stream = StreamChain(ascii_lowercase.encode())
     assert stream.read(4) == b"abcd"
     assert stream.read(8) == b"efghijkl"
@@ -143,17 +145,17 @@ def test_stream_part_above_read_size():
 
 class InfiniteIO(IOBase):
     @staticmethod
-    def read(size):
+    def read(size: Optional[int]) -> bytes:
         assert isinstance(size, int)
         assert 0 <= size < 16
         return (b"%x" % size) * size
 
     @staticmethod
-    def readable():
+    def readable() -> bool:
         return True
 
     @staticmethod
-    def __repr__():
+    def __repr__() -> str:
         return "InfiniteIO()"
 
 
@@ -179,7 +181,7 @@ class InfiniteIO(IOBase):
     ),
     ids=repr,
 )
-def test_pass_read_size(streams):
+def test_pass_read_size(streams: Tuple[Streamable, ...]) -> None:
     stream = StreamChain(*streams)
     assert stream.read(3) == b"***"
     assert stream.read(4) == b"4444"
@@ -188,7 +190,7 @@ def test_pass_read_size(streams):
 
 
 @pytest.mark.parametrize("size", (None, -1, 0))
-def test_invalid_read_sizes(size):
+def test_invalid_read_sizes(size: Optional[int]) -> None:
     stream = StreamChain(b"Hello, world!")
     with pytest.raises(NotImplementedError):
         stream.read(size)

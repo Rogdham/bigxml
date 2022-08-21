@@ -49,10 +49,9 @@ Note that `@xml_handle_text` is a shortcut for `@xml_handle_text()`:
     >>> @xml_handle_element("p")
     ... class Handler(list):
     ...     @xml_handle_text
-    ...     @xml_handle_element("em")
     ...     def handle_text(self, node):
-    ...         self.append((type(node).__name__, node.text))
+    ...         self.append(node.text)
 
     >>> with open("paragraph.xml", "rb") as f:
     ...    Parser(f).return_from(Handler)
-    [('XMLText', '\n    Hello,\n    '), ('XMLElement', 'world'), ('XMLText', '\n    !\n')]
+    ['\n    Hello,\n    ', '\n    !\n']

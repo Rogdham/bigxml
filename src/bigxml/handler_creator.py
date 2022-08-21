@@ -1,15 +1,33 @@
 from dataclasses import is_dataclass
 from inspect import getmembers, isclass
-from typing import Dict, Iterable, Tuple
+from typing import (
+    TYPE_CHECKING,
+    Any,
+    Callable,
+    Dict,
+    Iterable,
+    Iterator,
+    Optional,
+    Tuple,
+    Type,
+    Union,
+    cast,
+)
 import warnings
 
 from bigxml.marks import get_marks, has_marks
+from bigxml.typing import T
 from bigxml.utils import consume, get_mandatory_params, transform_to_iterator
+
+if TYPE_CHECKING:
+    from bigxml.nodes import XMLElement, XMLText
 
 CLASS_HANDLER_METHOD_NAME = "xml_handler"
 
 
-def _assert_one_mandatory_param(mandatory_params, klass, method_name):
+def _assert_one_mandatory_param(
+    mandatory_params: Tuple[str, ...], klass: Type[Any], method_name: str
+) -> None:
     if len(mandatory_params) > 1:
         raise TypeError(
             f"Invalid class method: {klass.__name__}.{method_name}"
@@ -18,7 +36,9 @@ def _assert_one_mandatory_param(mandatory_params, klass, method_name):
         )
 
 
-def _assert_iterable_or_none(item, klass, method_name):
+def _assert_iterable_or_none(
+    item: object, klass: Type[Any], method_name: str
+) -> Optional[Iterable[object]]:
     if item is None or isinstance(item, Iterable):
         return item
     raise TypeError(
@@ -27,17 +47,22 @@ def _assert_iterable_or_none(item, klass, method_name):
     )
 
 
-def _handler_identity(node):
+def _handler_identity(node: T) -> Iterator[T]:
     yield node
 
 
 class _HandlerTree:
-    def __init__(self, path=()):
+    def __init__(self, path: Tuple[str, ...] = ()) -> None:
         self.path: Tuple[str, ...] = path
-        self.children: Dict[str, "_HandlerTree"] = {}
-        self.handler = None
+        self.children: Dict[str, _HandlerTree] = {}
+        self.handler: Optional[Callable[..., Iterable[object]]] = None
 
-    def add_handler(self, path, handler, ignore_direct_marks):
+    def add_handler(
+        self,
+        path: Tuple[str, ...],
+        handler: object,
+        ignore_direct_marks: bool,
+    ) -> None:
         # marked
         marks = () if ignore_direct_marks else get_marks(handler)
         if marks:
@@ -73,7 +98,11 @@ class _HandlerTree:
         # other types
         raise TypeError(f"Invalid handler type: {type(handler).__name__}")
 
-    def add_handler_callable(self, path, handler):
+    def add_handler_callable(
+        self,
+        path: Tuple[str, ...],
+        handler: Callable[..., Iterable[object]],
+    ) -> None:
         if self.handler:
             raise TypeError(f"{self.path}: catchall handler exists: {self.handler}")
         if path:
@@ -86,13 +115,15 @@ class _HandlerTree:
             self.handler = handler
 
     @transform_to_iterator
-    def handle(self, node):
+    def handle(
+        self, node: Union["XMLElement", "XMLText"]
+    ) -> Optional[Iterable[object]]:
         if self.handler:
             if isclass(self.handler):
                 return self._handle_from_class(self.handler, node)
             return self.handler(node)
 
-        child = None
+        child: Optional[_HandlerTree] = None
         namespace = getattr(node, "namespace", None)
         if namespace is not None:
             child = self.children.get(f"{{{namespace}}}{node.name}")
@@ -103,11 +134,14 @@ class _HandlerTree:
                 return child.handle(node)
             if hasattr(node, "iter_from"):
                 # it would have been better to test for isinstance(node, XMLElement)
-                return node.iter_from(child.handle)
+                # to avoid the cast but that would have been a cyclic import
+                return cast("XMLElement", node).iter_from(child.handle)
         return None
 
     @staticmethod
-    def _handle_from_class(klass, node):
+    def _handle_from_class(  # type: ignore[misc]
+        klass: Type[Any], node: Union["XMLElement", "XMLText"]
+    ) -> Optional[Iterable[object]]:
         # instantiate class
         init_mandatory_params = get_mandatory_params(klass)
         try:
@@ -122,7 +156,7 @@ class _HandlerTree:
 
         # create handler tree
         sub_tree = _HandlerTree()
-        items = ()  # empty iterable
+        items: Iterable[object] = ()  # empty iterable
         try:
             sub_tree.add_handler((), instance, True)
         except TypeError:
@@ -131,7 +165,7 @@ class _HandlerTree:
             if has_marks(klass):
                 if hasattr(node, "iter_from"):
                     # it would have been better to test for isinstance(node, XMLElement)
-                    items = node.iter_from(sub_tree.handle)
+                    items = cast("XMLElement", node).iter_from(sub_tree.handle)
             else:
                 items = sub_tree.handle(node)
 
@@ -175,7 +209,9 @@ class _HandlerTree:
         return _assert_iterable_or_none(wrapper(), klass, CLASS_HANDLER_METHOD_NAME)
 
 
-def create_handler(*args):
+def create_handler(
+    *args: object,
+) -> Callable[[Union["XMLElement", "XMLText"]], Iterator[object]]:
     handler_tree = _HandlerTree()
     for arg in args:
         handler_tree.add_handler((), arg, False)

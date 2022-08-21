@@ -1,4 +1,4 @@
-from typing import List
+from typing import Callable, List, Tuple
 
 import pytest
 
@@ -7,27 +7,27 @@ from bigxml.utils import get_mandatory_params
 # pylint: disable=unused-argument
 
 
-def fct0():
+def fct0():  # type: ignore[no-untyped-def]
     pass  # for tests
 
 
-def fct1(arg0):
+def fct1(arg0):  # type: ignore[no-untyped-def]
     pass  # for tests
 
 
-def fct2(arg0, arg1, arg2):
+def fct2(arg0, arg1, arg2):  # type: ignore[no-untyped-def]
     pass  # for tests
 
 
-def fct3(arg0=13, arg1=37, arg2=42):
+def fct3(arg0=13, arg1=37, arg2=42):  # type: ignore[no-untyped-def]
     pass  # for tests
 
 
-def fct4(arg0, /, arg1, *, arg2, arg3=3):
+def fct4(arg0, /, arg1, *, arg2, arg3=3):  # type: ignore[no-untyped-def]
     pass  # for tests
 
 
-def fct5(arg0, /, arg1, *arg2, arg3, arg4=4, **arg5):
+def fct5(arg0, /, arg1, *arg2, arg3, arg4=4, **arg5):  # type: ignore[no-untyped-def]
     pass  # for tests
 
 
@@ -39,7 +39,7 @@ def fct6(
     arg3: int,
     arg4: int = 4,
     **arg5: List[int],
-):
+) -> None:
     pass  # for tests
 
 
@@ -60,6 +60,9 @@ def fct6(
         (dict, ()),
     ),
     ids=lambda x: str(x.__name__ if callable(x) else x),
-)
-def test_mandatory_params(fct, expected):
+)  # type: ignore[misc]
+# Typing note: see https://github.com/python/mypy/issues/13436
+def test_mandatory_params(
+    fct: Callable[..., object], expected: Tuple[str, ...]
+) -> None:
     assert get_mandatory_params(fct) == expected

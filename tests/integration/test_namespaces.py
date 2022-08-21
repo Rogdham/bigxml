@@ -1,6 +1,8 @@
+from typing import Iterator, Tuple
+
 import pytest
 
-from bigxml import Parser, xml_handle_element
+from bigxml import Parser, XMLElement, xml_handle_element
 
 XML = b"""
 <root xmlns="https://example.com/xml/"
@@ -16,7 +18,7 @@ XML = b"""
 """
 
 
-def test_namespaces():
+def test_namespaces() -> None:
     class Handler:
 
         #
@@ -26,21 +28,21 @@ def test_namespaces():
         # using `aaa` handle all {*}aaa unless overridden
         @staticmethod
         @xml_handle_element("root", "aaa")
-        def handle_aaa(node):
-            yield ("aaa", node.namespace)
+        def handle_aaa(node: XMLElement) -> Iterator[Tuple[str, str, str]]:
+            yield ("aaa", node.namespace, "")
 
         # using `{...}aaa` overrides `aaa` handler
         @staticmethod
         @xml_handle_element("root", "{https://example.com/xml/ex}aaa")
-        def handle_aaa_ex(node):
-            yield ("aaa_ex", node.namespace)
+        def handle_aaa_ex(node: XMLElement) -> Iterator[Tuple[str, str, str]]:
+            yield ("aaa_ex", node.namespace, "")
 
         # using `{}aaa` overrides `aaa` handler when there is no namespace
         @staticmethod
         @xml_handle_element("root", "{}aaa")
-        def handle_aaa_no_namespace(node):
+        def handle_aaa_no_namespace(node: XMLElement) -> Iterator[Tuple[str, str, str]]:
             # this code is never run
-            yield ("aaa_no_namespace", node.namespace)
+            yield ("aaa_no_namespace", node.namespace, "")
 
         #
         # namespaces in element attributes
@@ -48,7 +50,7 @@ def test_namespaces():
 
         @staticmethod
         @xml_handle_element("root", "bbb")
-        def handle_bbb(node):
+        def handle_bbb(node: XMLElement) -> Iterator[Tuple[str, str, str]]:
             # `name` gets any namespace
             # `{ns}name` gets specific namespace
             # `{}name` gets no namespace
@@ -76,13 +78,15 @@ def test_namespaces():
                 yield ("bbb", "yyy default", node.attributes["yyy"])
 
         @staticmethod
-        def xml_handler(generator):
+        def xml_handler(
+            generator: Iterator[Tuple[str, str, str]]
+        ) -> Iterator[Tuple[str, str, str]]:
             yield from generator
 
     assert list(Parser(XML).iter_from(Handler)) == [
-        ("aaa", "https://example.com/xml/"),
-        ("aaa", "https://example.com/xml/aaa"),
-        ("aaa_ex", "https://example.com/xml/ex"),
+        ("aaa", "https://example.com/xml/", ""),
+        ("aaa", "https://example.com/xml/aaa", ""),
+        ("aaa_ex", "https://example.com/xml/ex", ""),
         ("bbb", "uuu default", "0"),
         ("bbb", "uuu no", "0"),
         ("bbb", "vvv default", "1"),

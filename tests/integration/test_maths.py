@@ -1,7 +1,8 @@
 from functools import reduce
 import operator
+from typing import Callable, Iterable, Iterator, List, Optional, Union
 
-from bigxml import Parser, xml_handle_element, xml_handle_text
+from bigxml import Parser, XMLElement, XMLText, xml_handle_element, xml_handle_text
 
 XML = b"""
 <expr op="sub">
@@ -26,11 +27,11 @@ XML = b"""
 """
 
 
-def test_maths_eval_list():
-    handlers = []
+def test_maths_eval_list() -> None:
+    handlers: List[Callable[[Union[XMLElement, XMLText]], Optional[Iterable[int]]]] = []
 
     @xml_handle_element("expr")
-    def handle_expr(node):
+    def handle_expr(node: XMLElement) -> Iterator[int]:
         yield reduce(
             getattr(operator, node.attributes["op"]),
             node.iter_from(*handlers),
@@ -39,7 +40,7 @@ def test_maths_eval_list():
     handlers.append(handle_expr)
 
     @xml_handle_text("number")
-    def handle_number(node):
+    def handle_number(node: XMLText) -> Iterator[int]:
         yield int(node.text)
 
     handlers.append(handle_number)
@@ -47,11 +48,11 @@ def test_maths_eval_list():
     assert list(Parser(XML).iter_from(*handlers)) == [1337]
 
 
-def test_maths_eval_class():
+def test_maths_eval_class() -> None:
     class Eval:
         @staticmethod
         @xml_handle_element("expr")
-        def handle_expr(node):
+        def handle_expr(node: XMLElement) -> Iterator[int]:
             yield reduce(
                 getattr(operator, node.attributes["op"]),
                 node.iter_from(Eval),
@@ -59,11 +60,11 @@ def test_maths_eval_class():
 
         @staticmethod
         @xml_handle_text("number")
-        def handle_number(node):
+        def handle_number(node: XMLText) -> Iterator[int]:
             yield int(node.text)
 
         @staticmethod
-        def xml_handler(generator):
+        def xml_handler(generator: Iterator[int]) -> Iterator[int]:
             yield from generator
 
     assert list(Parser(XML).iter_from(Eval)) == [1337]

@@ -1,3 +1,5 @@
+from typing import Iterable
+
 import pytest
 
 from bigxml.utils import consume, last_item_or_none
@@ -20,11 +22,11 @@ from bigxml.utils import consume, last_item_or_none
     ),
     ids=repr,
 )
-def test_last_item_or_none(iterable, expected):
+def test_last_item_or_none(iterable: Iterable[object], expected: object) -> None:
     assert last_item_or_none(iterable) == expected
 
 
-def test_consume():
+def test_consume() -> None:
     iterator = iter("abc")
     assert consume(iterator) is True
     with pytest.raises(StopIteration):
@@ -48,5 +50,5 @@ def test_consume():
     ),
     ids=repr,
 )
-def test_consume_return_value(iterable, expected):
+def test_consume_return_value(iterable: Iterable[object], expected: object) -> None:
     assert consume(iterable) is expected

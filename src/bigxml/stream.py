@@ -1,15 +1,17 @@
 from io import IOBase
+from typing import Any, Generator, Iterable, Optional, cast
 
+from bigxml.typing import Streamable, SupportsRead
 from bigxml.utils import autostart_generator
 
 
 @autostart_generator
-def _flatten_stream(stream):
-    yield
+def _flatten_stream(stream: Streamable) -> Generator[Optional[memoryview], int, None]:
+    yield None
 
     # bytes-like
     try:
-        yield memoryview(stream)
+        yield memoryview(cast(bytes, stream))
         return
     except TypeError:
         pass
@@ -17,8 +19,8 @@ def _flatten_stream(stream):
     # file-like
     if hasattr(stream, "read"):
         while True:
-            size = yield
-            data = stream.read(size)
+            size = yield None
+            data = cast(SupportsRead[Any], stream).read(size)
             if not data:
                 break  # EOF
             try:
@@ -47,7 +49,7 @@ def _flatten_stream(stream):
 
     # stream iterator (recursive)
     try:
-        substreams = iter(stream)
+        substreams = iter(cast(Iterable[Streamable], stream))
     except TypeError:
         # other types not supported
         # pylint: disable=raise-missing-from
@@ -58,8 +60,10 @@ def _flatten_stream(stream):
 
 
 @autostart_generator
-def _convert_to_read(data_stream):
-    size = yield
+def _convert_to_read(
+    data_stream: Generator[Optional[memoryview], int, None]
+) -> Generator[bytes, int, None]:
+    size = yield b""
     while True:
         try:
             buffer = data_stream.send(size)
@@ -75,15 +79,15 @@ def _convert_to_read(data_stream):
 
 
 class StreamChain(IOBase):
-    def __init__(self, *streams):
+    def __init__(self, *streams: Streamable) -> None:
         super().__init__()
         self._read = _convert_to_read(_flatten_stream(streams))
 
-    def read(self, size=None):
+    def read(self, size: Optional[int] = None) -> bytes:
         if not isinstance(size, int) or size <= 0:
             raise NotImplementedError("Read size must be strictly positive")
         return self._read.send(size)
 
     @staticmethod
-    def readable():
+    def readable() -> bool:
         return True

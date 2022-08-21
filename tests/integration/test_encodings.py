@@ -1,8 +1,9 @@
+from typing import Iterator
 import xml.etree.ElementTree as ET
 
 import pytest
 
-from bigxml import Parser, xml_handle_element
+from bigxml import Parser, XMLElement, xml_handle_element
 
 TXT_STR = "aàâæcçeéèêëiïîoôuùûü"
 XML_STR = f"<élément>{TXT_STR}</élément>"
@@ -55,15 +56,15 @@ XML_STR = f"<élément>{TXT_STR}</élément>"
         ),
     ),
 )
-def test_encoding(xml):
+def test_encoding(xml: bytes) -> None:
     @xml_handle_element("élément")
-    def handler(node):
+    def handler(node: XMLElement) -> Iterator[str]:
         yield node.text
 
     assert Parser(xml).return_from(handler) == TXT_STR
 
 
-def test_wrong_explicit_encoding():
+def test_wrong_explicit_encoding() -> None:
     xml = ("<?xml version='1.0' encoding='ISO-8859-1'?>" + XML_STR).encode("utf_8")
     parser = Parser(xml)
     with pytest.raises(ET.ParseError):

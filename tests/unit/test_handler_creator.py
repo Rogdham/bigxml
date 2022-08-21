@@ -1,5 +1,18 @@
 from dataclasses import dataclass
 from functools import partial
+from typing import (
+    TYPE_CHECKING,
+    Any,
+    Callable,
+    Iterable,
+    Iterator,
+    List,
+    Optional,
+    Tuple,
+    Type,
+    Union,
+    cast,
+)
 from unittest.mock import Mock
 
 import pytest
@@ -8,18 +21,28 @@ from bigxml.handler_creator import CLASS_HANDLER_METHOD_NAME, create_handler
 from bigxml.handler_marker import xml_handle_element, xml_handle_text
 from bigxml.nodes import XMLElement, XMLElementAttributes, XMLText
 
+if TYPE_CHECKING:
+    # see https://github.com/pytest-dev/pytest/issues/7469
+    # for pytest exporting from pytest and not _pytest
+    from _pytest.mark import MarkDecorator, ParameterSet
 
-def create_nodes(*path, parent=None):
+
+def create_nodes(
+    *path: str, parent: Optional[Union[XMLElement, XMLText]] = None
+) -> List[Union[XMLElement, XMLText]]:
     # create nodes
     nodes = [parent] if parent is not None else []
     for node_name in path:
+        # the cast below is wrong but makes our life easier
+        # plus that case is kind of tested in tests below
+        parents = tuple(cast(List[XMLElement], nodes))
         if node_name == ":text:":
-            node = XMLText(text="text", parents=tuple(nodes))
+            node: Union[XMLElement, XMLText] = XMLText(text="text", parents=parents)
         else:
             node = XMLElement(
                 name=node_name,
                 attributes=XMLElementAttributes({}),
-                parents=tuple(nodes),
+                parents=parents,
             )
         nodes.append(node)
 
@@ -30,7 +53,9 @@ def create_nodes(*path, parent=None):
 
         # get existing children
         try:
-            children = list(node_parent.iter_from(lambda n: (n,)))
+            children: List[Union[XMLElement, XMLText]] = list(
+                node_parent.iter_from(lambda n: (n,))
+            )
         except RuntimeError:
             children = []
 
@@ -42,19 +67,22 @@ def create_nodes(*path, parent=None):
 
         # create handle
         def handle(
-            handler, _children=children
-        ):  # pylint: disable=dangerous-default-value
-            for child in _children:
+            handler: Callable[[Union[XMLElement, XMLText]], Iterator[object]],
+            children: List[Union[XMLElement, XMLText]],
+        ) -> Iterable[object]:  # pylint: disable=dangerous-default-value
+            for child in children:
                 yield from handler(child)
 
         # pylint: disable=protected-access
-        node_parent._handle = handle
+        node_parent._handle = partial(handle, children=children)  # type: ignore[assignment]
 
     return nodes
 
 
-def cases(*args):
-    tests = []
+def cases(
+    *args: Tuple[Tuple[str, ...], Optional[str], Optional[str]]
+) -> "MarkDecorator":
+    tests: List["ParameterSet"] = []
     for node_path, expected_text, expected_node_name in args:
         nodes = create_nodes(*node_path)
         if expected_node_name is None:
@@ -63,7 +91,12 @@ def cases(*args):
         else:
             expected_node = nodes[node_path.index(expected_node_name)]
 
-        def test_create_handler(root, expected_text, expected_node, *handles):
+        def test_create_handler(
+            root: Union[XMLElement, XMLText],
+            expected_text: Optional[str],
+            expected_node: Optional[str],
+            *handles: object,
+        ) -> None:
             handler = create_handler(*handles)
             out = list(handler(root))
             if expected_node is None:
@@ -83,12 +116,14 @@ def cases(*args):
     return pytest.mark.parametrize("test_create_handler", tests)
 
 
+TEST_CREATE_HANDLER_TYPE = Callable[..., None]  # pylint: disable=invalid-name
+
 #
 # no handler
 #
 
 
-def test_no_handlers():
+def test_no_handlers() -> None:
     handler = create_handler()
     node = Mock()
     assert not list(handler(node))
@@ -106,8 +141,10 @@ def test_no_handlers():
     (("d0", "d1", "d2"), "catchall", "d0"),
     ((":text:",), "catchall", ":text:"),
 )
-def test_one_catchall(test_create_handler):
-    def catchall(node):
+def test_one_catchall(test_create_handler: TEST_CREATE_HANDLER_TYPE) -> None:
+    def catchall(
+        node: Union[XMLElement, XMLText]
+    ) -> Iterator[Tuple[str, Union[XMLElement, XMLText]]]:
         yield ("catchall", node)
 
     test_create_handler(catchall)
@@ -129,30 +166,30 @@ def test_one_catchall(test_create_handler):
     (("t0", "t1", ":text:"), "5", ":text:"),
     (("t0", "t1", ":text:", "t2"), "5", ":text:"),
 )
-def test_several_functions(test_create_handler):
+def test_several_functions(test_create_handler: TEST_CREATE_HANDLER_TYPE) -> None:
     @xml_handle_element("a")
-    def handle0(node):
+    def handle0(node: XMLElement) -> Iterator[Tuple[str, XMLElement]]:
         yield ("0", node)
 
     @xml_handle_element("{foo}a")
-    def handle1(node):
+    def handle1(node: XMLElement) -> Iterator[Tuple[str, XMLElement]]:
         yield ("1", node)
 
     @xml_handle_element("b")
     @xml_handle_element("c")
-    def handle2(node):
+    def handle2(node: XMLElement) -> Iterator[Tuple[str, XMLElement]]:
         yield ("2", node)
 
     @xml_handle_element("d0", "d1")
-    def handle3(node):
+    def handle3(node: XMLElement) -> Iterator[Tuple[str, XMLElement]]:
         yield ("3", node)
 
     @xml_handle_text()
-    def handle4(node):
+    def handle4(node: XMLText) -> Iterator[Tuple[str, XMLText]]:
         yield ("4", node)
 
     @xml_handle_text("t0", "t1")
-    def handle5(node):
+    def handle5(node: XMLText) -> Iterator[Tuple[str, XMLText]]:
         yield ("5", node)
 
     test_create_handler(handle0, handle1, handle2, handle3, handle4, handle5)
@@ -161,9 +198,9 @@ def test_several_functions(test_create_handler):
 @cases(
     (("a", ":text:", "b"), None, None),
 )
-def test_invalid_handle(test_create_handler):
+def test_invalid_handle(test_create_handler: TEST_CREATE_HANDLER_TYPE) -> None:
     @xml_handle_element("a", XMLText.name, "b")
-    def handle_invalid(node):
+    def handle_invalid(node: XMLElement) -> Iterator[Tuple[str, XMLElement]]:
         yield ("nope", node)
 
     # just make sure it does not crash
@@ -186,7 +223,9 @@ def test_invalid_handle(test_create_handler):
     ("a", ("a",), ["a"]),
     ids=type,
 )
-def test_syntactic_sugar_one_level(test_create_handler, handler):
+def test_syntactic_sugar_one_level(
+    test_create_handler: TEST_CREATE_HANDLER_TYPE, handler: object
+) -> None:
     test_create_handler(handler)
 
 
@@ -204,7 +243,9 @@ def test_syntactic_sugar_one_level(test_create_handler, handler):
     (("a", "b"), ["a", "b"]),
     ids=type,
 )
-def test_syntactic_sugar_two_levels(test_create_handler, handler):
+def test_syntactic_sugar_two_levels(
+    test_create_handler: TEST_CREATE_HANDLER_TYPE, handler: object
+) -> None:
     test_create_handler(handler)
 
 
@@ -230,41 +271,45 @@ def test_syntactic_sugar_two_levels(test_create_handler, handler):
     (("t0", "t1", ":text:", "t2"), "5", ":text:"),
 )
 @pytest.mark.parametrize("instantiate_class", (False, True))
-def test_class_instance(test_create_handler, instantiate_class):
+def test_class_instance(
+    test_create_handler: TEST_CREATE_HANDLER_TYPE, instantiate_class: bool
+) -> None:
     class Handler:
         @xml_handle_element("a")
         @staticmethod
-        def handle0(node):
+        def handle0(node: XMLElement) -> Iterator[Tuple[str, XMLElement]]:
             yield ("0", node)
 
         @xml_handle_element("{foo}a")
         @staticmethod
-        def handle1(node):
+        def handle1(node: XMLElement) -> Iterator[Tuple[str, XMLElement]]:
             yield ("1", node)
 
         @xml_handle_element("b")
         @xml_handle_element("c")
         @staticmethod
-        def handle2(node):
+        def handle2(node: XMLElement) -> Iterator[Tuple[str, XMLElement]]:
             yield ("2", node)
 
         @xml_handle_element("d0", "d1")
         @staticmethod
-        def handle3(node):
+        def handle3(node: XMLElement) -> Iterator[Tuple[str, XMLElement]]:
             yield ("3", node)
 
         @xml_handle_text()
         @staticmethod
-        def handle4(node):
+        def handle4(node: XMLText) -> Iterator[Tuple[str, XMLText]]:
             yield ("4", node)
 
         @xml_handle_text("t0", "t1")
         @staticmethod
-        def handle5(node):
+        def handle5(node: XMLText) -> Iterator[Tuple[str, XMLText]]:
             yield ("5", node)
 
         @staticmethod
-        def xml_handler(generator):
+        def xml_handler(
+            generator: Iterator[Tuple[str, Union[XMLElement, XMLText]]]
+        ) -> Iterator[Tuple[str, Union[XMLElement, XMLText]]]:
             yield from generator
 
     handler = Handler() if instantiate_class else Handler
@@ -280,17 +325,21 @@ def test_class_instance(test_create_handler, instantiate_class):
     (("x1", "y1", "z", "w", "a"), None, None),
 )
 @pytest.mark.parametrize("instantiate_class", (False, True))
-def test_marked_class_instance(test_create_handler, instantiate_class):
+def test_marked_class_instance(
+    test_create_handler: TEST_CREATE_HANDLER_TYPE, instantiate_class: bool
+) -> None:
     @xml_handle_element("x0", "y0")
     @xml_handle_element("x1", "y1", "z")
     class Handler:
         @xml_handle_element("a")
         @staticmethod
-        def handle0(node):
+        def handle0(node: XMLElement) -> Iterator[Tuple[str, XMLElement]]:
             yield ("0", node)
 
         @staticmethod
-        def xml_handler(generator):
+        def xml_handler(
+            generator: Iterator[Tuple[str, XMLElement]]
+        ) -> Iterator[Tuple[str, XMLElement]]:
             yield from generator
 
     handler = Handler() if instantiate_class else Handler
@@ -311,38 +360,46 @@ def test_marked_class_instance(test_create_handler, instantiate_class):
     (("x", "y1", "z", "a"), None, None),
 )
 @pytest.mark.parametrize("instantiate_class", (False, True))
-def test_deep_marked_class_instances(test_create_handler, instantiate_class):
+def test_deep_marked_class_instances(
+    test_create_handler: TEST_CREATE_HANDLER_TYPE, instantiate_class: bool
+) -> None:
     @xml_handle_element("y0")
     class DeepHandler0:
         @xml_handle_element("a")
         @staticmethod
-        def handle0(node):
+        def handle0(node: XMLElement) -> Iterator[Tuple[str, XMLElement]]:
             yield ("0", node)
 
         @staticmethod
-        def xml_handler(generator):
+        def xml_handler(
+            generator: Iterator[Tuple[str, XMLElement]]
+        ) -> Iterator[Tuple[str, XMLElement]]:
             yield from generator
 
     @xml_handle_element("y1")
     class DeepHandler1:
         @xml_handle_element("a")
         @staticmethod
-        def handle1(node):
+        def handle1(node: XMLElement) -> Iterator[Tuple[str, XMLElement]]:
             yield ("1", node)
 
         @staticmethod
-        def xml_handler(generator):
+        def xml_handler(
+            generator: Iterator[Tuple[str, XMLElement]]
+        ) -> Iterator[Tuple[str, XMLElement]]:
             yield from generator
 
     @xml_handle_element("x")
     class Handler:
         deep_handler0 = DeepHandler0()
 
-        def __init__(self):
+        def __init__(self) -> None:
             self.deep_handler1 = DeepHandler1()
 
         @staticmethod
-        def xml_handler(generator):
+        def xml_handler(
+            generator: Iterator[Tuple[str, XMLElement]]
+        ) -> Iterator[Tuple[str, XMLElement]]:
             yield from generator
 
     handler = Handler() if instantiate_class else Handler
@@ -357,15 +414,17 @@ def test_deep_marked_class_instances(test_create_handler, instantiate_class):
 @cases(
     (("x", "a"), "0", "a"),
 )
-def test_class_instance_with_handler(test_create_handler):
+def test_class_instance_with_handler(
+    test_create_handler: TEST_CREATE_HANDLER_TYPE,
+) -> None:
     @xml_handle_element("x")
     class Handler:
         @xml_handle_element("a")
         @staticmethod
-        def handle0(node):
+        def handle0(node: XMLElement) -> Iterator[Tuple[str, XMLElement]]:
             yield ("0", node)
 
-        def xml_handler(self):
+        def xml_handler(self) -> Iterator[object]:
             raise RuntimeError(self)  # testing that it is not called
 
     handler = Handler()
@@ -378,7 +437,7 @@ def test_class_instance_with_handler(test_create_handler):
 #
 
 
-def test_class_without_sub_handler():
+def test_class_without_sub_handler() -> None:
     @xml_handle_element("x")
     class Handler:
         pass
@@ -392,58 +451,59 @@ def test_class_without_sub_handler():
 
 @pytest.mark.parametrize("init_mandatory", (False, True))
 @pytest.mark.parametrize("init_optional", (False, True))
-def test_class_init(init_mandatory, init_optional):
+def test_class_init(init_mandatory: bool, init_optional: bool) -> None:
+    # pylint: disable=too-many-locals
+
+    @xml_handle_element("x", "y")
+    class HandlerA:
+        def __init__(self, node: XMLElement, answer: int = 42) -> None:
+            self.seen: List[XMLElement] = []
+            self.root = node
+            self.answer = answer
+
+        @xml_handle_element("a", "b")
+        def handle0(self, node: XMLElement) -> None:
+            self.seen.append(node)
+
+    @xml_handle_element("x", "y")
+    class HandlerB:
+        def __init__(self, node: XMLElement) -> None:
+            self.seen: List[XMLElement] = []
+            self.root = node
+
+        @xml_handle_element("a", "b")
+        def handle0(self, node: XMLElement) -> None:
+            self.seen.append(node)
+
+    @xml_handle_element("x", "y")
+    class HandlerC:
+        def __init__(self, answer: int = 42) -> None:
+            self.seen: List[XMLElement] = []
+            self.answer = answer
+
+        @xml_handle_element("a", "b")
+        def handle0(self, node: XMLElement) -> None:
+            self.seen.append(node)
+
+    @xml_handle_element("x", "y")
+    class HandlerD:
+        def __init__(self) -> None:
+            self.seen: List[XMLElement] = []
+
+        @xml_handle_element("a", "b")
+        def handle0(self, node: XMLElement) -> None:
+            self.seen.append(node)
+
     if init_mandatory:
-
         if init_optional:
-
-            @xml_handle_element("x", "y")
-            class Handler:
-                def __init__(self, node, answer=42):
-                    self.seen = []
-                    self.root = node
-                    self.answer = answer
-
-                @xml_handle_element("a", "b")
-                def handle0(self, node):
-                    self.seen.append(node)
-
+            Handler: Type[object] = HandlerA
         else:
-
-            @xml_handle_element("x", "y")
-            class Handler:
-                def __init__(self, node):
-                    self.seen = []
-                    self.root = node
-
-                @xml_handle_element("a", "b")
-                def handle0(self, node):
-                    self.seen.append(node)
-
+            Handler = HandlerB
     else:
-
         if init_optional:
-
-            @xml_handle_element("x", "y")
-            class Handler:
-                def __init__(self, answer=42):
-                    self.seen = []
-                    self.answer = answer
-
-                @xml_handle_element("a", "b")
-                def handle0(self, node):
-                    self.seen.append(node)
-
+            Handler = HandlerC
         else:
-
-            @xml_handle_element("x", "y")
-            class Handler:
-                def __init__(self):
-                    self.seen = []
-
-                @xml_handle_element("a", "b")
-                def handle0(self, node):
-                    self.seen.append(node)
+            Handler = HandlerD
 
     #   x -> y0 -> a0 -> b0
     #                 -> b1
@@ -463,7 +523,7 @@ def test_class_init(init_mandatory, init_optional):
     # pylint: enable=unbalanced-tuple-unpacking
 
     handler = create_handler(Handler)
-    items = list(handler(node_x))
+    items: List[Any] = list(handler(node_x))
     assert all(isinstance(item, Handler) for item in items)
     assert len(items) == 2
     assert items[0].seen == [node_b0, node_b1, node_b2]
@@ -476,16 +536,16 @@ def test_class_init(init_mandatory, init_optional):
         assert items[1].answer == 42
 
 
-def test_class_init_text_node():
+def test_class_init_text_node() -> None:
     @xml_handle_text("x", "y0")
     @xml_handle_element("x", "y1")
     class Handler:
-        def __init__(self, node):
+        def __init__(self, node: XMLElement) -> None:
             self.root = node
-            self.node = None
+            self.node: Optional[XMLText] = None
 
         @xml_handle_text
-        def handle0(self, node):
+        def handle0(self, node: XMLText) -> None:
             self.node = node
 
     #   x -> y0 -> :text:
@@ -496,7 +556,7 @@ def test_class_init_text_node():
     # pylint: enable=unbalanced-tuple-unpacking
 
     handler = create_handler(Handler)
-    items = list(handler(node_x))
+    items: List[Any] = list(handler(node_x))
     assert all(isinstance(item, Handler) for item in items)
     assert len(items) == 2
     assert items[0].root == node_txt0
@@ -505,10 +565,10 @@ def test_class_init_text_node():
     assert items[1].node == node_txt1
 
 
-def test_class_init_two_mandatory_parameters():
+def test_class_init_two_mandatory_parameters() -> None:
     @xml_handle_element("x")
     class Handler:
-        def __init__(self, node, answer):
+        def __init__(self, node: XMLElement, answer: int) -> None:
             self.node = node
             self.answer = answer
 
@@ -522,7 +582,7 @@ def test_class_init_two_mandatory_parameters():
     assert "Add a default value for dataclass fields" not in str(excinfo.value)
 
 
-def test_dataclass_init_two_mandatory_parameters():
+def test_dataclass_init_two_mandatory_parameters() -> None:
     @xml_handle_element("x")
     @dataclass
     class Handler:
@@ -539,10 +599,10 @@ def test_dataclass_init_two_mandatory_parameters():
     assert "Add a default value for dataclass fields" in str(excinfo.value)
 
 
-def test_class_init_crash():
+def test_class_init_crash() -> None:
     @xml_handle_element("x")
     class Handler:
-        def __init__(self):
+        def __init__(self) -> None:
             raise TypeError("Something went wrong")
 
     nodes = create_nodes("x", "a")
@@ -553,21 +613,21 @@ def test_class_init_crash():
     assert str(excinfo.value) == "Something went wrong"
 
 
-def test_class_with_handler():
+def test_class_with_handler() -> None:
     @xml_handle_element("x")
     class Handler:
-        def __init__(self):
-            self.nodes = []
+        def __init__(self) -> None:
+            self.nodes: List[Tuple[str, XMLElement]] = []
 
         @xml_handle_element("a")
-        def handle0(self, node):
+        def handle0(self, node: XMLElement) -> None:
             self.nodes.append(("x", node))
 
         @xml_handle_element("b")
-        def handle1(self, node):
+        def handle1(self, node: XMLElement) -> None:
             self.nodes.append(("y", node))
 
-        def xml_handler(self):
+        def xml_handler(self) -> Iterator[Tuple[str, Optional[XMLElement]]]:
             yield ("start", None)
             for txt, node in self.nodes:
                 yield (f"_{txt}", node)
@@ -587,12 +647,12 @@ def test_class_with_handler():
     ]
 
 
-def test_class_no_handler_warning():
+def test_class_no_handler_warning() -> None:
     @xml_handle_element("x")
     class Handler:
         @xml_handle_element("a")
         @staticmethod
-        def handle0(node):
+        def handle0(node: XMLElement) -> Iterable[Tuple[str, XMLElement]]:
             yield ("0", node)  # this creates a warning
 
     nodes = create_nodes("x", "a")
@@ -603,16 +663,16 @@ def test_class_no_handler_warning():
     assert isinstance(items[0], Handler)
 
 
-def test_class_with_handler_static_method():
+def test_class_with_handler_static_method() -> None:
     @xml_handle_element("x")
     class Handler:
         @xml_handle_element("a")
         @staticmethod
-        def handle0(node):
+        def handle0(node: XMLElement) -> Iterable[Tuple[str, XMLElement]]:
             yield ("0", node)  # this creates a warning
 
         @staticmethod
-        def xml_handler():
+        def xml_handler() -> Iterable[Tuple[str, None]]:
             yield ("end", None)
 
     nodes = create_nodes("x", "a")
@@ -621,23 +681,25 @@ def test_class_with_handler_static_method():
         assert list(handler(nodes[0])) == [("end", None)]
 
 
-def test_class_with_handler_generator():
+def test_class_with_handler_generator() -> None:
     @xml_handle_element("x")
     class Handler:
-        def __init__(self):
-            self.nodes = []
+        def __init__(self) -> None:
+            self.nodes: List[Tuple[str, XMLElement]] = []
 
         @xml_handle_element("a")
-        def handle0(self, node):
+        def handle0(self, node: XMLElement) -> Iterable[Tuple[str, XMLElement]]:
             self.nodes.append(("x", node))
             yield ("0", node)
 
         @xml_handle_element("b")
-        def handle1(self, node):
+        def handle1(self, node: XMLElement) -> Iterable[Tuple[str, XMLElement]]:
             self.nodes.append(("y", node))
             yield ("1", node)
 
-        def xml_handler(self, generator):
+        def xml_handler(
+            self, generator: Iterable[Tuple[str, XMLElement]]
+        ) -> Iterable[Tuple[str, Optional[XMLElement]]]:
             yield ("start", None)
             for txt, node in self.nodes:
                 # before consuming the generator, self.nodes is empty
@@ -665,21 +727,23 @@ def test_class_with_handler_generator():
     ]
 
 
-def test_class_with_handler_static_method_generator():
+def test_class_with_handler_static_method_generator() -> None:
     @xml_handle_element("x")
     class Handler:
         @xml_handle_element("a")
         @staticmethod
-        def handle0(node):
+        def handle0(node: XMLElement) -> Iterable[Tuple[str, XMLElement]]:
             yield ("0", node)
 
         @xml_handle_element("b")
         @staticmethod
-        def handle1(node):
+        def handle1(node: XMLElement) -> Iterable[Tuple[str, XMLElement]]:
             yield ("1", node)
 
         @staticmethod
-        def xml_handler(generator):
+        def xml_handler(
+            generator: Iterable[Tuple[str, XMLElement]]
+        ) -> Iterable[Tuple[str, Optional[XMLElement]]]:
             yield ("start", None)
             for txt, node in generator:
                 yield (f"h{txt}", node)
@@ -699,18 +763,20 @@ def test_class_with_handler_static_method_generator():
     ]
 
 
-def test_class_with_handler_too_many_mandatory_params():
+def test_class_with_handler_too_many_mandatory_params() -> None:
     @xml_handle_element("x")
     class Handler:
         @xml_handle_element("a")
         @staticmethod
-        def handle0(node):
+        def handle0(node: XMLElement) -> Iterator[Tuple[str, XMLElement]]:
             yield ("0", node)
 
         @staticmethod
-        def xml_handler(generator, extra):
+        def xml_handler(
+            generator: Iterable[Tuple[str, XMLElement]], extra: int
+        ) -> Iterator[Tuple[int, str, XMLElement]]:
             for item in generator:
-                yield (extra, item)
+                yield (extra, *item)
 
     nodes = create_nodes("x", "a")
     handler = create_handler(Handler)
@@ -721,11 +787,11 @@ def test_class_with_handler_too_many_mandatory_params():
     assert "generator, extra" in str(excinfo.value)
 
 
-def test_class_with_handler_invalid_returned_value():
+def test_class_with_handler_invalid_returned_value() -> None:
     @xml_handle_element("x")
     class Handler:
         @staticmethod
-        def xml_handler():
+        def xml_handler() -> int:
             return 42
 
     nodes = create_nodes("x", "a")
@@ -736,7 +802,7 @@ def test_class_with_handler_invalid_returned_value():
     assert "xml_handler should have returned None or an iterable" in str(excinfo.value)
 
 
-def test_class_extends_builtin_str_without_init():
+def test_class_extends_builtin_str_without_init() -> None:
     @xml_handle_element("x")
     class Handler(str):
         pass
@@ -746,11 +812,11 @@ def test_class_extends_builtin_str_without_init():
     assert list(handler(nodes[0])) == [""]
 
 
-def test_class_extends_builtin_list_without_init():
+def test_class_extends_builtin_list_without_init() -> None:
     @xml_handle_element("x")
-    class Handler(list):
+    class Handler(List[XMLElement]):
         @xml_handle_element("a")
-        def handle0(self, node):
+        def handle0(self, node: XMLElement) -> None:
             self.append(node)
 
     nodes = create_nodes("x", "a")
@@ -763,23 +829,31 @@ def test_class_extends_builtin_list_without_init():
 #
 
 
-def test_catchall_handler_not_alone():
+def test_catchall_handler_not_alone() -> None:
     @xml_handle_element("a")
-    def handle(node):
+    def handle(
+        node: Union[XMLElement, XMLText]
+    ) -> Iterator[Tuple[str, Union[XMLElement, XMLText]]]:
         yield ("0", node)
 
-    def catchall(node):
+    def catchall(
+        node: Union[XMLElement, XMLText]
+    ) -> Iterator[Tuple[str, Union[XMLElement, XMLText]]]:
         yield ("1", node)
 
     with pytest.raises(TypeError):
         create_handler(handle, catchall)
 
 
-def test_several_catchall_handlers():
-    def catchall0(node):
+def test_several_catchall_handlers() -> None:
+    def catchall0(
+        node: Union[XMLElement, XMLText]
+    ) -> Iterator[Tuple[str, Union[XMLElement, XMLText]]]:
         yield ("0", node)
 
-    def catchall1(node):
+    def catchall1(
+        node: Union[XMLElement, XMLText]
+    ) -> Iterator[Tuple[str, Union[XMLElement, XMLText]]]:
         yield ("1", node)
 
     with pytest.raises(TypeError):
@@ -800,6 +874,6 @@ def test_several_catchall_handlers():
     ),
     ids=type,
 )
-def test_invalid_handler_type(handler):
+def test_invalid_handler_type(handler: object) -> None:
     with pytest.raises(TypeError):
         create_handler(handler)

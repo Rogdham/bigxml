@@ -20,6 +20,8 @@ adheres to [Semantic Versioning](https://semver.org/).
 
 ### :rocket: Added
 
+- Type hints
+- New export: `HandlerTypeHelper` that can help with type hints in some cases
 - Sanity check on `xml_handler` method of class handlers for returned values (`None` or
   an iterable)
 
@@ -27,6 +29,11 @@ adheres to [Semantic Versioning](https://semver.org/).
 
 - Add tests for PyPy 3.9
 - Refactor handler creator code
+- Type validation with mypy
+- Distribute `py.typed` file in conformance with [PEP 561]
+- Update `typing-extensions` dependency
+
+[pep 561]: https://www.python.org/dev/peps/pep-0561/
 
 ## [0.7.0] - 2022-01-15
 

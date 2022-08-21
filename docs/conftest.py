@@ -2,16 +2,27 @@ from os import chdir, getcwd
 from pathlib import Path
 import re
 from tempfile import TemporaryDirectory
+from typing import Dict, Iterator
 from unittest.mock import Mock
 
 import pytest
 
-from bigxml import Parser, xml_handle_element, xml_handle_text
+from bigxml import (
+    HandlerTypeHelper,
+    Parser,
+    XMLElement,
+    XMLText,
+    xml_handle_element,
+    xml_handle_text,
+)
 
 
 @pytest.fixture(scope="module", autouse=True)
-def import_pytest(doctest_namespace):
+def import_pytest(doctest_namespace: Dict[str, object]) -> None:
+    doctest_namespace["HandlerTypeHelper"] = HandlerTypeHelper
     doctest_namespace["Parser"] = Parser
+    doctest_namespace["XMLElement"] = XMLElement
+    doctest_namespace["XMLText"] = XMLText
     doctest_namespace["xml_handle_element"] = xml_handle_element
     doctest_namespace["xml_handle_text"] = xml_handle_text
 
@@ -29,7 +40,7 @@ def import_pytest(doctest_namespace):
 
 
 @pytest.fixture(scope="module", autouse=True)
-def create_files():
+def create_files() -> Iterator[None]:
     cwd = getcwd()
     docs_path = Path(__file__).parent
     try:

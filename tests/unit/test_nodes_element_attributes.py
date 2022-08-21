@@ -46,7 +46,7 @@ XML_ELEMENT_ATTRIBUTES = XMLElementAttributes(ATTRIBUTES)
         "prefer no namespace (3)",
     ),
 )
-def test_get_without_namespace(key, value, should_warn):
+def test_get_without_namespace(key: str, value: str, should_warn: bool) -> None:
     if should_warn:
         with pytest.warns(RuntimeWarning):
             assert XML_ELEMENT_ATTRIBUTES[key] == value
@@ -58,19 +58,19 @@ def test_get_without_namespace(key, value, should_warn):
     "key, value",
     ((k if k[0] == "{" else f"{{}}{k}", v) for k, v in ATTRIBUTES.items()),
 )
-def test_get_with_namespace(key, value):
+def test_get_with_namespace(key: str, value: str) -> None:
     assert XML_ELEMENT_ATTRIBUTES[key] == value
 
 
-def test_iter():
+def test_iter() -> None:
     assert set(iter(XML_ELEMENT_ATTRIBUTES)) == set(ATTRIBUTES.keys())
 
 
-def test_len():
+def test_len() -> None:
     assert len(XML_ELEMENT_ATTRIBUTES) == 13
 
 
-def test_eq():
+def test_eq() -> None:
     i = XMLElementAttributes({"foo": "bar"})
     assert i == i  # pylint: disable=comparison-with-itself
     assert i == XMLElementAttributes(i)

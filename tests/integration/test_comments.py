@@ -1,4 +1,6 @@
-from bigxml import Parser, xml_handle_element
+from typing import Iterator
+
+from bigxml import Parser, XMLElement, xml_handle_element
 
 XML = b"""
 <comments>
@@ -18,9 +20,9 @@ XML = b"""
 """
 
 
-def test_comments():
+def test_comments() -> None:
     @xml_handle_element("comments", "comment")
-    def handler(node):
+    def handler(node: XMLElement) -> Iterator[str]:
         yield node.text
 
     items = Parser(XML).iter_from(handler)

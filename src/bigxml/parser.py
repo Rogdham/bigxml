@@ -1,19 +1,31 @@
+from typing import TYPE_CHECKING, Callable, Iterator, Optional, Tuple, Union
+
 from defusedxml.ElementTree import iterparse
 
 from bigxml.handle_mgr import HandleMgr
 from bigxml.nodes import XMLElement, XMLElementAttributes, XMLText
 from bigxml.stream import StreamChain
+from bigxml.typing import Streamable, T
 from bigxml.utils import IterWithRollback
 
+if TYPE_CHECKING:
+    from defusedxml.ElementTree import Element
 
-def _parse(iterator, handler, parents, parent_elem, expected_iteration):
+
+def _parse(
+    iterator: IterWithRollback[Tuple[str, "Element"]],
+    handler: Callable[[Union[XMLElement, XMLText]], Iterator[T]],
+    parents: Tuple[XMLElement, ...],
+    parent_elem: Optional["Element"],
+    expected_iteration: int,
+) -> Iterator[T]:
     if iterator.iteration != expected_iteration:
         raise RuntimeError("Tried to access a node out of order")
 
     depth = 0
-    last_child = None
+    last_child: Optional["Element"] = None
 
-    def handle_text():
+    def handle_text() -> Iterator[T]:
         if last_child is not None:
             text = last_child.tail
         elif parent_elem is not None:
@@ -24,7 +36,7 @@ def _parse(iterator, handler, parents, parent_elem, expected_iteration):
             node = XMLText(text=text, parents=parents)
             yield from handler(node)
 
-    def create_node(elem, iteration):
+    def create_node(elem: "Element", iteration: int) -> Union[XMLElement, XMLText]:
         node = XMLElement(
             name=elem.tag, attributes=XMLElementAttributes(elem.attrib), parents=parents
         )
@@ -58,6 +70,6 @@ def _parse(iterator, handler, parents, parent_elem, expected_iteration):
 
 
 class Parser(HandleMgr):
-    def __init__(self, *streams):
+    def __init__(self, *streams: Streamable) -> None:
         iterator = IterWithRollback(iterparse(StreamChain(*streams), ("start", "end")))
         self._handle = lambda h: _parse(iterator, h, (), None, 0)

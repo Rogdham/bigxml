@@ -1,23 +1,43 @@
 from itertools import count
+from typing import Callable, Dict, Iterator, List, Optional, Tuple, Union
 
 import pytest
 
+from bigxml.handler_marker import xml_handle_element
 from bigxml.nodes import XMLElement, XMLElementAttributes, XMLText
 from bigxml.parser import Parser
 
+HANDLER_TYPE = Callable[  # pylint: disable=invalid-name
+    [Union[XMLElement, XMLText]],
+    Iterator[Tuple[str, Union[XMLElement, XMLText]]],
+]
+
 
 @pytest.fixture
-def handler():
+def handler() -> Iterator[HANDLER_TYPE]:
     return_values = count()
 
-    def handler_fct(node):
+    def handler_fct(
+        node: Union[XMLElement, XMLText]
+    ) -> Iterator[Tuple[str, Union[XMLElement, XMLText]]]:
         yield (f"handler-yield-{next(return_values)}", node)
 
     yield handler_fct
 
 
-def elem(name, *, attributes=None, parents=(), namespace=""):
-    return XMLElement(name, XMLElementAttributes(attributes or {}), parents, namespace)
+def elem(
+    name: str,
+    *,
+    attributes: Optional[Dict[str, str]] = None,
+    parents: Tuple["XMLElement", ...] = (),
+    namespace: str = "",
+) -> XMLElement:
+    return XMLElement(
+        name,
+        XMLElementAttributes(attributes or {}),
+        parents,
+        namespace,
+    )
 
 
 root_node = elem("root")
@@ -41,7 +61,15 @@ root_node = elem("root")
     ],
     ids=["self-closing", "empty", "with text", "with children", "attributes", "xmlns"],
 )
-def test_root_level(xml, node, handler):  # pylint: disable=redefined-outer-name
+def test_root_level(
+    xml: bytes,
+    node: XMLElement,
+    # pylint: disable=redefined-outer-name
+    handler: Callable[
+        [Union[XMLElement, XMLText]],
+        Iterator[Tuple[str, Union[XMLElement, XMLText]]],
+    ],
+) -> None:
     parser = Parser(xml)
     assert list(parser.iter_from(handler)) == [
         ("handler-yield-0", node),
@@ -102,8 +130,16 @@ BIG_TEXT_LEN = 1_000_000
         "big texts",
     ],
 )
-def test_contents(xml_contents, nodes, handler):  # pylint: disable=redefined-outer-name
-    def root_handler(node):
+def test_contents(
+    xml_contents: bytes,
+    nodes: List[Union[XMLElement, XMLText]],
+    # pylint: disable=redefined-outer-name
+    handler: HANDLER_TYPE,
+) -> None:
+    @xml_handle_element("root")
+    def root_handler(
+        node: XMLElement,
+    ) -> Iterator[Tuple[str, Union[XMLElement, XMLText]]]:
         yield from node.iter_from(handler)
 
     parser = Parser(b"<root>", xml_contents, b"</root>")
@@ -112,11 +148,13 @@ def test_contents(xml_contents, nodes, handler):  # pylint: disable=redefined-ou
     ]
 
 
-def test_out_of_order():
-    def node_handler(node):
+def test_out_of_order() -> None:
+    @xml_handle_element("foo")
+    def node_handler(node: XMLElement) -> Iterator[XMLElement]:
         yield node
 
-    def root_handler(node):
+    @xml_handle_element("root")
+    def root_handler(node: XMLElement) -> Iterator[XMLElement]:
         yield from node.iter_from(node_handler)
 
     parser = Parser(b"<root><foo>hello</foo><foo>world</foo><foo>!</foo></root>")
@@ -128,14 +166,20 @@ def test_out_of_order():
         first_node.text  # pylint: disable=pointless-statement
 
 
-def test_many_small_streams(handler):  # pylint: disable=redefined-outer-name
+def test_many_small_streams(
+    # pylint: disable=redefined-outer-name
+    handler: HANDLER_TYPE,
+) -> None:
     xml = b"<root>Hello<foo />World</root>"
     xml_parts = list(bytes([v]) for v in xml)  # characters one by one
     assert len(xml_parts) == 30
 
     nodes = [text_h_node, elem_f_node, text_w_node]
 
-    def root_handler(node):
+    @xml_handle_element("root")
+    def root_handler(
+        node: XMLElement,
+    ) -> Iterator[Tuple[str, Union[XMLElement, XMLText]]]:
         yield from node.iter_from(handler)
 
     parser = Parser(*xml_parts)

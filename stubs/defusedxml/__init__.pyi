@@ -1,0 +1,6 @@
+# note: only used items are defined here
+
+class DefusedXmlException(ValueError): ...
+class EntitiesForbidden(DefusedXmlException): ...
+
+__all__ = ("DefusedXmlException", "EntitiesForbidden")

@@ -3,14 +3,14 @@ import pytest
 from bigxml.utils import IterWithRollback
 
 
-def test_no_rollback():
+def test_no_rollback() -> None:
     i = IterWithRollback("abcd")
     assert i.iteration == 0
     assert list(i) == ["a", "b", "c", "d"]
     assert i.iteration == 4
 
 
-def test_rollback_start():
+def test_rollback_start() -> None:
     i = IterWithRollback("abcd")
     assert i.iteration == 0
     i.rollback()
@@ -19,7 +19,7 @@ def test_rollback_start():
     assert i.iteration == 4
 
 
-def test_rollback():
+def test_rollback() -> None:
     i = IterWithRollback("abcd")
     assert i.iteration == 0
     assert next(i) == "a"
@@ -51,7 +51,7 @@ def test_rollback():
     assert i.iteration == 4
 
 
-def test_rollback_called_twice():
+def test_rollback_called_twice() -> None:
     i = IterWithRollback("abcd")
     assert i.iteration == 0
     assert next(i) == "a"
