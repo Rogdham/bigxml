@@ -9,6 +9,10 @@ adheres to [Semantic Versioning](https://semver.org/).
 
 [unreleased]: https://github.com/rogdham/bigxml/compare/v0.7.0...HEAD
 
+### :boom: Breaking changes
+
+- End of Python 3.6 support
+
 ### :bug: Fixes
 
 - Fix an edge case when a class decorated with `xml_handle_text` has an attribute
