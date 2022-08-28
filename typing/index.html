@@ -3,9 +3,9 @@
 <head>
     <meta charset="utf-8" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="author" content="Rogdham" /><link rel="canonical" href="https://bigxml.rogdham.net/encodings/" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="author" content="Rogdham" /><link rel="canonical" href="https://bigxml.rogdham.net/typing/" />
       <link rel="shortcut icon" href="../img/favicon.ico" />
-    <title>Encodings - BigXML</title>
+    <title>Typing - BigXML</title>
     <link rel="stylesheet" href="../css/theme.css" />
     <link rel="stylesheet" href="../css/theme_extra.css" />
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/10.5.0/styles/github.min.css" />
@@ -13,9 +13,9 @@
     
       <script>
         // Current page data
-        var mkdocs_page_name = "Encodings";
-        var mkdocs_page_input_path = "encodings.md";
-        var mkdocs_page_url = "/encodings/";
+        var mkdocs_page_name = "Typing";
+        var mkdocs_page_input_path = "typing.md";
+        var mkdocs_page_url = "/typing/";
       </script>
     
     <script src="../js/jquery-3.6.0.min.js" defer></script>
@@ -51,15 +51,21 @@
                   </li>
                   <li class="toctree-l1"><a class="reference internal" href="../recipes/">Recipes</a>
                   </li>
-                  <li class="toctree-l1 current"><a class="reference internal current" href="./">Encodings</a>
-    <ul class="current">
-    <li class="toctree-l2"><a class="reference internal" href="#wrong-encoding">Wrong encoding</a>
-    </li>
-    </ul>
+                  <li class="toctree-l1"><a class="reference internal" href="../encodings/">Encodings</a>
                   </li>
                   <li class="toctree-l1"><a class="reference internal" href="../namespaces/">Namespaces</a>
                   </li>
-                  <li class="toctree-l1"><a class="reference internal" href="../typing/">Typing</a>
+                  <li class="toctree-l1 current"><a class="reference internal current" href="./">Typing</a>
+    <ul class="current">
+    <li class="toctree-l2"><a class="reference internal" href="#handlers">Handlers</a>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#returned-values-from-iter_from-return_from">Returned values from iter_from / return_from</a>
+        <ul>
+    <li class="toctree-l3"><a class="reference internal" href="#several-handlers-with-no-common-type-in-return-value">Several handlers with no common type in return value</a>
+    </li>
+        </ul>
+    </li>
+    </ul>
                   </li>
                   <li class="toctree-l1"><a class="reference internal" href="../faq/">FAQ</a>
                   </li>
@@ -103,9 +109,9 @@
   <ul class="wy-breadcrumbs">
     <li><a href=".." class="icon icon-home" alt="Docs"></a> &raquo;</li>
           <li>User guide &raquo;</li>
-      <li>Encodings</li>
+      <li>Typing</li>
     <li class="wy-breadcrumbs-aside">
-        <a href="https://github.com/rogdham/bigxml/edit/master/docs/encodings.md"
+        <a href="https://github.com/rogdham/bigxml/edit/master/docs/typing.md"
           class="icon icon-github"> Edit on GitHub</a>
     </li>
   </ul>
@@ -114,70 +120,105 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
             <div class="section" itemprop="articleBody">
               
-                <h1 id="stream-encodings">Stream encodings</h1>
-<p>The <a href="../streams/">streams</a> passed to <code>Parser</code> are expected to be <code>bytes</code>-oriented.</p>
-<p>The decoding is performed according to the
-<a href="https://www.w3.org/TR/xml/#charencoding">XML specification</a>, i.e. based on the
-<code>encoding</code> attribute of the XML declaration:</p>
-<pre class="codehilite"><code class="language-xml">&lt;?xml version='1.0' encoding='ISO-8859-1'?&gt;
+                <h1 id="typing">Typing</h1>
+<p><em>BigXML</em> commes natively with type hints, which are checked by <a href="https://mypy.readthedocs.io/en/stable/index.html"><em>mypy</em></a>.</p>
+<p>The benefits are twofold:</p>
+<ul>
+<li>Improve the correctness of the code of the library itself;</li>
+<li>Allow users of the library to benefit from well-defined type hints on the public API.</li>
+</ul>
+<p>As a rule of thumbs, we follow <a href="https://en.wikipedia.org/wiki/Robustness_principle">Postel's law</a> by being as vague as possible
+for the arguments of functions, and as precise as possible for the returned values.</p>
+<h2 id="handlers">Handlers</h2>
+<pre class="codehilite"><code class="language-python">&gt;&gt;&gt; from typing import Iterator, Tuple
+
+&gt;&gt;&gt; @xml_handle_text(&quot;p&quot;)
+... def handle_text(node: XMLText) -&gt; Iterator[str]:
+...     yield node.text
+
+&gt;&gt;&gt; @xml_handle_element(&quot;p&quot;, &quot;em&quot;)
+... def handle_em(node: XMLElement) -&gt; Iterator[str]:
+...     yield node.text
+
+&gt;&gt;&gt; @xml_handle_element(&quot;root&quot;, &quot;cart&quot;)
+... class Cart:
+...     @xml_handle_element(&quot;product&quot;)
+...     def handle_product(self, node: XMLElement) -&gt; Iterator[float]:
+...         yield float(node.attributes[&quot;price&quot;])
+...
+...     def xml_handler(self, iterator: Iterator[float]) -&gt; Iterator[float]:
+...         yield sum(iterator)
 </code></pre>
 
 <div class="admonition note">
 <p class="admonition-title">Note</p>
-<p>The XML declaration is optional for UTF-8 and UTF-16 encodings.</p>
+<p>Instead of <code>Iterator[X]</code>, any iterable as return value works, as well as <code>None</code>.
+<code>Optional[Iterable[X]]</code> can also be used if needed.</p>
 </div>
-<h2 id="wrong-encoding">Wrong encoding</h2>
-<p>Sometimes, the encoding of the stream to parse does not match the one specified in the
-XML declaration.</p>
-<pre class="codehilite"><code class="language-python">&gt;&gt;&gt; @xml_handle_element(&quot;root&quot;)
-... def handler(node):
+<h2 id="returned-values-from-iter_from-return_from">Returned values from <code>iter_from</code> / <code>return_from</code></h2>
+<p>We our trying our best to be as specific as possible with the returned values of
+<code>iter_from</code> and <code>return_from</code> methods.</p>
+<pre class="codehilite"><code class="language-python">&gt;&gt;&gt; with open(&quot;paragraph.xml&quot;, &quot;rb&quot;) as f:
+...    for item in Parser(f).iter_from(handle_text, handle_em):
+...        print(type(item), repr(item))
+...        # reveal_type(item)
+...        # Revealed type is &quot;builtins.str&quot;
+&lt;class 'str'&gt; '\n    Hello,\n    '
+&lt;class 'str'&gt; 'world'
+&lt;class 'str'&gt; '\n    !\n'
+</code></pre>
+
+<p>However, there are some cases where a little help from your side is needed.</p>
+<h3 id="several-handlers-with-no-common-type-in-return-value">Several handlers with no common type in return value</h3>
+<pre class="codehilite"><code class="language-xml">&lt;root&gt;
+    &lt;number&gt;42&lt;/number&gt;
+    &lt;string&gt;Abc&lt;/string&gt;
+&lt;/root&gt;
+</code></pre>
+
+<!---->
+
+<pre class="codehilite"><code class="language-python">&gt;&gt;&gt; @xml_handle_text(&quot;root&quot;, &quot;number&quot;)
+... def handle_number(node: XMLText) -&gt; Iterator[int]:
+...     yield int(node.text)
+
+&gt;&gt;&gt; @xml_handle_text(&quot;root&quot;, &quot;string&quot;)
+... def handle_string(node: XMLText) -&gt; Iterator[str]:
 ...     yield node.text
 
-&gt;&gt;&gt; stream_bytes = b&quot;&lt;root&gt;\xe0\xe9\xef\xf4\xf9&lt;/root&gt;&quot;  # ISO-8859-1
-
-&gt;&gt;&gt; Parser(stream_bytes).return_from(handler)
-Traceback (most recent call last):
-    ...
-xml.etree.ElementTree.ParseError: not well-formed (invalid token)...
+&gt;&gt;&gt; with open(&quot;mixed.xml&quot;, &quot;rb&quot;) as f:
+...    for item in Parser(f).iter_from(handle_number, handle_string):
+...        print(type(item), item)
+...        # reveal_type(item)
+...        # Revealed type is &quot;builtins.object&quot;
+&lt;class 'int'&gt; 42
+&lt;class 'str'&gt; Abc
 </code></pre>
 
-<p>If you know that there is no XML declaration, you can add one before the stream:</p>
-<pre class="codehilite"><code class="language-python">&gt;&gt;&gt; Parser(
-...    &quot;&lt;?xml version='1.0' encoding='ISO-8859-1'?&gt;&quot;.encode(&quot;ISO-8859-1&quot;),
-...    stream_bytes,
-... ).return_from(handler)
-'àéïôù'
-</code></pre>
+<p>Here we can see that the type of <code>item</code> is <code>object</code>, which is not precise.</p>
+<p>In that case, instead of just using <code>cast</code>, you can use the provided <code>HandlerTypeHelper</code>
+with the expected type in square brackets, by simply adding it as one of the handlers
+passed to <code>iter_from</code> or <code>return_from</code>:</p>
+<pre class="codehilite"><code class="language-python">&gt;&gt;&gt; from typing import Union
 
-<p>But if the XML declaration is already here, you will need to change the encoding of your
-stream manually. For <code>bytes</code> instances, decode then encode:</p>
-<pre class="codehilite"><code class="language-python">&gt;&gt;&gt; stream_bytes_with_xml_declaration = (
-...     b&quot;&lt;?xml version='1.0' encoding='UTF-8'?&gt;&quot;  # wrong encoding specified
-...     b&quot;&lt;root&gt;\xe0\xe9\xef\xf4\xf9&lt;/root&gt;&quot;       # ISO-8859-1
-... )
-
-&gt;&gt;&gt; Parser(
-...     stream_bytes_with_xml_declaration.decode(&quot;ISO-8859-1&quot;).encode(&quot;UTF-8&quot;),
-... ).return_from(handler)
-'àéïôù'
-</code></pre>
-
-<p>For file-like objects, use <code>codecs.EncodedFile</code>:</p>
-<pre class="codehilite"><code class="language-python">&gt;&gt;&gt; import io
-&gt;&gt;&gt; stream_file = io.BytesIO(stream_bytes_with_xml_declaration)
-
-&gt;&gt;&gt; import codecs
-&gt;&gt;&gt; Parser(
-...     codecs.EncodedFile(stream_file, &quot;UTF-8&quot;, &quot;ISO-8859-1&quot;),
-... ).return_from(handler)
-'àéïôù'
+&gt;&gt;&gt; with open(&quot;mixed.xml&quot;, &quot;rb&quot;) as f:
+...    for item in Parser(f).iter_from(
+...        HandlerTypeHelper[Union[int, str]],
+...        handle_number,
+...        handle_string,
+...    ):
+...        print(type(item), item)
+...        # reveal_type(item)
+...        # Revealed type is &quot;Union[builtins.int, builtins.str]&quot;
+&lt;class 'int'&gt; 42
+&lt;class 'str'&gt; Abc
 </code></pre>
               
             </div>
           </div><footer>
     <div class="rst-footer-buttons" role="navigation" aria-label="Footer Navigation">
-        <a href="../recipes/" class="btn btn-neutral float-left" title="Recipes"><span class="icon icon-circle-arrow-left"></span> Previous</a>
-        <a href="../namespaces/" class="btn btn-neutral float-right" title="Namespaces">Next <span class="icon icon-circle-arrow-right"></span></a>
+        <a href="../namespaces/" class="btn btn-neutral float-left" title="Namespaces"><span class="icon icon-circle-arrow-left"></span> Previous</a>
+        <a href="../faq/" class="btn btn-neutral float-right" title="FAQ">Next <span class="icon icon-circle-arrow-right"></span></a>
     </div>
 
   <hr/>
@@ -204,10 +245,10 @@ stream manually. For <code>bytes</code> instances, decode then encode:</p>
         </span>
     
     
-      <span><a href="../recipes/" style="color: #fcfcfc">&laquo; Previous</a></span>
+      <span><a href="../namespaces/" style="color: #fcfcfc">&laquo; Previous</a></span>
     
     
-      <span><a href="../namespaces/" style="color: #fcfcfc">Next &raquo;</a></span>
+      <span><a href="../faq/" style="color: #fcfcfc">Next &raquo;</a></span>
     
   </span>
 </div>
