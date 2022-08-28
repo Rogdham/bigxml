@@ -5,6 +5,15 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/), and this project
 adheres to [Semantic Versioning](https://semver.org/).
 
+## [Unreleased]
+
+[unreleased]: https://github.com/rogdham/bigxml/compare/v0.8.0...HEAD
+
+### :house: Internal
+
+- Add tests for CPython 3.11
+- Use CPython 3.11 for misc. tests
+
 ## [0.8.0] - 2022-08-28
 
 [0.8.0]: https://github.com/rogdham/bigxml/compare/v0.7.0...v0.8.0

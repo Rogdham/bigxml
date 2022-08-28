@@ -57,7 +57,7 @@ and PyPy implementations).
 If you have other use cases or find issues with some Python versions, feel free to
 [open a ticket](https://github.com/Rogdham/bigxml/issues/new)!
 
-[python-versions]: https://devguide.python.org/#status-of-python-branches
+[python-versions]: https://devguide.python.org/versions/#supported-versions
 
 ## Status of the project
 
