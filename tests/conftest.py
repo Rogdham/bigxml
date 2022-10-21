@@ -1,20 +1,14 @@
 from pathlib import Path
 import sys
-from typing import TYPE_CHECKING, List
+from typing import List
 
 import pytest
-
-if TYPE_CHECKING:
-    # see https://github.com/pytest-dev/pytest/issues/7469
-    # for pytest exporting from pytest and not _pytest
-    from _pytest.config import Config
-    from _pytest.nodes import Item
 
 
 def pytest_collection_modifyitems(
     # pylint: disable=unused-argument
-    config: "Config",
-    items: List["Item"],
+    config: pytest.Config,
+    items: List[pytest.Item],
 ) -> None:
     root = Path(__file__).parent.parent
     for item in items:

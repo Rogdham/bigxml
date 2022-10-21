@@ -24,7 +24,7 @@ from bigxml.nodes import XMLElement, XMLElementAttributes, XMLText
 if TYPE_CHECKING:
     # see https://github.com/pytest-dev/pytest/issues/7469
     # for pytest exporting from pytest and not _pytest
-    from _pytest.mark import MarkDecorator, ParameterSet
+    from _pytest.mark import ParameterSet
 
 
 def create_nodes(
@@ -81,7 +81,7 @@ def create_nodes(
 
 def cases(
     *args: Tuple[Tuple[str, ...], Optional[str], Optional[str]]
-) -> "MarkDecorator":
+) -> pytest.MarkDecorator:
     tests: List["ParameterSet"] = []
     for node_path, expected_text, expected_node_name in args:
         nodes = create_nodes(*node_path)

@@ -24,11 +24,6 @@ else:
         return val
 
 
-# workaround against pylint false-positive
-# see https://github.com/PyCQA/pylint/issues/7368
-assert_type  # pylint: disable=used-before-assignment, pointless-statement
-
-
 # Note: the aim of this file is to test the typing of return-values
 # for iter_from and return_from as they would be used in the wild.
 # As a result, we don't try to factor code or do anything smart here.
