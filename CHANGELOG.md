@@ -11,7 +11,7 @@ adheres to [Semantic Versioning](https://semver.org/).
 
 ### :house: Internal
 
-- Necessary code changes following dev dependency update: pylint, pytest
+- Necessary code changes following dev dependency update: mypy, pylint, pytest
 - Add tests for CPython 3.11
 - Use CPython 3.11 for misc. tests
 - Update Github actions dependencies

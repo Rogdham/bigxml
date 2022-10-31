@@ -16,6 +16,14 @@ from bigxml.typing import F, K, Protocol, T, T_co, U
 
 
 class ___xml_handle_xxx_wrapped(Protocol[T_co]):  # pylint: disable=invalid-name
+    # wrapper for classes
+    @overload
+    def __call__(
+        self,
+        obj: K,
+    ) -> K:
+        ...
+
     # wrapper for functions
     @overload
     def __call__(
@@ -30,14 +38,6 @@ class ___xml_handle_xxx_wrapped(Protocol[T_co]):  # pylint: disable=invalid-name
         self,
         obj: Callable[[U, T_co], Optional[Iterable[T]]],
     ) -> Callable[[U, Union[XMLElement, XMLText]], Optional[Iterable[T]]]:
-        ...
-
-    # wrapper for classes
-    @overload
-    def __call__(
-        self,
-        obj: K,
-    ) -> K:
         ...
 
 
@@ -63,6 +63,14 @@ def xml_handle_element(*args: str) -> ___xml_handle_xxx_wrapped[XMLElement]:
     )
 
 
+# @xml_handle_text (for classes)
+@overload
+def xml_handle_text(
+    obj: K,
+) -> K:
+    ...
+
+
 # @xml_handle_text (for functions)
 @overload
 def xml_handle_text(
@@ -76,14 +84,6 @@ def xml_handle_text(
 def xml_handle_text(
     obj: Callable[[U, XMLText], Optional[Iterable[T]]],
 ) -> Callable[[U, Union[XMLElement, XMLText]], Optional[Iterable[T]]]:
-    ...
-
-
-# @xml_handle_text (for classes)
-@overload
-def xml_handle_text(
-    obj: K,
-) -> K:
     ...
 
 
