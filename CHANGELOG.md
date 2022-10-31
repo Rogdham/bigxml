@@ -14,6 +14,7 @@ adheres to [Semantic Versioning](https://semver.org/).
 - Necessary code changes following dev dependency update: pytest
 - Add tests for CPython 3.11
 - Use CPython 3.11 for misc. tests
+- Update Github actions dependencies
 
 ## [0.8.0] - 2022-08-28
 
