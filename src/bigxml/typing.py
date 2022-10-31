@@ -12,7 +12,7 @@ else:  # pragma: no cover
     from typing import ParamSpec
 
 
-# pylint: disable=invalid-name, unused-argument
+# pylint: disable=unused-argument
 
 
 P = ParamSpec("P")

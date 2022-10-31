@@ -69,7 +69,7 @@ def create_nodes(
         def handle(
             handler: Callable[[Union[XMLElement, XMLText]], Iterator[object]],
             children: List[Union[XMLElement, XMLText]],
-        ) -> Iterable[object]:  # pylint: disable=dangerous-default-value
+        ) -> Iterable[object]:
             for child in children:
                 yield from handler(child)
 

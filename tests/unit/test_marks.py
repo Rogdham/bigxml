@@ -11,11 +11,7 @@ def test_marks(instanciate: bool) -> None:
     obj = Markable() if instanciate else Markable
 
     assert not has_marks(obj)
-    assert (
-        # pylint: disable=use-implicit-booleaness-not-comparison
-        get_marks(obj)
-        == ()
-    )
+    assert not get_marks(obj)
 
     add_mark(obj, ("abc",))
     assert has_marks(obj)
