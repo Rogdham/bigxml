@@ -1,0 +1,17 @@
+# Exceptions
+
+All exceptions raised due to invalid stream content will be `BigXmlException` instances:
+
+    :::python
+    >>> Parser(b"").return_from()
+    Traceback (most recent call last):
+        ...
+    bigxml.exceptions.BigXmlException: No element found: line 1, column 0
+
+The `security` attribute on the `BigXmlException` instance is a boolean allowing you to
+quickly know if the error came from a security issue when parsing the XML.
+
+!!! Note
+
+    Invalid usages of the library (e.g. passing a `str` to `Parser`) will raise other
+    kinds of exceptions.

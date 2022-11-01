@@ -37,7 +37,7 @@ restrict the type of nodes they are called with.
 
 !!! Note
 
-    To handle different kind of nodes at once, the same function can be decorated
+    To handle different kinds of nodes at once, the same function can be decorated
     several times with `xml_handle_element` or `xml_handle_text` as shown above.
 
 ## Classes

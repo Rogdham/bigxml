@@ -20,6 +20,7 @@ nav:
       - Handlers: handlers.md
       - Decorators: decorators.md
       - Nodes: nodes.md
+      - Exceptions: exceptions.md
   - External Links:
       - Changelog: https://github.com/rogdham/bigxml/blob/master/CHANGELOG.md
       - Issue tracker: https://github.com/rogdham/bigxml/issues

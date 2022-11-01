@@ -2,6 +2,7 @@ from typing import TYPE_CHECKING, Callable, Iterator, Optional, Tuple, Union
 
 from defusedxml.ElementTree import iterparse
 
+from bigxml.exceptions import rewrite_exceptions
 from bigxml.handle_mgr import HandleMgr
 from bigxml.nodes import XMLElement, XMLElementAttributes, XMLText
 from bigxml.stream import StreamChain
@@ -71,5 +72,12 @@ def _parse(
 
 class Parser(HandleMgr):
     def __init__(self, *streams: Streamable) -> None:
-        iterator = IterWithRollback(iterparse(StreamChain(*streams), ("start", "end")))
+        iterator = IterWithRollback(
+            rewrite_exceptions(
+                iterparse(
+                    StreamChain(*streams),
+                    ("start", "end"),
+                )
+            )
+        )
         self._handle = lambda h: _parse(iterator, h, (), None, 0)

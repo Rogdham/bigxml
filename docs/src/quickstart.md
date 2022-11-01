@@ -53,7 +53,7 @@ pass the path to the `title` XML elements we are interested in as arguments of t
     :::python
     >>> @xml_handle_element("feed", "entry", "title")
     ... def handler(node):
-    ...     yield node.text  # node contents as a str
+    ...     yield node.text  # node content as a str
 
 Next, we need to instantiate a `Parser` with a stream. In our case, we have the atom
 feed saved into a file, so we pass the file object.

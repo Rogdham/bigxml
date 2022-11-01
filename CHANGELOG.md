@@ -9,6 +9,12 @@ adheres to [Semantic Versioning](https://semver.org/).
 
 [unreleased]: https://github.com/rogdham/bigxml/compare/v0.8.0...HEAD
 
+### :boom: Breaking changes
+
+- All exceptions raised due to invalid stream content are now instances of
+  `BigXmlException` instead of `xml.etree.ElementTree.ParseError` or
+  `defusedxml.DefusedXmlException`.
+
 ### :house: Internal
 
 - Necessary code changes following dev dependency update: mypy, pylint, pytest

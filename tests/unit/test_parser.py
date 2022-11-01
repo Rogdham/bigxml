@@ -86,7 +86,7 @@ BIG_TEXT_LEN = 1_000_000
 
 
 @pytest.mark.parametrize(
-    "xml_contents, nodes",
+    "xml_content, nodes",
     [
         [b"", []],
         [b"Hello", [text_h_node]],
@@ -130,8 +130,8 @@ BIG_TEXT_LEN = 1_000_000
         "big texts",
     ],
 )
-def test_contents(
-    xml_contents: bytes,
+def test_content(
+    xml_content: bytes,
     nodes: List[Union[XMLElement, XMLText]],
     # pylint: disable=redefined-outer-name
     handler: HANDLER_TYPE,
@@ -142,7 +142,7 @@ def test_contents(
     ) -> Iterator[Tuple[str, Union[XMLElement, XMLText]]]:
         yield from node.iter_from(handler)
 
-    parser = Parser(b"<root>", xml_contents, b"</root>")
+    parser = Parser(b"<root>", xml_content, b"</root>")
     assert list(parser.iter_from(root_handler)) == [
         (f"handler-yield-{i}", node) for i, node in enumerate(nodes)
     ]

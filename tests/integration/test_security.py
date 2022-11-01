@@ -1,9 +1,8 @@
 from typing import Iterator
 
-from defusedxml import EntitiesForbidden
 import pytest
 
-from bigxml import Parser, XMLText
+from bigxml import BigXmlException, Parser, XMLText
 
 
 def handler_get_text(node: XMLText) -> Iterator[str]:
@@ -11,7 +10,7 @@ def handler_get_text(node: XMLText) -> Iterator[str]:
 
 
 @pytest.mark.parametrize(
-    "xml",
+    "xml, msg",
     (
         pytest.param(
             (
@@ -20,6 +19,7 @@ def handler_get_text(node: XMLText) -> Iterator[str]:
                 b"]>\n"
                 b"<root>&a;&a;&a;&a;&a;&a;&a;&a;&a;&a;&a;&a;&a;&a;&a;&a;&a;&a;&a;&a;</root>\n"
             ),
+            "Entity definition is forbidden",
             id="one entity (1kb)",
         ),
         pytest.param(
@@ -33,6 +33,7 @@ def handler_get_text(node: XMLText) -> Iterator[str]:
                 b"]>\n"
                 b"<root>&e;</root>\n"
             ),
+            "Entity definition is forbidden",
             id="bomb (5Mb)",
         ),
         pytest.param(
@@ -49,6 +50,7 @@ def handler_get_text(node: XMLText) -> Iterator[str]:
                 b"]>\n"
                 b"<root>&h;</root>\n"
             ),
+            "Entity definition is forbidden",
             id="bomb (33Gb)",
         ),
         pytest.param(
@@ -59,6 +61,7 @@ def handler_get_text(node: XMLText) -> Iterator[str]:
                 b"]>\n"
                 b"<root>&a;</root>\n"
             ),
+            "Entity definition is forbidden",
             id="recursive",
         ),
         pytest.param(
@@ -68,6 +71,7 @@ def handler_get_text(node: XMLText) -> Iterator[str]:
                 b"]>\n"
                 b"<root>&a;</root>\n"
             ),
+            "Entity definition is forbidden",
             id="resolution (file)",
         ),
         pytest.param(
@@ -77,6 +81,7 @@ def handler_get_text(node: XMLText) -> Iterator[str]:
                 b"]>\n"
                 b"<root>&a;</root>\n"
             ),
+            "Entity definition is forbidden",
             id="resolution (http)",
         ),
         pytest.param(
@@ -86,10 +91,13 @@ def handler_get_text(node: XMLText) -> Iterator[str]:
                 b"]>\n"
                 b"<root>&a;</root>\n"
             ),
+            "Entity definition is forbidden",
             id="resolution (expect)",
         ),
     ),
 )
-def test_external_entities(xml: bytes) -> None:
-    with pytest.raises(EntitiesForbidden):
+def test_external_entities(xml: bytes, msg: str) -> None:
+    with pytest.raises(BigXmlException) as exc_info:
         Parser(xml).return_from(handler_get_text)
+    assert str(exc_info.value) == msg
+    assert exc_info.value.security
