@@ -3,6 +3,7 @@ site_description: Parse big xml files and streams with ease
 site_author: Rogdham
 repo_url: https://github.com/rogdham/bigxml
 site_url: https://bigxml.rogdham.net/
+edit_uri: blob/master/docs/src
 docs_dir: src
 site_dir: ../build/docs
 nav:

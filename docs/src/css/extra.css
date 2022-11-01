@@ -48,6 +48,9 @@
 .wy-menu > ul {
   margin-bottom: 32px;
 }
+.wy-menu-vertical li.toctree-l1.current > a button {
+    display: none;
+}
 
 footer {
   visibility: hidden;
