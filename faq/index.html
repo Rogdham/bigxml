@@ -82,6 +82,8 @@
                   </li>
                   <li class="toctree-l1"><a class="reference internal" href="../nodes/">Nodes</a>
                   </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../exceptions/">Exceptions</a>
+                  </li>
               </ul>
               <p class="caption"><span class="caption-text">External Links</span></p>
               <ul>
@@ -111,8 +113,7 @@
           <li>User guide &raquo;</li>
       <li>FAQ</li>
     <li class="wy-breadcrumbs-aside">
-        <a href="https://github.com/rogdham/bigxml/edit/master/docs/faq.md"
-          class="icon icon-github"> Edit on GitHub</a>
+          <a href="https://github.com/rogdham/bigxml/blob/master/docs/src/faq.md" class="icon icon-github"> Edit on GitHub</a>
     </li>
   </ul>
   <hr/>
@@ -177,7 +178,7 @@ TypeError: Invalid stream type: str.
 <h2 id="exnodes-out-of-order-exception">I keep getting the following exception: Tried to access a node out of order</h2>
 <p>Each byte of the XML streams is only read once. An exception occurs when you try to
 perform an action that would need to go backward in the streams. For more details,
-<a href="..#philosophy">read the philosophy behind the design of <em>BigXML</em></a>.</p>
+<a href="../#philosophy">read the philosophy behind the design of <em>BigXML</em></a>.</p>
 <p>Usually, the issue can be solved by following these principles:</p>
 <ul>
 <li>Consider that all children of a node must be processed in one pass;</li>

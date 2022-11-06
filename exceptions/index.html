@@ -3,9 +3,9 @@
 <head>
     <meta charset="utf-8" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="author" content="Rogdham" /><link rel="canonical" href="https://bigxml.rogdham.net/encodings/" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="author" content="Rogdham" /><link rel="canonical" href="https://bigxml.rogdham.net/exceptions/" />
       <link rel="shortcut icon" href="../img/favicon.ico" />
-    <title>Encodings - BigXML</title>
+    <title>Exceptions - BigXML</title>
     <link rel="stylesheet" href="../css/theme.css" />
     <link rel="stylesheet" href="../css/theme_extra.css" />
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/10.5.0/styles/github.min.css" />
@@ -13,9 +13,9 @@
     
       <script>
         // Current page data
-        var mkdocs_page_name = "Encodings";
-        var mkdocs_page_input_path = "encodings.md";
-        var mkdocs_page_url = "/encodings/";
+        var mkdocs_page_name = "Exceptions";
+        var mkdocs_page_input_path = "exceptions.md";
+        var mkdocs_page_url = "/exceptions/";
       </script>
     
     <script src="../js/jquery-3.6.0.min.js" defer></script>
@@ -46,16 +46,12 @@
                 </li>
               </ul>
               <p class="caption"><span class="caption-text">User guide</span></p>
-              <ul class="current">
+              <ul>
                   <li class="toctree-l1"><a class="reference internal" href="../quickstart/">Quickstart</a>
                   </li>
                   <li class="toctree-l1"><a class="reference internal" href="../recipes/">Recipes</a>
                   </li>
-                  <li class="toctree-l1 current"><a class="reference internal current" href="./">Encodings</a>
-    <ul class="current">
-    <li class="toctree-l2"><a class="reference internal" href="#wrong-encoding">Wrong encoding</a>
-    </li>
-    </ul>
+                  <li class="toctree-l1"><a class="reference internal" href="../encodings/">Encodings</a>
                   </li>
                   <li class="toctree-l1"><a class="reference internal" href="../namespaces/">Namespaces</a>
                   </li>
@@ -65,7 +61,7 @@
                   </li>
               </ul>
               <p class="caption"><span class="caption-text">API reference</span></p>
-              <ul>
+              <ul class="current">
                   <li class="toctree-l1"><a class="reference internal" href="../parser/">Parser</a>
                   </li>
                   <li class="toctree-l1"><a class="reference internal" href="../streams/">Streams</a>
@@ -76,7 +72,9 @@
                   </li>
                   <li class="toctree-l1"><a class="reference internal" href="../nodes/">Nodes</a>
                   </li>
-                  <li class="toctree-l1"><a class="reference internal" href="../exceptions/">Exceptions</a>
+                  <li class="toctree-l1 current"><a class="reference internal current" href="./">Exceptions</a>
+    <ul class="current">
+    </ul>
                   </li>
               </ul>
               <p class="caption"><span class="caption-text">External Links</span></p>
@@ -104,10 +102,10 @@
         <div class="rst-content"><div role="navigation" aria-label="breadcrumbs navigation">
   <ul class="wy-breadcrumbs">
     <li><a href=".." class="icon icon-home" alt="Docs"></a> &raquo;</li>
-          <li>User guide &raquo;</li>
-      <li>Encodings</li>
+          <li>API reference &raquo;</li>
+      <li>Exceptions</li>
     <li class="wy-breadcrumbs-aside">
-          <a href="https://github.com/rogdham/bigxml/blob/master/docs/src/encodings.md" class="icon icon-github"> Edit on GitHub</a>
+          <a href="https://github.com/rogdham/bigxml/blob/master/docs/src/exceptions.md" class="icon icon-github"> Edit on GitHub</a>
     </li>
   </ul>
   <hr/>
@@ -115,70 +113,26 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
             <div class="section" itemprop="articleBody">
               
-                <h1 id="stream-encodings">Stream encodings</h1>
-<p>The <a href="../streams/">streams</a> passed to <code>Parser</code> are expected to be <code>bytes</code>-oriented.</p>
-<p>The decoding is performed according to the
-<a href="https://www.w3.org/TR/xml/#charencoding">XML specification</a>, i.e. based on the
-<code>encoding</code> attribute of the XML declaration:</p>
-<pre class="codehilite"><code class="language-xml">&lt;?xml version='1.0' encoding='ISO-8859-1'?&gt;
-</code></pre>
-
-<div class="admonition note">
-<p class="admonition-title">Note</p>
-<p>The XML declaration is optional for UTF-8 and UTF-16 encodings.</p>
-</div>
-<h2 id="wrong-encoding">Wrong encoding</h2>
-<p>Sometimes, the encoding of the stream to parse does not match the one specified in the
-XML declaration.</p>
-<pre class="codehilite"><code class="language-python">&gt;&gt;&gt; @xml_handle_element(&quot;root&quot;)
-... def handler(node):
-...     yield node.text
-
-&gt;&gt;&gt; stream_bytes = b&quot;&lt;root&gt;\xe0\xe9\xef\xf4\xf9&lt;/root&gt;&quot;  # ISO-8859-1
-
-&gt;&gt;&gt; Parser(stream_bytes).return_from(handler)
+                <h1 id="exceptions">Exceptions</h1>
+<p>All exceptions raised due to invalid stream content will be <code>BigXmlException</code> instances:</p>
+<pre class="codehilite"><code class="language-python">&gt;&gt;&gt; Parser(b&quot;&quot;).return_from()
 Traceback (most recent call last):
     ...
-bigxml.exceptions.BigXmlException: Not well-formed (invalid token)...
+bigxml.exceptions.BigXmlException: No element found: line 1, column 0
 </code></pre>
 
-<p>If you know that there is no XML declaration, you can add one before the stream:</p>
-<pre class="codehilite"><code class="language-python">&gt;&gt;&gt; Parser(
-...    &quot;&lt;?xml version='1.0' encoding='ISO-8859-1'?&gt;&quot;.encode(&quot;ISO-8859-1&quot;),
-...    stream_bytes,
-... ).return_from(handler)
-'àéïôù'
-</code></pre>
-
-<p>But if the XML declaration is already here, you will need to change the encoding of your
-stream manually. For <code>bytes</code> instances, decode then encode:</p>
-<pre class="codehilite"><code class="language-python">&gt;&gt;&gt; stream_bytes_with_xml_declaration = (
-...     b&quot;&lt;?xml version='1.0' encoding='UTF-8'?&gt;&quot;  # wrong encoding specified
-...     b&quot;&lt;root&gt;\xe0\xe9\xef\xf4\xf9&lt;/root&gt;&quot;       # ISO-8859-1
-... )
-
-&gt;&gt;&gt; Parser(
-...     stream_bytes_with_xml_declaration.decode(&quot;ISO-8859-1&quot;).encode(&quot;UTF-8&quot;),
-... ).return_from(handler)
-'àéïôù'
-</code></pre>
-
-<p>For file-like objects, use <code>codecs.EncodedFile</code>:</p>
-<pre class="codehilite"><code class="language-python">&gt;&gt;&gt; import io
-&gt;&gt;&gt; stream_file = io.BytesIO(stream_bytes_with_xml_declaration)
-
-&gt;&gt;&gt; import codecs
-&gt;&gt;&gt; Parser(
-...     codecs.EncodedFile(stream_file, &quot;UTF-8&quot;, &quot;ISO-8859-1&quot;),
-... ).return_from(handler)
-'àéïôù'
-</code></pre>
+<p>The <code>security</code> attribute on the <code>BigXmlException</code> instance is a boolean allowing you to
+quickly know if the error came from a security issue when parsing the XML.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>Invalid usages of the library (e.g. passing a <code>str</code> to <code>Parser</code>) will raise other
+kinds of exceptions.</p>
+</div>
               
             </div>
           </div><footer>
     <div class="rst-footer-buttons" role="navigation" aria-label="Footer Navigation">
-        <a href="../recipes/" class="btn btn-neutral float-left" title="Recipes"><span class="icon icon-circle-arrow-left"></span> Previous</a>
-        <a href="../namespaces/" class="btn btn-neutral float-right" title="Namespaces">Next <span class="icon icon-circle-arrow-right"></span></a>
+        <a href="../nodes/" class="btn btn-neutral float-left" title="Nodes"><span class="icon icon-circle-arrow-left"></span> Previous</a>
     </div>
 
   <hr/>
@@ -205,10 +159,8 @@ stream manually. For <code>bytes</code> instances, decode then encode:</p>
         </span>
     
     
-      <span><a href="../recipes/" style="color: #fcfcfc">&laquo; Previous</a></span>
+      <span><a href="../nodes/" style="color: #fcfcfc">&laquo; Previous</a></span>
     
-    
-      <span><a href="../namespaces/" style="color: #fcfcfc">Next &raquo;</a></span>
     
   </span>
 </div>

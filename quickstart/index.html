@@ -80,6 +80,8 @@
                   </li>
                   <li class="toctree-l1"><a class="reference internal" href="../nodes/">Nodes</a>
                   </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../exceptions/">Exceptions</a>
+                  </li>
               </ul>
               <p class="caption"><span class="caption-text">External Links</span></p>
               <ul>
@@ -109,8 +111,7 @@
           <li>User guide &raquo;</li>
       <li>Quickstart</li>
     <li class="wy-breadcrumbs-aside">
-        <a href="https://github.com/rogdham/bigxml/edit/master/docs/quickstart.md"
-          class="icon icon-github"> Edit on GitHub</a>
+          <a href="https://github.com/rogdham/bigxml/blob/master/docs/src/quickstart.md" class="icon icon-github"> Edit on GitHub</a>
     </li>
   </ul>
   <hr/>
@@ -157,14 +158,14 @@ demonstration purposes):</p>
 
 <p>For this tutorial, save that into an <code>atom.xml</code> file (we will learn to parse HTTP
 responses in streaming later). Make sure you have
-<a href="..#installation"><em>BigXML</em> installed</a> so that you can follow along.</p>
+<a href="../#installation"><em>BigXML</em> installed</a> so that you can follow along.</p>
 <h2 id="getting-nodes-and-data">Getting nodes and data</h2>
 <p>Say we want to get the comics' titles. To do so, we will create a handler function. We
 pass the path to the <code>title</code> XML elements we are interested in as arguments of the
 <code>xml_handle_element</code> decorator:</p>
 <pre class="codehilite"><code class="language-python">&gt;&gt;&gt; @xml_handle_element(&quot;feed&quot;, &quot;entry&quot;, &quot;title&quot;)
 ... def handler(node):
-...     yield node.text  # node contents as a str
+...     yield node.text  # node content as a str
 </code></pre>
 
 <p>Next, we need to instantiate a <code>Parser</code> with a stream. In our case, we have the atom
