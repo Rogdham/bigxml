@@ -7,5 +7,4 @@ disable =
     missing-class-docstring,
     missing-function-docstring,
     missing-module-docstring,
-    not-an-iterable,
     too-few-public-methods,

@@ -15,6 +15,10 @@ adheres to [Semantic Versioning](https://semver.org/).
   `BigXmlException` instead of `xml.etree.ElementTree.ParseError` or
   `defusedxml.DefusedXmlException`.
 
+### :bug: Fixes
+
+- Add a workaround against pylint `not-an-iterable` false-positive on `iter_from`
+
 ### :house: Internal
 
 - Necessary code changes following dev dependency update: mypy, pylint, pytest
