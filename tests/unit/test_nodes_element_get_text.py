@@ -41,6 +41,7 @@ def test_element_get_text_direct(text: str) -> None:
         ("a ", "b", " c", "a b c"),
         ("a", " b ", "c", "a b c"),
         ("a", "", "c", "ac"),
+        ("a", " ", "c", "ac"),
         ("a ", "", "c", "a c"),
         ("a", "", " c", "a c"),
         ("a ", "", " c", "a c"),

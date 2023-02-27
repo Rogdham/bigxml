@@ -92,7 +92,11 @@ class _HandlerTree:
         if isinstance(handler, list):
             handler = tuple(handler)
         if isinstance(handler, tuple):
-            self.add_handler(path + handler, _handler_identity, False)
+            self.add_handler(
+                path + handler,
+                _handler_identity,
+                True,  # does not matter as _handler_identity has no marks
+            )
             return
 
         # other types

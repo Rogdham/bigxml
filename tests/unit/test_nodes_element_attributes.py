@@ -83,3 +83,9 @@ def test_eq() -> None:
     assert XMLElementAttributes(i) == j
     assert i == XMLElementAttributes(j)
     assert XMLElementAttributes(i) == XMLElementAttributes(j)
+
+
+@pytest.mark.parametrize("key", [r"{aaa", r"{aaa}{bbb"])
+def test_invalid_key(key: str) -> None:
+    with pytest.raises(ValueError):
+        XMLElementAttributes({key: "foo"})

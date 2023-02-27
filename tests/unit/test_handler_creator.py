@@ -841,8 +841,17 @@ def test_catchall_handler_not_alone() -> None:
     ) -> Iterator[Tuple[str, Union[XMLElement, XMLText]]]:
         yield ("1", node)
 
-    with pytest.raises(TypeError):
+    # ok alone
+    create_handler(handle)
+    create_handler(catchall)
+
+    # ko together
+    with pytest.raises(TypeError) as exc_info:
         create_handler(handle, catchall)
+    assert str(exc_info.value).startswith("(): handlers exist: {'a': ")
+    with pytest.raises(TypeError) as exc_info:
+        create_handler(catchall, handle)
+    assert str(exc_info.value).startswith("(): catchall handler exists: <function ")
 
 
 def test_several_catchall_handlers() -> None:
@@ -856,8 +865,29 @@ def test_several_catchall_handlers() -> None:
     ) -> Iterator[Tuple[str, Union[XMLElement, XMLText]]]:
         yield ("1", node)
 
-    with pytest.raises(TypeError):
+    with pytest.raises(TypeError) as exc_info:
         create_handler(catchall0, catchall1)
+    assert str(exc_info.value).startswith("(): catchall handler exists: <function ")
+
+
+def test_concurrent_handlers() -> None:
+    @xml_handle_element("a", "b", "c")
+    def handle0(
+        node: Union[XMLElement, XMLText]
+    ) -> Iterator[Tuple[str, Union[XMLElement, XMLText]]]:
+        yield ("0", node)
+
+    @xml_handle_element("a", "b", "c")
+    def handle1(
+        node: Union[XMLElement, XMLText]
+    ) -> Iterator[Tuple[str, Union[XMLElement, XMLText]]]:
+        yield ("0", node)
+
+    with pytest.raises(TypeError) as exc_info:
+        create_handler(handle0, handle1)
+    assert str(exc_info.value).startswith(
+        "('a', 'b', 'c'): catchall handler exists: <function "
+    )
 
 
 @pytest.mark.parametrize(

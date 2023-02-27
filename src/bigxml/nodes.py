@@ -1,6 +1,6 @@
 from dataclasses import dataclass
 import sys
-from typing import Dict, Iterator, Tuple, Union
+from typing import Dict, Iterator, Optional, Tuple, Union
 import warnings
 
 from bigxml.handle_mgr import HandleMgr
@@ -8,28 +8,38 @@ from bigxml.utils import extract_namespace_name
 
 if sys.version_info < (3, 9):  # pragma: no cover
     from typing import Mapping
+
+    def removeprefix(data: str, prefix: str) -> str:
+        if data.startswith(prefix):
+            return data[len(prefix) :]
+        return data
+
 else:  # pragma: no cover
     from collections.abc import Mapping
 
 
 class XMLElementAttributes(Mapping[str, str]):
     def __init__(self, attributes: Mapping[str, str]) -> None:
-        self._items: Dict[str, Tuple[int, str]] = {}  # key -> (alternatives, value)
+        self._items: Dict[
+            str, Tuple[Optional[int], str]
+        ] = {}  # key -> (alternatives, value)
         self._len = 0
         for key, value in attributes.items():
             namespace, name = extract_namespace_name(key)
-            self._items[f"{{{namespace}}}{name}"] = (-1, value)
+            if name.startswith("{"):
+                raise ValueError("Invalid key: '{key}'")
+            self._items[f"{{{namespace}}}{name}"] = (None, value)
             self._len += 1
             if namespace:
                 alternatives, value = self._items.get(name, (0, value))
-                if alternatives != -1:
+                if alternatives is not None:
                     self._items[name] = (alternatives + 1, value)
             else:
-                self._items[name] = (-1, value)
+                self._items[name] = (None, value)
 
     def __getitem__(self, key: str) -> str:
         alternatives, value = self._items[key]
-        if alternatives > 1:
+        if alternatives is not None and alternatives > 1:
             warnings.warn(
                 (
                     f"Several alternatives for attribute name '{key}'."
@@ -40,12 +50,12 @@ class XMLElementAttributes(Mapping[str, str]):
         return value
 
     def __iter__(self) -> Iterator[str]:
-        for key, value in self._items.items():
-            if key.startswith("{") and value[0] == -1:
-                if key.startswith("{}"):
-                    yield key[2:]
-                else:
-                    yield key
+        for key in self._items:
+            if key.startswith("{"):
+                if sys.version_info < (3, 9):  # pragma: no cover
+                    yield removeprefix(key, r"{}")
+                else:  # pragma: no cover
+                    yield key.removeprefix(r"{}")
 
     def __len__(self) -> int:
         return self._len
