@@ -4,7 +4,7 @@
 
 Parse big xml files and streams with ease
 
-[![GitHub build status](https://img.shields.io/github/workflow/status/rogdham/bigxml/build/master)](https://github.com/rogdham/bigxml/actions?query=branch:master)
+[![GitHub build status](https://img.shields.io/github/actions/workflow/status/rogdham/bigxml/build.yml?branch=master)](https://github.com/rogdham/bigxml/actions?query=branch:master)
 [![Release on PyPI](https://img.shields.io/pypi/v/bigxml)](https://pypi.org/project/bigxml/)
 [![Code coverage](https://img.shields.io/badge/coverage-100%25-brightgreen)](https://github.com/rogdham/bigxml/search?q=fail+under&type=Code)
 [![Mypy type checker](https://img.shields.io/badge/type_checker-mypy-informational)](https://mypy.readthedocs.io/)
@@ -12,7 +12,7 @@ Parse big xml files and streams with ease
 
 ---
 
-[:book: Documentation](https://bigxml.rogdham.net/)&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;[:page_with_curl: Changelog](./CHANGELOG.md)
+[📖 Documentation](https://bigxml.rogdham.net/)&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;[📃 Changelog](./CHANGELOG.md)
 
 </div>
 

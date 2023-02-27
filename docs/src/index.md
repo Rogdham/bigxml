@@ -48,7 +48,7 @@ Install _BigXML_ with pip:
     :::sh
     $ python -m pip install bigxml
 
-### Python version support
+## Python version support
 
 As a general rule, all Python versions that are both [released and still officially
 supported][python-versions] are supported by `bigxml` and tested against (both CPython
