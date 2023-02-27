@@ -5,6 +5,14 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/), and this project
 adheres to [Semantic Versioning](https://semver.org/).
 
+## [Unreleased]
+
+[unreleased]: https://github.com/rogdham/bigxml/compare/v0.9.0...HEAD
+
+### :house: Internal
+
+- Necessary code changes following dev dependency update: mypy
+
 ## [0.9.0] - 2022-11-06
 
 [0.9.0]: https://github.com/rogdham/bigxml/compare/v0.8.0...v0.9.0

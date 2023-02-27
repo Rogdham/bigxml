@@ -29,14 +29,7 @@ class SupportsRead(Protocol[T_co]):
         ...  # pragma: no cover
 
 
-# cyclic types are not supported yet
-StreamableRec5 = Any
-StreamableRec4 = Union[SupportsRead[bytes], bytes, Iterable[StreamableRec5]]
-StreamableRec3 = Union[SupportsRead[bytes], bytes, Iterable[StreamableRec4]]
-StreamableRec2 = Union[SupportsRead[bytes], bytes, Iterable[StreamableRec3]]
-StreamableRec1 = Union[SupportsRead[bytes], bytes, Iterable[StreamableRec2]]
-StreamableRec0 = Union[SupportsRead[bytes], bytes, Iterable[StreamableRec1]]
-Streamable = Union[SupportsRead[bytes], bytes, Iterable[StreamableRec0]]
+Streamable = Union[SupportsRead[bytes], bytes, Iterable["Streamable"]]
 
 
 class ClassHandlerWithCustomWrapper0(Protocol[T_co]):
