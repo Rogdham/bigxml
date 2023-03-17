@@ -27,15 +27,15 @@ def create_element(*children: Union[XMLElement, XMLText]) -> XMLElement:
     return node
 
 
-@pytest.mark.parametrize("text", ("abc", "  \n  abc \n  "))
+@pytest.mark.parametrize("text", ["abc", "  \n  abc \n  "])
 def test_element_get_text_direct(text: str) -> None:
     node = create_element(create_text(text))
     assert node.text == "abc"
 
 
 @pytest.mark.parametrize(
-    "left, middle, right, exp",
-    (
+    ["left", "middle", "right", "exp"],
+    [
         ("a", "b", "c", "abc"),
         ("a ", " b ", " c", "a b c"),
         ("a ", "b", " c", "a b c"),
@@ -45,7 +45,7 @@ def test_element_get_text_direct(text: str) -> None:
         ("a ", "", "c", "a c"),
         ("a", "", " c", "a c"),
         ("a ", "", " c", "a c"),
-    ),
+    ],
 )
 def test_element_get_text_nested(left: str, middle: str, right: str, exp: str) -> None:
     node = create_element(

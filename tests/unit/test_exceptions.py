@@ -13,7 +13,7 @@ def generate(ex: Exception) -> Iterator[int]:
 
 
 @pytest.mark.parametrize(
-    "exception, msg, security",
+    ["exception", "msg", "security"],
     [
         pytest.param(
             ParseError(ValueError("something went wrong")),

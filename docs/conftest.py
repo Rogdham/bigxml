@@ -18,7 +18,7 @@ from bigxml import (
 
 
 @pytest.fixture(scope="module", autouse=True)
-def import_pytest(doctest_namespace: Dict[str, object]) -> None:
+def _import_pytest(doctest_namespace: Dict[str, object]) -> None:
     doctest_namespace["HandlerTypeHelper"] = HandlerTypeHelper
     doctest_namespace["Parser"] = Parser
     doctest_namespace["XMLElement"] = XMLElement
@@ -40,7 +40,7 @@ def import_pytest(doctest_namespace: Dict[str, object]) -> None:
 
 
 @pytest.fixture(scope="module", autouse=True)
-def create_files() -> Iterator[None]:
+def _create_files() -> Iterator[None]:
     cwd = getcwd()
     docs_path = Path(__file__).parent
     try:

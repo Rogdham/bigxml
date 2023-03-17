@@ -31,9 +31,9 @@ class XMLElementAttributes(Mapping[str, str]):
             self._items[f"{{{namespace}}}{name}"] = (None, value)
             self._len += 1
             if namespace:
-                alternatives, value = self._items.get(name, (0, value))
-                if alternatives is not None:
-                    self._items[name] = (alternatives + 1, value)
+                alt_nb, alt_value = self._items.get(name, (0, value))
+                if alt_nb is not None:
+                    self._items[name] = (alt_nb + 1, alt_value)
             else:
                 self._items[name] = (None, value)
 
@@ -46,6 +46,7 @@ class XMLElementAttributes(Mapping[str, str]):
                     f" Specify namespace by using '{{namespace}}{key}' as the key."
                 ),
                 UserWarning,
+                stacklevel=1,
             )
         return value
 
@@ -73,7 +74,7 @@ def _handler_get_text(node: Union["XMLElement", "XMLText"]) -> Iterator[str]:
     elif isinstance(node, XMLElement):
         yield from node.iter_from(_handler_get_text)
     else:  # pragma: no cover
-        raise RuntimeError  # should not happen
+        raise TypeError  # should not happen
 
 
 @dataclass

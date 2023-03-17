@@ -20,7 +20,7 @@ if TYPE_CHECKING:
     from typing_extensions import assert_type
 else:
 
-    def assert_type(val: Any, _: Any) -> Any:
+    def assert_type(val: Any, _: Any) -> Any:  # noqa: ANN401
         return val
 
 

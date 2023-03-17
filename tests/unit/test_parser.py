@@ -14,7 +14,7 @@ HANDLER_TYPE = Callable[  # pylint: disable=invalid-name
 
 
 @pytest.fixture
-def handler() -> Iterator[HANDLER_TYPE]:
+def handler() -> HANDLER_TYPE:
     return_values = count()
 
     def handler_fct(
@@ -22,7 +22,7 @@ def handler() -> Iterator[HANDLER_TYPE]:
     ) -> Iterator[Tuple[str, Union[XMLElement, XMLText]]]:
         yield (f"handler-yield-{next(return_values)}", node)
 
-    yield handler_fct
+    return handler_fct
 
 
 def elem(
@@ -44,20 +44,20 @@ root_node = elem("root")
 
 
 @pytest.mark.parametrize(
-    "xml, node",
+    ["xml", "node"],
     [
-        [b"<root />", root_node],
-        [b"<root></root>", root_node],
-        [b"<root>Hello!</root>", root_node],
-        [b"<root><foo><bar/></foo></root>", root_node],
-        [
+        (b"<root />", root_node),
+        (b"<root></root>", root_node),
+        (b"<root>Hello!</root>", root_node),
+        (b"<root><foo><bar/></foo></root>", root_node),
+        (
             b"<root abc='def' ghi='klm' />",
             elem("root", attributes={"abc": "def", "ghi": "klm"}),
-        ],
-        [
+        ),
+        (
             b"<root xmlns='https://example.com/xml/' />",
             elem("root", namespace="https://example.com/xml/"),
-        ],
+        ),
     ],
     ids=["self-closing", "empty", "with text", "with children", "attributes", "xmlns"],
 )
@@ -86,23 +86,23 @@ BIG_TEXT_LEN = 1_000_000
 
 
 @pytest.mark.parametrize(
-    "xml_content, nodes",
+    ["xml_content", "nodes"],
     [
-        [b"", []],
-        [b"Hello", [text_h_node]],
-        [b"<foo />", [elem_f_node]],
-        [b"Hello<foo />", [text_h_node, elem_f_node]],
-        [b"<foo />World", [elem_f_node, text_w_node]],
-        [b"Hello<foo />World", [text_h_node, elem_f_node, text_w_node]],
-        [
+        (b"", []),
+        (b"Hello", [text_h_node]),
+        (b"<foo />", [elem_f_node]),
+        (b"Hello<foo />", [text_h_node, elem_f_node]),
+        (b"<foo />World", [elem_f_node, text_w_node]),
+        (b"Hello<foo />World", [text_h_node, elem_f_node, text_w_node]),
+        (
             b'Hello<foo />World<bar abc="def" />Hello',
             [text_h_node, elem_f_node, text_w_node, elem_b_node, text_h_node],
-        ],
-        [
+        ),
+        (
             b"Hello<foo>Abc<bar>Def<xxx />Ghi</bar>Klm</foo>World",
             [text_h_node, elem_f_node, text_w_node],
-        ],
-        [
+        ),
+        (
             b'%s<foo />%s<bar abc="def" />%s'
             % (
                 b"a" * BIG_TEXT_LEN,
@@ -116,7 +116,7 @@ BIG_TEXT_LEN = 1_000_000
                 elem_b_node,
                 XMLText("c" * BIG_TEXT_LEN, (root_node,)),
             ],
-        ],
+        ),
     ],
     ids=[
         "empty",
@@ -163,7 +163,7 @@ def test_out_of_order() -> None:
     second_node = next(nodes)
     assert second_node.text == "world"
     with pytest.raises(RuntimeError):
-        first_node.text  # pylint: disable=pointless-statement
+        first_node.text  # pylint: disable=pointless-statement  # noqa: B018
 
 
 def test_many_small_streams(
@@ -171,7 +171,7 @@ def test_many_small_streams(
     handler: HANDLER_TYPE,
 ) -> None:
     xml = b"<root>Hello<foo />World</root>"
-    xml_parts = list(bytes([v]) for v in xml)  # characters one by one
+    xml_parts = [bytes([v]) for v in xml]  # characters one by one
     assert len(xml_parts) == 30
 
     nodes = [text_h_node, elem_f_node, text_w_node]

@@ -1,0 +1,30 @@
+select = ["ALL"]
+src = ["src"]
+target-version = "py37"
+
+ignore = [
+    "ANN101",
+    "ANN102",
+    "C901",
+    "COM812",
+    "D",
+    "E501",
+    "EM",
+    "ERA001",
+    "PLR0912",
+    "TRY003",
+    "TRY301",
+]
+
+[per-file-ignores]
+"docs/**" = ["D", "INP001", "PTH109"]
+"stubs/**" = ["D"]
+"tests/**" = ["D", "FBT", "INP001", "PLR2004", "S101", "SLF001"]
+
+[isort]
+force-sort-within-sections = true
+
+[flake8-pytest-style]
+fixture-parentheses = false
+mark-parentheses = false
+parametrize-names-type = "list"

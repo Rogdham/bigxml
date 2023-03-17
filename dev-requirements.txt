@@ -11,10 +11,10 @@ pytest-cov
 
 # lint
 pylint
+ruff==0.0.262
 
 # format
 black
-isort
 
 # publish
 setuptools_scm

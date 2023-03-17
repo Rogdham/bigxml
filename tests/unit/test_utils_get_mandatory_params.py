@@ -1,33 +1,35 @@
+# pylint: disable=unused-argument
+# ruff: noqa: ARG001
+
 from typing import Callable, List, Tuple
 
 import pytest
 
 from bigxml.utils import get_mandatory_params
 
-# pylint: disable=unused-argument
 
-
-def fct0():  # type: ignore[no-untyped-def]
+def fct0():  # type: ignore[no-untyped-def] # noqa: ANN201
     pass  # for tests
 
 
-def fct1(arg0):  # type: ignore[no-untyped-def]
+def fct1(arg0):  # type: ignore[no-untyped-def] # noqa: ANN001,ANN201
     pass  # for tests
 
 
-def fct2(arg0, arg1, arg2):  # type: ignore[no-untyped-def]
+def fct2(arg0, arg1, arg2):  # type: ignore[no-untyped-def] # noqa: ANN001,ANN201
     pass  # for tests
 
 
-def fct3(arg0=13, arg1=37, arg2=42):  # type: ignore[no-untyped-def]
+def fct3(arg0=13, arg1=37, arg2=42):  # type: ignore[no-untyped-def] # noqa: ANN001,ANN201
     pass  # for tests
 
 
-def fct4(arg0, /, arg1, *, arg2, arg3=3):  # type: ignore[no-untyped-def]
+def fct4(arg0, /, arg1, *, arg2, arg3=3):  # type: ignore[no-untyped-def] # noqa: ANN001,ANN201
     pass  # for tests
 
 
-def fct5(arg0, /, arg1, *arg2, arg3, arg4=4, **arg5):  # type: ignore[no-untyped-def]
+# pylint: disable-next=line-too-long
+def fct5(arg0, /, arg1, *arg2, arg3, arg4=4, **arg5):  # type: ignore[no-untyped-def] # noqa: ANN001,ANN002,ANN003,ANN201
     pass  # for tests
 
 
@@ -47,8 +49,8 @@ def fct6(
 
 
 @pytest.mark.parametrize(
-    "fct, expected",
-    (
+    ["fct", "expected"],
+    [
         (fct0, ()),
         (fct1, ("arg0",)),
         (fct2, ("arg0", "arg1", "arg2")),
@@ -58,7 +60,7 @@ def fct6(
         (fct6, ("arg0", "arg1", "arg3")),
         (int, ()),
         (dict, ()),
-    ),
+    ],
     ids=lambda x: str(x.__name__ if callable(x) else x),
 )  # type: ignore[misc]
 # Typing note: see https://github.com/python/mypy/issues/13436

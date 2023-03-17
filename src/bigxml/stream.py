@@ -12,7 +12,7 @@ def _flatten_stream(stream: Streamable) -> Generator[Optional[memoryview], int, 
     # bytes-like
     try:
         yield memoryview(cast(bytes, stream))
-        return
+        return  # noqa: TRY300
     except TypeError:
         pass
 
@@ -52,8 +52,7 @@ def _flatten_stream(stream: Streamable) -> Generator[Optional[memoryview], int, 
         substreams = iter(cast(Iterable[Streamable], stream))
     except TypeError:
         # other types not supported
-        # pylint: disable=raise-missing-from
-        raise TypeError(f"Invalid stream type: {type(stream).__name__}")
+        raise TypeError(f"Invalid stream type: {type(stream).__name__}") from None
 
     for substream in substreams:
         yield from _flatten_stream(substream)

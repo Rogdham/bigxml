@@ -6,8 +6,8 @@ from bigxml.utils import consume, last_item_or_none
 
 
 @pytest.mark.parametrize(
-    "iterable, expected",
-    (
+    ["iterable", "expected"],
+    [
         # no items
         ((), None),
         (iter(()), None),
@@ -19,7 +19,7 @@ from bigxml.utils import consume, last_item_or_none
         # several items
         ("abcd", "d"),
         (range(43), 42),
-    ),
+    ],
     ids=repr,
 )
 def test_last_item_or_none(iterable: Iterable[object], expected: object) -> None:
@@ -34,8 +34,8 @@ def test_consume() -> None:
 
 
 @pytest.mark.parametrize(
-    "iterable, expected",
-    (
+    ["iterable", "expected"],
+    [
         # no items
         ((), False),
         (iter(()), False),
@@ -47,7 +47,7 @@ def test_consume() -> None:
         # several items
         ("abcd", True),
         (range(43), True),
-    ),
+    ],
     ids=repr,
 )
 def test_consume_return_value(iterable: Iterable[object], expected: object) -> None:

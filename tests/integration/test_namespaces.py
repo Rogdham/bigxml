@@ -20,7 +20,6 @@ XML = b"""
 
 def test_namespaces() -> None:
     class Handler:
-
         #
         # namespaces in element names
         #

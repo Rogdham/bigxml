@@ -4,7 +4,7 @@ from bigxml import BigXmlError, Parser
 
 
 @pytest.mark.parametrize(
-    "xml, msg",
+    ["xml", "msg"],
     [
         pytest.param(
             b"",

@@ -10,8 +10,8 @@ def handler_get_text(node: XMLText) -> Iterator[str]:
 
 
 @pytest.mark.parametrize(
-    "xml, msg",
-    (
+    ["xml", "msg"],
+    [
         pytest.param(
             (
                 b"<!DOCTYPE foobar [\n"
@@ -94,7 +94,7 @@ def handler_get_text(node: XMLText) -> Iterator[str]:
             "Entity definition is forbidden",
             id="resolution (expect)",
         ),
-    ),
+    ],
 )
 def test_external_entities(xml: bytes, msg: str) -> None:
     with pytest.raises(BigXmlError) as exc_info:

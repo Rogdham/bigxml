@@ -30,23 +30,23 @@ XML_ELEMENT_ATTRIBUTES = XMLElementAttributes(ATTRIBUTES)
 
 
 @pytest.mark.parametrize(
-    "key, value, should_warn",
-    (
+    ["key", "value", "should_warn"],
+    [
         ("aaa", "0", False),
         ("bbb", "1", False),
         ("ccc", "2", True),
         ("ddd", "4", False),
         ("eee", "8", False),
         ("fff", "12", False),
-    ),
-    ids=(
+    ],
+    ids=[
         "no namespace",
         "one namespace",
         "several namespaces",
         "prefer no namespace (1)",
         "prefer no namespace (2)",
         "prefer no namespace (3)",
-    ),
+    ],
 )
 def test_get_without_namespace(key: str, value: str, should_warn: bool) -> None:
     context: AbstractContextManager[object] = nullcontext()
@@ -57,8 +57,8 @@ def test_get_without_namespace(key: str, value: str, should_warn: bool) -> None:
 
 
 @pytest.mark.parametrize(
-    "key, value",
-    ((k if k[0] == "{" else f"{{}}{k}", v) for k, v in ATTRIBUTES.items()),
+    ["key", "value"],
+    [(k if k[0] == "{" else f"{{}}{k}", v) for k, v in ATTRIBUTES.items()],
 )
 def test_get_with_namespace(key: str, value: str) -> None:
     assert XML_ELEMENT_ATTRIBUTES[key] == value
@@ -89,5 +89,5 @@ def test_eq() -> None:
 
 @pytest.mark.parametrize("key", [r"{aaa", r"{aaa}{bbb"])
 def test_invalid_key(key: str) -> None:
-    with pytest.raises(ValueError):
+    with pytest.raises(ValueError, match="Invalid key: '.*'"):
         XMLElementAttributes({key: "foo"})

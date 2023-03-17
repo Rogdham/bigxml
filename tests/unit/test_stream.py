@@ -20,7 +20,7 @@ def abcdef_generator() -> Iterator[bytes]:
 
 @pytest.mark.parametrize(
     "stream",
-    (
+    [
         b"abcdef",
         bytearray(b"abcdef"),
         memoryview(b"abcdef"),
@@ -29,7 +29,7 @@ def abcdef_generator() -> Iterator[bytes]:
         (b"abcdef",),
         iter([b"abcdef"]),
         abcdef_generator(),
-    ),
+    ],
     ids=type,
 )
 def test_types(stream: Streamable) -> None:
@@ -59,8 +59,8 @@ class IntIO(IOBase):
 
 
 @pytest.mark.parametrize(
-    "stream, err_message",
-    (
+    ["stream", "err_message"],
+    [
         pytest.param("abcdef", "Convert it to a bytes-like object", id="str"),
         pytest.param(
             StringIO("abcdef"),
@@ -86,7 +86,7 @@ class IntIO(IOBase):
         pytest.param(
             IntIO(), "Stream read method did not return a byte-like object", id="IntIo"
         ),
-    ),
+    ],
 )
 def test_types_invalid(stream: object, err_message: str) -> None:
     stream = StreamChain(cast(Streamable, stream))
@@ -161,7 +161,7 @@ class InfiniteIO(IOBase):
 
 @pytest.mark.parametrize(
     "streams",
-    (
+    [
         (BytesIO(b"***"), InfiniteIO()),
         (BytesIO(b"***"), [InfiniteIO()]),
         ([BytesIO(b"***"), InfiniteIO()]),
@@ -178,7 +178,7 @@ class InfiniteIO(IOBase):
         (b"", b"", [b"", b"", BytesIO(b"***"), b"", b"", [InfiniteIO()]]),
         (b"", b"", [b"", b"", [BytesIO(b"***"), b"", b"", InfiniteIO()]]),
         (b"", b"", [b"", b"", [b"", b"", BytesIO(b"***"), b"", b"", InfiniteIO()]]),
-    ),
+    ],
     ids=repr,
 )
 def test_pass_read_size(streams: Tuple[Streamable, ...]) -> None:
@@ -189,7 +189,7 @@ def test_pass_read_size(streams: Tuple[Streamable, ...]) -> None:
     assert stream.read(2) == b"22"
 
 
-@pytest.mark.parametrize("size", (None, -1, 0))
+@pytest.mark.parametrize("size", [None, -1, 0])
 def test_invalid_read_sizes(size: Optional[int]) -> None:
     stream = StreamChain(b"Hello, world!")
     with pytest.raises(NotImplementedError):

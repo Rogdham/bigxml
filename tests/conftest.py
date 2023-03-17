@@ -7,7 +7,7 @@ import pytest
 
 def pytest_collection_modifyitems(
     # pylint: disable=unused-argument
-    config: pytest.Config,
+    config: pytest.Config,  # noqa: ARG001
     items: List[pytest.Item],
 ) -> None:
     root = Path(__file__).parent.parent

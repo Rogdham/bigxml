@@ -124,7 +124,7 @@ class HandleMgr:
     @overload
     def iter_from(
         self,
-        *handlers: Any,
+        *handlers: Any,  # noqa: ANN401
     ) -> Iterator[object]:
         ...
 
@@ -132,7 +132,7 @@ class HandleMgr:
         if not self._handle:
             raise RuntimeError("No handle to use")
         handler = create_handler(*handlers)
-        return self._handle(handler)  # pylint: disable=not-callable
+        return self._handle(handler)  # pylint: disable=not-callable
 
     # return_from
 

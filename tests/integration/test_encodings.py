@@ -10,7 +10,7 @@ XML_STR = f"<élément>{TXT_STR}</élément>"
 
 @pytest.mark.parametrize(
     "xml",
-    (
+    [
         # UTF-8 and UTF-16 may omit XML declaration (in which case BOM is optional for UTF-8)
         # https://www.w3.org/TR/xml/#charencoding
         pytest.param(
@@ -53,7 +53,7 @@ XML_STR = f"<élément>{TXT_STR}</élément>"
             ("<?xml version='1.0' encoding='ISO-8859-1'?>" + XML_STR).encode("latin_1"),
             id="explicit ISO-8859-1",
         ),
-    ),
+    ],
 )
 def test_encoding(xml: bytes) -> None:
     @xml_handle_element("élément")

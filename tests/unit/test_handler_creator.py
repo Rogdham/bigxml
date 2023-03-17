@@ -1,3 +1,4 @@
+from contextlib import suppress
 from dataclasses import dataclass
 from functools import partial
 from typing import (
@@ -60,10 +61,8 @@ def create_nodes(
             children = []
 
         # append new children
-        try:
+        with suppress(IndexError):
             children.append(nodes[i + 1])
-        except IndexError:
-            pass
 
         # create handle
         def handle(
@@ -220,7 +219,7 @@ def test_invalid_handle(test_create_handler: TEST_CREATE_HANDLER_TYPE) -> None:
 )
 @pytest.mark.parametrize(
     "handler",
-    ("a", ("a",), ["a"]),
+    ["a", ("a",), ["a"]],
     ids=type,
 )
 def test_syntactic_sugar_one_level(
@@ -240,7 +239,7 @@ def test_syntactic_sugar_one_level(
 )
 @pytest.mark.parametrize(
     "handler",
-    (("a", "b"), ["a", "b"]),
+    [("a", "b"), ["a", "b"]],
     ids=type,
 )
 def test_syntactic_sugar_two_levels(
@@ -270,7 +269,7 @@ def test_syntactic_sugar_two_levels(
     (("t0", "t1", ":text:"), "5", ":text:"),
     (("t0", "t1", ":text:", "t2"), "5", ":text:"),
 )
-@pytest.mark.parametrize("instantiate_class", (False, True))
+@pytest.mark.parametrize("instantiate_class", [False, True])
 def test_class_instance(
     test_create_handler: TEST_CREATE_HANDLER_TYPE, instantiate_class: bool
 ) -> None:
@@ -324,7 +323,7 @@ def test_class_instance(
     (("x1", "y1", "z", "a"), "0", "a"),
     (("x1", "y1", "z", "w", "a"), None, None),
 )
-@pytest.mark.parametrize("instantiate_class", (False, True))
+@pytest.mark.parametrize("instantiate_class", [False, True])
 def test_marked_class_instance(
     test_create_handler: TEST_CREATE_HANDLER_TYPE, instantiate_class: bool
 ) -> None:
@@ -359,7 +358,7 @@ def test_marked_class_instance(
     (("x", "y1", "z"), None, None),
     (("x", "y1", "z", "a"), None, None),
 )
-@pytest.mark.parametrize("instantiate_class", (False, True))
+@pytest.mark.parametrize("instantiate_class", [False, True])
 def test_deep_marked_class_instances(
     test_create_handler: TEST_CREATE_HANDLER_TYPE, instantiate_class: bool
 ) -> None:
@@ -449,8 +448,8 @@ def test_class_without_sub_handler() -> None:
     assert isinstance(items[0], Handler)
 
 
-@pytest.mark.parametrize("init_mandatory", (False, True))
-@pytest.mark.parametrize("init_optional", (False, True))
+@pytest.mark.parametrize("init_mandatory", [False, True])
+@pytest.mark.parametrize("init_optional", [False, True])
 def test_class_init(init_mandatory: bool, init_optional: bool) -> None:
     # pylint: disable=too-many-locals
 
@@ -496,14 +495,14 @@ def test_class_init(init_mandatory: bool, init_optional: bool) -> None:
 
     if init_mandatory:
         if init_optional:
-            Handler: Type[object] = HandlerA
+            Handler: Type[object] = HandlerA  # noqa: N806
         else:
-            Handler = HandlerB
+            Handler = HandlerB  # noqa: N806
     else:
-        if init_optional:
-            Handler = HandlerC
+        if init_optional:  # noqa: PLR5501
+            Handler = HandlerC  # noqa: N806
         else:
-            Handler = HandlerD
+            Handler = HandlerD  # noqa: N806
 
     #   x -> y0 -> a0 -> b0
     #                 -> b1
@@ -892,7 +891,7 @@ def test_concurrent_handlers() -> None:
 
 @pytest.mark.parametrize(
     "handler",
-    (
+    [
         None,
         True,
         False,
@@ -901,7 +900,7 @@ def test_concurrent_handlers() -> None:
         {"a", "b"},
         {"a": lambda _: None},
         object(),
-    ),
+    ],
     ids=type,
 )
 def test_invalid_handler_type(handler: object) -> None:

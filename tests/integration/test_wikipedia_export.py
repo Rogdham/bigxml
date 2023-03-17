@@ -18,7 +18,7 @@ def test_wikipedia_export() -> None:
 
         @xml_handle_text("timestamp")
         def handle_date(self, node: XMLText) -> None:
-            self.date = datetime.strptime(node.text, "%Y-%m-%dT%H:%M:%SZ")
+            self.date = datetime.strptime(node.text, "%Y-%m-%dT%H:%M:%SZ").astimezone()
 
     with LZMAFile(Path(__file__).parent / "wikipedia_python_export.xml.xz") as stream:
         items = list(Parser(stream).iter_from(Revision))

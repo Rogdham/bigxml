@@ -61,13 +61,14 @@ class _HandlerTree:
         self,
         path: Tuple[str, ...],
         handler: object,
+        *,
         ignore_direct_marks: bool,
     ) -> None:
         # marked
         marks = () if ignore_direct_marks else get_marks(handler)
         if marks:
             for mark in marks:
-                self.add_handler(path + mark, handler, True)
+                self.add_handler(path + mark, handler, ignore_direct_marks=True)
             return
 
         # callable
@@ -81,7 +82,7 @@ class _HandlerTree:
             if handler_name.startswith("__"):
                 continue
             for sub_path in get_marks(sub_handler):
-                self.add_handler(path + sub_path, sub_handler, True)
+                self.add_handler(path + sub_path, sub_handler, ignore_direct_marks=True)
                 found = True
         if found:
             return
@@ -95,7 +96,7 @@ class _HandlerTree:
             self.add_handler(
                 path + handler,
                 _handler_identity,
-                True,  # does not matter as _handler_identity has no marks
+                ignore_direct_marks=True,  # does not matter as _handler_identity has no marks
             )
             return
 
@@ -111,8 +112,10 @@ class _HandlerTree:
             raise TypeError(f"{self.path}: catchall handler exists: {self.handler}")
         if path:
             if path[0] not in self.children:
-                self.children[path[0]] = _HandlerTree(self.path + (path[0],))
-            self.children[path[0]].add_handler(path[1:], handler, True)
+                self.children[path[0]] = _HandlerTree((*self.path, path[0]))
+            self.children[path[0]].add_handler(
+                path[1:], handler, ignore_direct_marks=True
+            )
         elif self.children:
             raise TypeError(f"{self.path}: handlers exist: {self.children}")
         else:
@@ -162,7 +165,7 @@ class _HandlerTree:
         sub_tree = _HandlerTree()
         items: Iterable[object] = ()  # empty iterable
         try:
-            sub_tree.add_handler((), instance, True)
+            sub_tree.add_handler((), instance, ignore_direct_marks=True)
         except TypeError:
             pass  # no marks on public attributes
         else:
@@ -205,7 +208,7 @@ class _HandlerTree:
                     f" Create a {CLASS_HANDLER_METHOD_NAME}"
                     " method to handle them properly."
                 )
-            warnings.warn(warning_msg, UserWarning)
+            warnings.warn(warning_msg, UserWarning, stacklevel=1)
 
         if wrapper is None:
             # no custom wrapper: only yield instance
@@ -218,5 +221,5 @@ def create_handler(
 ) -> Callable[[Union["XMLElement", "XMLText"]], Iterator[object]]:
     handler_tree = _HandlerTree()
     for arg in args:
-        handler_tree.add_handler((), arg, False)
+        handler_tree.add_handler((), arg, ignore_direct_marks=False)
     return handler_tree.handle

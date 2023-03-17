@@ -9,7 +9,7 @@ from bigxml.typing import T
 class BigXmlError(ValueError):
     """Error parsing XML content"""
 
-    def __init__(self, msg: str, security: bool) -> None:
+    def __init__(self, msg: str, *, security: bool) -> None:
         # put only first letter of 'msg' in uppercase
         super().__init__(msg[:1].upper() + msg[1:])
         self.security = security
@@ -19,7 +19,7 @@ def rewrite_exceptions(iterable: Iterable[T]) -> Iterator[T]:
     try:
         yield from iterable
     except ParseError as ex:
-        raise BigXmlError(str(ex), False) from ex
+        raise BigXmlError(str(ex), security=False) from ex
     except DefusedXmlException as ex:
         # defusedxml has usable wording in it's exception's doc
         # except for base DefusedXmlException
@@ -27,4 +27,4 @@ def rewrite_exceptions(iterable: Iterable[T]) -> Iterator[T]:
         # pylint: disable-next=unidiomatic-typecheck
         if not msg or type(ex) is DefusedXmlException:
             msg = "Invalid XML"
-        raise BigXmlError(msg, True) from ex
+        raise BigXmlError(msg, security=True) from ex

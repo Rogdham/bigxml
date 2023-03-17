@@ -21,6 +21,7 @@ adheres to [Semantic Versioning](https://semver.org/).
 ### :house: Internal
 
 - Necessary code changes following dev dependency update: mypy
+- Use ruff for linting (and remove isort)
 
 ## [0.9.0] - 2022-11-06
 
