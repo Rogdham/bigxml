@@ -48,6 +48,23 @@ Install _BigXML_ with pip:
     :::sh
     $ python -m pip install bigxml
 
+## Imports
+
+The most used imports are the following:
+
+    :::python
+    from bigxml import Parser, xml_handle_element, xml_handle_text
+
+If you want to catch [exceptions](exceptions) raised by this module:
+
+    :::python
+    from bigxml import BigXmlException
+
+For [type hints](typing):
+
+    :::python
+    from bigxml import HandlerTypeHelper, XMLElement, XMLText
+
 ## Python version support
 
 As a general rule, all Python versions that are both [released and still officially

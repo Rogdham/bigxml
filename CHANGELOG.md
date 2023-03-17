@@ -9,6 +9,10 @@ adheres to [Semantic Versioning](https://semver.org/).
 
 [unreleased]: https://github.com/rogdham/bigxml/compare/v0.9.0...HEAD
 
+### :rocket: Added
+
+- Add documentation to explain how to import the library
+
 ### :house: Internal
 
 - Necessary code changes following dev dependency update: mypy
