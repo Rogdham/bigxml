@@ -58,7 +58,7 @@ The most used imports are the following:
 If you want to catch [exceptions](exceptions) raised by this module:
 
     :::python
-    from bigxml import BigXmlException
+    from bigxml import BigXmlError
 
 For [type hints](typing):
 

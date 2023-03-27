@@ -2,7 +2,7 @@ from typing import Iterator
 
 import pytest
 
-from bigxml import BigXmlException, Parser, XMLElement, xml_handle_element
+from bigxml import BigXmlError, Parser, XMLElement, xml_handle_element
 
 TXT_STR = "aàâæcçeéèêëiïîoôuùûü"
 XML_STR = f"<élément>{TXT_STR}</élément>"
@@ -66,7 +66,7 @@ def test_encoding(xml: bytes) -> None:
 def test_wrong_explicit_encoding() -> None:
     xml = ("<?xml version='1.0' encoding='ISO-8859-1'?>" + XML_STR).encode("utf_8")
     parser = Parser(xml)
-    with pytest.raises(BigXmlException) as exc_info:
+    with pytest.raises(BigXmlError) as exc_info:
         parser.return_from()
     assert str(exc_info.value) == "Not well-formed (invalid token): line 1, column 45"
     assert not exc_info.value.security

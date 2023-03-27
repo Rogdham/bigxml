@@ -2,7 +2,7 @@ from typing import Iterator
 
 import pytest
 
-from bigxml import BigXmlException, Parser, XMLText
+from bigxml import BigXmlError, Parser, XMLText
 
 
 def handler_get_text(node: XMLText) -> Iterator[str]:
@@ -97,7 +97,7 @@ def handler_get_text(node: XMLText) -> Iterator[str]:
     ),
 )
 def test_external_entities(xml: bytes, msg: str) -> None:
-    with pytest.raises(BigXmlException) as exc_info:
+    with pytest.raises(BigXmlError) as exc_info:
         Parser(xml).return_from(handler_get_text)
     assert str(exc_info.value) == msg
     assert exc_info.value.security

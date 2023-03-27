@@ -4,7 +4,7 @@ from defusedxml import DefusedXmlException, NotSupportedError
 from defusedxml.ElementTree import ParseError
 import pytest
 
-from bigxml.exceptions import BigXmlException, rewrite_exceptions
+from bigxml.exceptions import BigXmlError, rewrite_exceptions
 
 
 def generate(ex: Exception) -> Iterator[int]:
@@ -38,7 +38,7 @@ def generate(ex: Exception) -> Iterator[int]:
 def test_exceptions(exception: Exception, msg: str, security: bool) -> None:
     iterator = rewrite_exceptions(generate(exception))
     assert next(iterator) == 42
-    with pytest.raises(BigXmlException) as exc_info:
+    with pytest.raises(BigXmlError) as exc_info:
         next(iterator)
     assert str(exc_info.value) == msg
     assert exc_info.value.security == security

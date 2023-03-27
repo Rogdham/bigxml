@@ -9,6 +9,10 @@ adheres to [Semantic Versioning](https://semver.org/).
 
 [unreleased]: https://github.com/rogdham/bigxml/compare/v0.9.0...HEAD
 
+### :boom: Breaking changes
+
+- Renamed the base class for exceptions to `BigXmlError` in conformance with PEP8
+
 ### :rocket: Added
 
 - Add documentation to explain how to import the library

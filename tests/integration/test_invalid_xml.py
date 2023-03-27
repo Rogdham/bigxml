@@ -1,6 +1,6 @@
 import pytest
 
-from bigxml import BigXmlException, Parser
+from bigxml import BigXmlError, Parser
 
 
 @pytest.mark.parametrize(
@@ -31,13 +31,13 @@ from bigxml import BigXmlException, Parser
 def test_invalid_xml(xml: bytes, msg: str) -> None:
     parser = Parser(xml)
     iterable = parser.iter_from("node")
-    with pytest.raises(BigXmlException) as exc_info:
+    with pytest.raises(BigXmlError) as exc_info:
         next(iterable)
     assert str(exc_info.value) == msg
     assert not exc_info.value.security
 
     parser = Parser(xml)
-    with pytest.raises(BigXmlException) as exc_info:
+    with pytest.raises(BigXmlError) as exc_info:
         parser.return_from("node")
     assert str(exc_info.value) == msg
     assert not exc_info.value.security
