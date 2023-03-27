@@ -1,3 +1,5 @@
+from contextlib import AbstractContextManager, nullcontext
+
 import pytest
 
 from bigxml.nodes import XMLElementAttributes
@@ -47,10 +49,10 @@ XML_ELEMENT_ATTRIBUTES = XMLElementAttributes(ATTRIBUTES)
     ),
 )
 def test_get_without_namespace(key: str, value: str, should_warn: bool) -> None:
+    context: AbstractContextManager[object] = nullcontext()
     if should_warn:
-        with pytest.warns(RuntimeWarning):
-            assert XML_ELEMENT_ATTRIBUTES[key] == value
-    else:
+        context = pytest.warns(UserWarning)
+    with context:
         assert XML_ELEMENT_ATTRIBUTES[key] == value
 
 

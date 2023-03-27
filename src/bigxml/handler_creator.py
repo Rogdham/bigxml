@@ -205,7 +205,7 @@ class _HandlerTree:
                     f" Create a {CLASS_HANDLER_METHOD_NAME}"
                     " method to handle them properly."
                 )
-            warnings.warn(warning_msg, RuntimeWarning)
+            warnings.warn(warning_msg, UserWarning)
 
         if wrapper is None:
             # no custom wrapper: only yield instance

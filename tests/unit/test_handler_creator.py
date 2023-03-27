@@ -657,7 +657,7 @@ def test_class_no_handler_warning() -> None:
 
     nodes = create_nodes("x", "a")
     handler = create_handler(Handler)
-    with pytest.warns(RuntimeWarning):
+    with pytest.warns(UserWarning):
         items = list(handler(nodes[0]))
     assert len(items) == 1
     assert isinstance(items[0], Handler)
@@ -677,7 +677,7 @@ def test_class_with_handler_static_method() -> None:
 
     nodes = create_nodes("x", "a")
     handler = create_handler(Handler)
-    with pytest.warns(RuntimeWarning):
+    with pytest.warns(UserWarning):
         assert list(handler(nodes[0])) == [("end", None)]
 
 

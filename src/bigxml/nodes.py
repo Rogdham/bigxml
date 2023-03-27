@@ -45,7 +45,7 @@ class XMLElementAttributes(Mapping[str, str]):
                     f"Several alternatives for attribute name '{key}'."
                     f" Specify namespace by using '{{namespace}}{key}' as the key."
                 ),
-                RuntimeWarning,
+                UserWarning,
             )
         return value
 

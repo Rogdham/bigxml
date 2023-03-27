@@ -72,7 +72,7 @@ def test_namespaces() -> None:
             )
             # note that a warning is emitted if there are attributes with various
             # namespaces but none without namespace
-            with pytest.warns(RuntimeWarning):
+            with pytest.warns(UserWarning):
                 # current implementation uses "first" attribute in that case
                 # but you should not rely on it and specify the namespace to use
                 yield ("bbb", "yyy default", node.attributes["yyy"])

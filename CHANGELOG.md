@@ -12,6 +12,7 @@ adheres to [Semantic Versioning](https://semver.org/).
 ### :rocket: Added
 
 - Add documentation to explain how to import the library
+- Warnings due to wrong usage are now using `UserWarning` instead of `RuntimeWarning`
 
 ### :house: Internal
 
