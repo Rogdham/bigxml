@@ -1,4 +1,5 @@
 from typing import TYPE_CHECKING, Callable, Iterator, Optional, Tuple, Union
+import warnings
 
 from defusedxml.ElementTree import iterparse
 
@@ -73,12 +74,24 @@ def _parse(
 
 
 class Parser(HandleMgr):
-    def __init__(self, *streams: Streamable) -> None:
+    def __init__(
+        self,
+        *streams: Streamable,
+        insecurely_allow_entities: bool = False,
+    ) -> None:
+        if insecurely_allow_entities:
+            warnings.warn(
+                "Using 'insecurely_allow_entities' makes your code vulnerable to some XML attacks."
+                " Are you sure you trust where the input streams are coming from?",
+                UserWarning,
+                stacklevel=1,
+            )
         iterator = IterWithRollback(
             rewrite_exceptions(
                 iterparse(
                     StreamChain(*streams),
                     ("start", "end"),
+                    forbid_entities=not insecurely_allow_entities,
                 )
             )
         )

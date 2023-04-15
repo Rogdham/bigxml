@@ -17,6 +17,7 @@ adheres to [Semantic Versioning](https://semver.org/).
 
 - Add documentation to explain how to import the library
 - Warnings due to wrong usage are now using `UserWarning` instead of `RuntimeWarning`
+- Undocumented parameter `insecurely_allow_entities` to `Parser`
 
 ### :house: Internal
 

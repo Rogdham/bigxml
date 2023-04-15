@@ -80,6 +80,7 @@ elem_f_node = elem("foo", parents=(root_node,))
 elem_b_node = elem("bar", parents=(root_node,), attributes={"abc": "def"})
 text_h_node = XMLText("Hello", (root_node,))
 text_w_node = XMLText("World", (root_node,))
+text_pi_node = XMLText("π", (root_node,))
 
 # to make sure that text are not in buffer, we generate huge texts
 BIG_TEXT_LEN = 1_000_000
@@ -186,3 +187,21 @@ def test_many_small_streams(
     assert list(parser.iter_from(root_handler)) == [
         (f"handler-yield-{i}", node) for i, node in enumerate(nodes)
     ]
+
+
+def test_insecurely_allow_entities(
+    # pylint: disable=redefined-outer-name
+    handler: HANDLER_TYPE,
+) -> None:
+    xml = b'<!DOCTYPE money [<!ENTITY pi "&#960;">]><root>&pi;</root>'
+
+    @xml_handle_element("root")
+    def root_handler(
+        node: XMLElement,
+    ) -> Iterator[Tuple[str, Union[XMLElement, XMLText]]]:
+        yield from node.iter_from(handler)
+
+    with pytest.warns(UserWarning):
+        parser = Parser(xml, insecurely_allow_entities=True)
+
+    assert list(parser.iter_from(root_handler)) == [("handler-yield-0", text_pi_node)]
