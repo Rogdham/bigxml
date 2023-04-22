@@ -49,10 +49,10 @@
     <li class="toctree-l2"><a class="reference internal" href="#philosophy">Philosophy</a>
     </li>
     <li class="toctree-l2"><a class="reference internal" href="#installation">Installation</a>
-        <ul>
-    <li class="toctree-l3"><a class="reference internal" href="#python-version-support">Python version support</a>
     </li>
-        </ul>
+    <li class="toctree-l2"><a class="reference internal" href="#imports">Imports</a>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#python-version-support">Python version support</a>
     </li>
     <li class="toctree-l2"><a class="reference internal" href="#status-of-the-project">Status of the project</a>
     </li>
@@ -162,7 +162,20 @@ produces a single iterable that will be handled by your application.</p>
 <pre class="codehilite"><code class="language-sh">$ python -m pip install bigxml
 </code></pre>
 
-<h3 id="python-version-support">Python version support</h3>
+<h2 id="imports">Imports</h2>
+<p>The most used imports are the following:</p>
+<pre class="codehilite"><code class="language-python">from bigxml import Parser, xml_handle_element, xml_handle_text
+</code></pre>
+
+<p>If you want to catch <a href="exceptions">exceptions</a> raised by this module:</p>
+<pre class="codehilite"><code class="language-python">from bigxml import BigXmlError
+</code></pre>
+
+<p>For <a href="typing">type hints</a>:</p>
+<pre class="codehilite"><code class="language-python">from bigxml import HandlerTypeHelper, XMLElement, XMLText
+</code></pre>
+
+<h2 id="python-version-support">Python version support</h2>
 <p>As a general rule, all Python versions that are both <a href="https://devguide.python.org/versions/#supported-versions">released and still officially
 supported</a> are supported by <code>bigxml</code> and tested against (both CPython
 and PyPy implementations).</p>
@@ -223,5 +236,5 @@ detailed in the <a href="https://github.com/Rogdham/bigxml/blob/master/CHANGELOG
 
 <!--
 MkDocs version : 1.4.2
-Build Date UTC : 2022-11-06 15:39:24.248052+00:00
+Build Date UTC : 2023-04-22 14:12:35.036400+00:00
 -->

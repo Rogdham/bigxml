@@ -114,14 +114,14 @@
             <div class="section" itemprop="articleBody">
               
                 <h1 id="exceptions">Exceptions</h1>
-<p>All exceptions raised due to invalid stream content will be <code>BigXmlException</code> instances:</p>
+<p>All exceptions raised due to invalid stream content will be <code>BigXmlError</code> instances:</p>
 <pre class="codehilite"><code class="language-python">&gt;&gt;&gt; Parser(b&quot;&quot;).return_from()
 Traceback (most recent call last):
     ...
-bigxml.exceptions.BigXmlException: No element found: line 1, column 0
+bigxml.exceptions.BigXmlError: No element found: line 1, column 0
 </code></pre>
 
-<p>The <code>security</code> attribute on the <code>BigXmlException</code> instance is a boolean allowing you to
+<p>The <code>security</code> attribute on the <code>BigXmlError</code> instance is a boolean allowing you to
 quickly know if the error came from a security issue when parsing the XML.</p>
 <div class="admonition note">
 <p class="admonition-title">Note</p>
