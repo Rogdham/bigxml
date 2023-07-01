@@ -1,4 +1,5 @@
 from dataclasses import dataclass
+from functools import partial
 import sys
 from typing import TYPE_CHECKING, Any, Iterable, Iterator, Optional, Tuple, Union
 
@@ -57,14 +58,28 @@ def catchall(node: Union[XMLElement, XMLText]) -> Iterator[int]:
     yield len(node.text)
 
 
+def catchall_param(param: int, node: Union[XMLElement, XMLText]) -> Iterator[int]:
+    yield param * len(node.text)
+
+
 @xml_handle_element("root", "item")
 def element_handler(node: XMLElement) -> Iterator[str]:
     yield node.text
 
 
+@xml_handle_element("root", "item")
+def element_handler_param(param: int, node: XMLElement) -> Iterator[str]:
+    yield f"{param}-{node.text}"
+
+
 @xml_handle_text("root")
 def text_handler(node: XMLText) -> Iterator[int]:
     yield len(node.text)
+
+
+@xml_handle_text("root")
+def text_handler_param(param: int, node: XMLText) -> Iterator[int]:
+    yield param * len(node.text)
 
 
 def test_catchall() -> None:
@@ -77,6 +92,17 @@ def test_catchall() -> None:
     assert value == 11
 
 
+def test_catchall_partial() -> None:
+    handler = partial(catchall_param, 2)
+    iterator = Parser(XML).iter_from(handler)
+    assert_type(iterator, Iterator[int])
+    assert list(iterator) == [22]
+
+    value = Parser(XML).return_from(handler)
+    assert_type(value, Optional[int])
+    assert value == 22
+
+
 def test_element_handler() -> None:
     iterator = Parser(XML).iter_from(element_handler)
     assert_type(iterator, Iterator[str])
@@ -85,6 +111,17 @@ def test_element_handler() -> None:
     value = Parser(XML).return_from(element_handler)
     assert_type(value, Optional[str])
     assert value == "three"
+
+
+def test_element_handler_partial() -> None:
+    handler = partial(element_handler_param, 42)
+    iterator = Parser(XML).iter_from(handler)
+    assert_type(iterator, Iterator[str])
+    assert list(iterator) == ["42-one", "42-two", "42-three"]
+
+    value = Parser(XML).return_from(handler)
+    assert_type(value, Optional[str])
+    assert value == "42-three"
 
 
 def test_text_handler() -> None:
@@ -97,6 +134,17 @@ def test_text_handler() -> None:
     assert value == 1
 
 
+def test_text_handler_partial() -> None:
+    handler = partial(text_handler_param, 2)
+    iterator = Parser(XML).iter_from(handler)
+    assert_type(iterator, Iterator[int])
+    assert list(iterator) == [10, 10, 10, 2]
+
+    value = Parser(XML).return_from(handler)
+    assert_type(value, Optional[int])
+    assert value == 2
+
+
 # class
 
 
@@ -106,6 +154,13 @@ class Nothing:
 
 class HoldNode:
     def __init__(self, node: XMLElement) -> None:
+        self.name = node.name
+        self.text = node.text
+
+
+class HoldNodeParam:
+    def __init__(self, param: int, node: XMLElement) -> None:
+        self.param = param
         self.name = node.name
         self.text = node.text
 
@@ -165,6 +220,25 @@ def test_class_init() -> None:
     value = Parser(XML).return_from(HoldNode)
     assert_type(value, Optional[HoldNode])
     assert isinstance(value, HoldNode)
+    assert value.name == "root"
+    assert value.text == "onetwothree"
+
+
+def test_class_partial_init() -> None:
+    handler = partial(HoldNodeParam, 42)
+    iterator = Parser(XML).iter_from(handler)
+    assert_type(iterator, Iterator[HoldNodeParam])
+    items = list(iterator)
+    assert len(items) == 1
+    assert isinstance(items[0], HoldNodeParam)
+    assert items[0].param == 42
+    assert items[0].name == "root"
+    assert items[0].text == "onetwothree"
+
+    value = Parser(XML).return_from(handler)
+    assert_type(value, Optional[HoldNodeParam])
+    assert isinstance(value, HoldNodeParam)
+    assert value.param == 42
     assert value.name == "root"
     assert value.text == "onetwothree"
 

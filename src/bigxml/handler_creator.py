@@ -1,5 +1,7 @@
 from dataclasses import is_dataclass
+from functools import partial  # unquote partial type uses after python 3.9
 from inspect import getmembers, isclass
+import sys
 from typing import (
     TYPE_CHECKING,
     Any,
@@ -19,32 +21,58 @@ from bigxml.marks import get_marks, has_marks
 from bigxml.typing import T
 from bigxml.utils import consume, get_mandatory_params, transform_to_iterator
 
+if sys.version_info < (3, 10):  # pragma: no cover
+    from typing_extensions import TypeGuard
+else:  # pragma: no cover
+    from typing import TypeGuard
+
+
 if TYPE_CHECKING:
     from bigxml.nodes import XMLElement, XMLText
 
 CLASS_HANDLER_METHOD_NAME = "xml_handler"
 
 
+def _class_name(klass: Union[Type[Any], "partial[Any]"]) -> str:
+    if isinstance(klass, partial):
+        return klass.func.__name__
+    return klass.__name__
+
+
 def _assert_one_mandatory_param(
-    mandatory_params: Tuple[str, ...], klass: Type[Any], method_name: str
+    mandatory_params: Tuple[str, ...],
+    klass: Union[Type[Any], "partial[Any]"],
+    method_name: str,
 ) -> None:
     if len(mandatory_params) > 1:
         raise TypeError(
-            f"Invalid class method: {klass.__name__}.{method_name}"
+            f"Invalid class method: {_class_name(klass)}.{method_name}"
             " should have no or one mandatory parameters, got:"
             f" {', '.join(mandatory_params)}"
         )
 
 
 def _assert_iterable_or_none(
-    item: object, klass: Type[Any], method_name: str
+    item: object,
+    klass: Union[Type[Any], "partial[Any]"],
+    method_name: str,
 ) -> Optional[Iterable[object]]:
     if item is None or isinstance(item, Iterable):
         return item
     raise TypeError(
-        f"Invalid_class method: {klass.__name__}.{method_name}"
+        f"Invalid class method: {_class_name(klass)}.{method_name}"
         " should have returned None or an iterable"
     )
+
+
+def _is_class_constructor(
+    fct: Callable[..., object]
+) -> TypeGuard[Union[Type[Any], "partial[Any]"]]:
+    return isclass(fct.func if isinstance(fct, partial) else fct)  # type: ignore[attr-defined]
+
+
+def _is_dataclass_constructor(fct: Callable[..., object]) -> bool:
+    return is_dataclass(fct.func if isinstance(fct, partial) else fct)  # type: ignore[attr-defined]
 
 
 def _handler_identity(node: T) -> Iterator[T]:
@@ -126,7 +154,7 @@ class _HandlerTree:
         self, node: Union["XMLElement", "XMLText"]
     ) -> Optional[Iterable[object]]:
         if self.handler:
-            if isclass(self.handler):
+            if _is_class_constructor(self.handler):
                 return self._handle_from_class(self.handler, node)
             return self.handler(node)
 
@@ -147,14 +175,15 @@ class _HandlerTree:
 
     @staticmethod
     def _handle_from_class(  # type: ignore[misc]
-        klass: Type[Any], node: Union["XMLElement", "XMLText"]
+        klass: Union[Type[Any], "partial[Any]"],
+        node: Union["XMLElement", "XMLText"],
     ) -> Optional[Iterable[object]]:
         # instantiate class
         init_mandatory_params = get_mandatory_params(klass)
         try:
             _assert_one_mandatory_param(init_mandatory_params, klass, "__init__")
         except TypeError as ex:
-            if is_dataclass(klass):
+            if _is_dataclass_constructor(klass):
                 raise TypeError(
                     f"{ex}. Add a default value for dataclass fields."
                 ) from ex

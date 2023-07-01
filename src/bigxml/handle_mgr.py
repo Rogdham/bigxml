@@ -1,3 +1,6 @@
+from functools import (  # noqa: TCH003 # unquote partial type uses after python 3.9
+    partial,
+)
 from typing import (
     TYPE_CHECKING,
     Any,
@@ -70,6 +73,8 @@ class HandleMgr:
             ClassHandlerWithCustomWrapper1[T],
             Type[ClassHandlerWithCustomWrapper0[T]],
             Type[ClassHandlerWithCustomWrapper1[T]],
+            "partial[ClassHandlerWithCustomWrapper0[T]]",
+            "partial[ClassHandlerWithCustomWrapper1[T]]",
         ],
     ) -> Iterator[T]:
         ...
@@ -84,6 +89,9 @@ class HandleMgr:
             Type[ClassHandlerWithCustomWrapper0[T]],
             Type[ClassHandlerWithCustomWrapper1[T]],
             Type[T],
+            "partial[ClassHandlerWithCustomWrapper0[T]]",
+            "partial[ClassHandlerWithCustomWrapper1[T]]",
+            "partial[T]",
         ],
     ) -> Iterator[T]:
         ...
@@ -97,6 +105,8 @@ class HandleMgr:
             ClassHandlerWithCustomWrapper1[T],
             Type[ClassHandlerWithCustomWrapper0[T]],
             Type[ClassHandlerWithCustomWrapper1[T]],
+            "partial[ClassHandlerWithCustomWrapper0[T]]",
+            "partial[ClassHandlerWithCustomWrapper1[T]]",
             str,
             List[str],
             Tuple[str, ...],
@@ -114,6 +124,9 @@ class HandleMgr:
             Type[ClassHandlerWithCustomWrapper0[T]],
             Type[ClassHandlerWithCustomWrapper1[T]],
             Type[T],
+            "partial[ClassHandlerWithCustomWrapper0[T]]",
+            "partial[ClassHandlerWithCustomWrapper1[T]]",
+            "partial[T]",
             str,
             List[str],
             Tuple[str, ...],
@@ -162,6 +175,8 @@ class HandleMgr:
             ClassHandlerWithCustomWrapper1[T],
             Type[ClassHandlerWithCustomWrapper0[T]],
             Type[ClassHandlerWithCustomWrapper1[T]],
+            "partial[ClassHandlerWithCustomWrapper0[T]]",
+            "partial[ClassHandlerWithCustomWrapper1[T]]",
         ],
     ) -> Optional[T]:
         ...
@@ -176,6 +191,9 @@ class HandleMgr:
             Type[ClassHandlerWithCustomWrapper0[T]],
             Type[ClassHandlerWithCustomWrapper1[T]],
             Type[T],
+            "partial[ClassHandlerWithCustomWrapper0[T]]",
+            "partial[ClassHandlerWithCustomWrapper1[T]]",
+            "partial[T]",
         ],
     ) -> Optional[T]:
         ...
@@ -189,6 +207,8 @@ class HandleMgr:
             ClassHandlerWithCustomWrapper1[T],
             Type[ClassHandlerWithCustomWrapper0[T]],
             Type[ClassHandlerWithCustomWrapper1[T]],
+            "partial[ClassHandlerWithCustomWrapper0[T]]",
+            "partial[ClassHandlerWithCustomWrapper1[T]]",
             str,
             List[str],
             Tuple[str, ...],
@@ -205,10 +225,13 @@ class HandleMgr:
             ClassHandlerWithCustomWrapper1[T],
             Type[ClassHandlerWithCustomWrapper0[T]],
             Type[ClassHandlerWithCustomWrapper1[T]],
+            Type[T],
+            "partial[ClassHandlerWithCustomWrapper0[T]]",
+            "partial[ClassHandlerWithCustomWrapper1[T]]",
+            "partial[T]",
             str,
             List[str],
             Tuple[str, ...],
-            Type[T],
         ],
     ) -> Optional[Union["XMLElement", T]]:
         ...

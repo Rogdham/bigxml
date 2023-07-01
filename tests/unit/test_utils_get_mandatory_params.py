@@ -1,6 +1,7 @@
 # pylint: disable=unused-argument
 # ruff: noqa: ARG001
 
+from functools import partial
 from typing import Callable, List, Tuple
 
 import pytest
@@ -51,17 +52,18 @@ def fct6(
 @pytest.mark.parametrize(
     ["fct", "expected"],
     [
-        (fct0, ()),
-        (fct1, ("arg0",)),
-        (fct2, ("arg0", "arg1", "arg2")),
-        (fct3, ()),
-        (fct4, ("arg0", "arg1", "arg2")),
-        (fct5, ("arg0", "arg1", "arg3")),
-        (fct6, ("arg0", "arg1", "arg3")),
-        (int, ()),
-        (dict, ()),
+        pytest.param(fct0, (), id="fct0"),
+        pytest.param(fct1, ("arg0",), id="fct1"),
+        pytest.param(fct2, ("arg0", "arg1", "arg2"), id="fct2"),
+        pytest.param(fct3, (), id="fct3"),
+        pytest.param(fct4, ("arg0", "arg1", "arg2"), id="fct4"),
+        pytest.param(fct5, ("arg0", "arg1", "arg3"), id="fct5"),
+        pytest.param(fct6, ("arg0", "arg1", "arg3"), id="fct6"),
+        pytest.param(partial(fct1, 42), (), id="partial-fct1"),
+        pytest.param(partial(fct2, 13, 37), ("arg2",), id="partial-fct2"),
+        pytest.param(int, (), id="int"),
+        pytest.param(dict, (), id="dict"),
     ],
-    ids=lambda x: str(x.__name__ if callable(x) else x),
 )  # type: ignore[misc]
 # Typing note: see https://github.com/python/mypy/issues/13436
 def test_mandatory_params(

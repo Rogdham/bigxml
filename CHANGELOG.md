@@ -17,6 +17,10 @@ adheres to [Semantic Versioning](https://semver.org/).
 
 - Improve documentation about usage with `requests`
 
+### :rocket: Added
+
+- Support class handlers using `functools.partial`
+
 ### :house: Internal
 
 - Necessary code changes following dev dependency update: ruff

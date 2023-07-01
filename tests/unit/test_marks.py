@@ -1,14 +1,25 @@
+from functools import partial
+from typing import Literal
+
 import pytest
 
 from bigxml.marks import add_mark, get_marks, has_marks
 
 
-@pytest.mark.parametrize("instantiate", [True, False])
-def test_marks(instantiate: bool) -> None:
+@pytest.mark.parametrize("case", ["class", "instance", "function", "partial"])
+def test_marks(case: Literal["class", "instance", "function", "partial"]) -> None:
     class Markable:
         pass
 
-    obj = Markable() if instantiate else Markable
+    def markable(i: int, j: int) -> int:
+        return i * j
+
+    obj = {
+        "class": Markable,
+        "instance": Markable(),
+        "function": markable,
+        "partial": partial(markable, 42),
+    }[case]
 
     assert not has_marks(obj)
     assert not get_marks(obj)
