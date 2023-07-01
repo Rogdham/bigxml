@@ -1,4 +1,5 @@
 from dataclasses import is_dataclass
+from functools import partial
 from inspect import getmembers, isclass
 from typing import (
     TYPE_CHECKING,
@@ -55,7 +56,12 @@ class _HandlerTree:
     def __init__(self, path: Tuple[str, ...] = ()) -> None:
         self.path: Tuple[str, ...] = path
         self.children: Dict[str, _HandlerTree] = {}
-        self.handler: Optional[Callable[..., Iterable[object]]] = None
+        self.handler: Optional[
+            Union[
+                Callable[..., Iterable[object]],
+                partial[Callable[..., Iterable[object]]],
+            ]
+        ] = None
 
     def add_handler(
         self,
@@ -126,9 +132,14 @@ class _HandlerTree:
         self, node: Union["XMLElement", "XMLText"]
     ) -> Optional[Iterable[object]]:
         if self.handler:
-            if isclass(self.handler):
-                return self._handle_from_class(self.handler, node)
-            return self.handler(node)
+            if isclass(
+                self.handler.func if isinstance(self.handler, partial) else self.handler
+            ):
+                return self._handle_from_class(cast(Type[Any], self.handler), node)
+            return cast(
+                Callable[[Union["XMLElement", "XMLText"]], Iterable[object]],
+                self.handler,
+            )(node)
 
         child: Optional[_HandlerTree] = None
         namespace = getattr(node, "namespace", None)

@@ -1,3 +1,4 @@
+from functools import partial
 from typing import Iterator, Union
 
 import pytest
@@ -13,6 +14,16 @@ def test_one_maker_element() -> None:
         yield f"<{node.text}>"
 
     assert get_marks(fct) == (("abc", "def"),)
+
+
+def test_one_marker_element_on_partial_func() -> None:
+    @xml_handle_element("abc", "def")
+    def fct(ctx: str, node: XMLElement) -> Iterator[str]:
+        yield f"{ctx}: <{node.text}>"
+
+    partial_fct = partial(fct, "foo")
+
+    assert get_marks(partial_fct) == (("abc", "def"),)
 
 
 def test_one_maker_element_on_method() -> None:
