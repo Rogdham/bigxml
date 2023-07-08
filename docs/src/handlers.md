@@ -6,6 +6,11 @@ The methods `iter_from` and `return_from` take _handlers_ as arguments.
 
 A handler can be a generator function taking a _node_ as an argument.
 
+!!! Tip
+
+    A handler can take more than a node argument, by using `functools.partial`.
+    See [this recipe](recipes.md#arbitrary-handler-args) for examples.
+
 Such functions are usually decorated with `xml_handle_element` or `xml_handle_text`, to
 restrict the type of nodes they are called with.
 
@@ -96,6 +101,11 @@ argument is supplied with the encountered node:
     ...         print(f"{instance} for user {instance.user}")
     <__main__.Cart object...> for user Alice
     <__main__.Cart object...> for user Bob
+
+!!! Tip
+
+    `__init__` can take more than a node argument, by using `functools.partial`.
+    See [this recipe](recipes.md#arbitrary-handler-args) for examples.
 
 ### Class methods as sub-handlers
 

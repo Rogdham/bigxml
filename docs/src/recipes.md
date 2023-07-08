@@ -125,9 +125,7 @@ the `__post_init__` method:
 !!! Warning
 
     The `node` attribute is an `InitVar`, so that it is passed to `__post_init__` but
-    not stored in class attributes. It must be the only mandatory field, since the class
-    is automatically instantiated with only one argument (the node). For more details,
-    see [class handlers](handlers.md#classes).
+    not stored in class attributes.
 
 ## Yielding data in a class `__init__` {: #yield-in-init }
 
@@ -177,6 +175,43 @@ Instead, you can define a custom `xml_handler` method:
     product: 9780340960196
     product: 9780099580485
     END cart parsing for user Bob
+
+## Passing arbitrary arguments to handlers {: #arbitrary-handler-args}
+
+You may want to pass arbitrary arguments to your handlers. This is achievable by
+using `functools.partial`.
+
+For example, let's say you only want to yield fast vehicles from this vehicle file:
+
+    :::xml filename=vehicles.xml
+    <vehicles>
+        <vehicle speed="300">Train</vehicle>
+        <vehicle speed="30">Boat</vehicle>
+        <vehicle speed="80">Car</vehicle>
+        <vehicle speed="900">Plane</vehicle>
+    </vehicles>
+
+You can pass the desired speed threshold directly to the handler
+by using `functools.partial`:
+
+    :::python
+    >>> from functools import partial
+    >>> @xml_handle_element("vehicles", "vehicle")
+    ... def handler(speed_threshold, node):
+    ...     if int(node.attributes['speed']) > speed_threshold:
+    ...         yield node.text
+
+    >>> with open("vehicles.xml", "rb") as stream:
+    ...     for vehicle in Parser(stream).iter_from(partial(handler, 150)):
+    ...         print(vehicle)
+    Train
+    Plane
+
+!!! Warning
+
+    If the parameter is positional-only, it must come before the `node` argument.
+
+This behavior also work for class (and dataclasses) handlers.
 
 ## Streams without root {: #no-root }
 

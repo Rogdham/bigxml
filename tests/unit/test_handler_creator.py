@@ -150,6 +150,24 @@ def test_one_catchall(test_create_handler: TEST_CREATE_HANDLER_TYPE) -> None:
 
 
 @cases(
+    (("a",), "foo: catchall", "a"),
+    (("{foo}a",), "foo: catchall", "{foo}a"),
+    (("d0", "d1"), "foo: catchall", "d0"),
+    (("d0", "d1", "d2"), "foo: catchall", "d0"),
+    ((":text:",), "foo: catchall", ":text:"),
+)
+def test_one_partial_catchall(test_create_handler: TEST_CREATE_HANDLER_TYPE) -> None:
+    def catchall(
+        ctx: str, node: Union[XMLElement, XMLText]
+    ) -> Iterator[Tuple[str, Union[XMLElement, XMLText]]]:
+        yield (f"{ctx}: catchall", node)
+
+    partial_handler = partial(catchall, "foo")
+
+    test_create_handler(partial_handler)
+
+
+@cases(
     (("a",), "0", "a"),
     (("{foo}a",), "1", "{foo}a"),
     (("{bar}a",), "0", "{bar}a"),
@@ -448,6 +466,20 @@ def test_class_without_sub_handler() -> None:
     assert isinstance(items[0], Handler)
 
 
+def test_partial_class_without_subhandler() -> None:
+    @xml_handle_element("x")
+    class Handler:
+        def __init__(self, ctx: str) -> None:
+            self.ctx = ctx
+
+    partial_handler = partial(Handler, "foo")
+    nodes = create_nodes("x", "y")
+    handler = create_handler(partial_handler)
+    items = list(handler(nodes[0]))
+    assert len(items) == 1
+    assert isinstance(items[0], Handler)
+
+
 @pytest.mark.parametrize("init_mandatory", [False, True])
 @pytest.mark.parametrize("init_optional", [False, True])
 def test_class_init(init_mandatory: bool, init_optional: bool) -> None:
@@ -581,6 +613,21 @@ def test_class_init_two_mandatory_parameters() -> None:
     assert "Add a default value for dataclass fields" not in str(excinfo.value)
 
 
+def test_partial_class_multiple_mandatory_parameters() -> None:
+    @xml_handle_element("x")
+    class Handler:
+        def __init__(self, before: str, node: XMLElement, after: str) -> None:
+            pass
+
+    partial_handler = partial(Handler, "before", after="after")
+    nodes = create_nodes("x", "y")
+    handler = create_handler(partial_handler)
+    items = list(handler(nodes[0]))
+
+    assert len(items) == 1
+    assert isinstance(items[0], Handler)
+
+
 def test_dataclass_init_two_mandatory_parameters() -> None:
     @xml_handle_element("x")
     @dataclass
@@ -596,6 +643,23 @@ def test_dataclass_init_two_mandatory_parameters() -> None:
     assert "__init__ should have" in str(excinfo.value)
     assert "node, answer" in str(excinfo.value)
     assert "Add a default value for dataclass fields" in str(excinfo.value)
+
+
+def test_partial_dataclass_two_mandatory_parameters() -> None:
+    @xml_handle_element("x")
+    @dataclass
+    class Handler:
+        before: str
+        node: XMLElement
+        after: str
+
+    partial_handler = partial(Handler, "before", after="after")
+    nodes = create_nodes("x", "y")
+    handler = create_handler(partial_handler)
+    items = list(handler(nodes[0]))
+
+    assert len(items) == 1
+    assert isinstance(items[0], Handler)
 
 
 def test_class_init_crash() -> None:

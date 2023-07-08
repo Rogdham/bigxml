@@ -1,3 +1,5 @@
+from functools import partial
+
 import pytest
 
 from bigxml.marks import add_mark, get_marks, has_marks
@@ -9,6 +11,24 @@ def test_marks(instanciate: bool) -> None:
         pass
 
     obj = Markable() if instanciate else Markable
+
+    assert not has_marks(obj)
+    assert not get_marks(obj)
+
+    add_mark(obj, ("abc",))
+    assert has_marks(obj)
+    assert get_marks(obj) == (("abc",),)
+
+    add_mark(obj, ("def", "ghi", "jkl"))
+    assert has_marks(obj)
+    assert get_marks(obj) == (("abc",), ("def", "ghi", "jkl"))
+
+
+def test_marks_on_partial() -> None:
+    class Markable:
+        pass
+
+    obj = partial(Markable, "foo")
 
     assert not has_marks(obj)
     assert not get_marks(obj)
