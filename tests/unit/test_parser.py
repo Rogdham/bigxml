@@ -193,7 +193,7 @@ def test_insecurely_allow_entities(
     # pylint: disable=redefined-outer-name
     handler: HANDLER_TYPE,
 ) -> None:
-    xml = b'<!DOCTYPE money [<!ENTITY pi "&#960;">]><root>&pi;</root>'
+    xml = b'<!DOCTYPE root [<!ENTITY pi "&#960;">]><root>&pi;</root>'
 
     @xml_handle_element("root")
     def root_handler(

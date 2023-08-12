@@ -3,12 +3,12 @@ import pytest
 from bigxml.marks import add_mark, get_marks, has_marks
 
 
-@pytest.mark.parametrize("instanciate", [True, False])
-def test_marks(instanciate: bool) -> None:
+@pytest.mark.parametrize("instantiate", [True, False])
+def test_marks(instantiate: bool) -> None:
     class Markable:
         pass
 
-    obj = Markable() if instanciate else Markable
+    obj = Markable() if instantiate else Markable
 
     assert not has_marks(obj)
     assert not get_marks(obj)
