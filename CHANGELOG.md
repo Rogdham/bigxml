@@ -17,6 +17,10 @@ adheres to [Semantic Versioning](https://semver.org/).
 
 - Improve documentation about usage with `requests`
 
+### :house: Internal
+
+- Necessary code changes following dev dependency update: ruff
+
 ## [0.10.0] - 2023-04-22
 
 [0.10.0]: https://github.com/rogdham/bigxml/compare/v0.9.0...v0.10.0

@@ -11,7 +11,7 @@ pytest-cov
 
 # lint
 pylint
-ruff==0.0.262
+ruff==0.1.1
 
 # format
 black

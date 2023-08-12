@@ -493,16 +493,11 @@ def test_class_init(init_mandatory: bool, init_optional: bool) -> None:
         def handle0(self, node: XMLElement) -> None:
             self.seen.append(node)
 
+    Handler: Type[object]  # noqa: N806 # pylint: disable=invalid-name
     if init_mandatory:
-        if init_optional:
-            Handler: Type[object] = HandlerA  # noqa: N806
-        else:
-            Handler = HandlerB  # noqa: N806
+        Handler = HandlerA if init_optional else HandlerB  # noqa: N806
     else:
-        if init_optional:  # noqa: PLR5501
-            Handler = HandlerC  # noqa: N806
-        else:
-            Handler = HandlerD  # noqa: N806
+        Handler = HandlerC if init_optional else HandlerD  # noqa: N806
 
     #   x -> y0 -> a0 -> b0
     #                 -> b1
@@ -804,7 +799,7 @@ def test_class_with_handler_invalid_returned_value() -> None:
 def test_class_extends_builtin_str_without_init() -> None:
     @xml_handle_element("x")
     class Handler(str):
-        pass
+        __slots__ = ()
 
     nodes = create_nodes("x", "a")
     handler = create_handler(Handler)
