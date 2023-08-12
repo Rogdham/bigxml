@@ -9,6 +9,10 @@ adheres to [Semantic Versioning](https://semver.org/).
 
 [unreleased]: https://github.com/rogdham/bigxml/compare/v0.10.0...HEAD
 
+### :boom: Breaking changes
+
+- End of Python 3.7 support
+
 ### :bug: Fixes
 
 - Improve documentation about usage with `requests`

@@ -1,14 +1,8 @@
 # ruff: noqa: FBT001
 # note: only used items are defined here, with used typing
 
-import sys
-from typing import Iterator, Optional, Sequence, TypeVar
+from typing import Iterator, Optional, Protocol, Sequence, TypeVar
 from xml.etree.ElementTree import Element, ParseError
-
-if sys.version_info < (3, 8):  # pragma: no cover
-    from typing_extensions import Protocol
-else:  # pragma: no cover
-    from typing import Protocol
 
 _T_co = TypeVar("_T_co", covariant=True)
 

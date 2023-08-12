@@ -66,16 +66,14 @@ def xml_handle_element(*args: str) -> ___xml_handle_xxx_wrapped[XMLElement]:
 
 # @xml_handle_text (for classes)
 @overload
-def xml_handle_text(
-    obj: K,
-) -> K:
+def xml_handle_text(obj: K, /) -> K:
     ...
 
 
 # @xml_handle_text (for functions)
 @overload
 def xml_handle_text(
-    obj: Callable[[XMLText], Optional[Iterable[T]]],
+    obj: Callable[[XMLText], Optional[Iterable[T]]], /
 ) -> Callable[[Union[XMLElement, XMLText]], Optional[Iterable[T]]]:
     ...
 
@@ -83,7 +81,7 @@ def xml_handle_text(
 # @xml_handle_text (for methods)
 @overload
 def xml_handle_text(
-    obj: Callable[[U, XMLText], Optional[Iterable[T]]],
+    obj: Callable[[U, XMLText], Optional[Iterable[T]]], /
 ) -> Callable[[U, Union[XMLElement, XMLText]], Optional[Iterable[T]]]:
     ...
 
@@ -94,16 +92,7 @@ def xml_handle_text(*args: str) -> ___xml_handle_xxx_wrapped[XMLText]:
     ...
 
 
-def xml_handle_text(*args: Any, **_kwargs: Any) -> Any:
-    if _kwargs:  # pragma: no cover
-        # the _kwargs in the signature is just to be compliant with the first overload
-        # with python >= 3.8 we will be able to change that overload
-        #    to use a positional-only argument (PEP 570)
-        # see also: https://stackoverflow.com/a/72409226
-        raise TypeError(
-            f"xml_handle_text called with some unexpected keyword arguments: {tuple(_kwargs)}"
-        )
-
+def xml_handle_text(*args: Any) -> Any:
     # @xml_handle_text
     if len(args) == 1 and callable(args[0]):  # https://stackoverflow.com/q/653368
         return xml_handle_element(XMLText.name)(args[0])

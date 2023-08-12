@@ -1,10 +1,15 @@
 import sys
-from typing import Any, Callable, Iterable, Iterator, Optional, Type, TypeVar, Union
-
-if sys.version_info < (3, 8):  # pragma: no cover
-    from typing_extensions import Protocol
-else:  # pragma: no cover
-    from typing import Protocol
+from typing import (
+    Any,
+    Callable,
+    Iterable,
+    Iterator,
+    Optional,
+    Protocol,
+    Type,
+    TypeVar,
+    Union,
+)
 
 if sys.version_info < (3, 10):  # pragma: no cover
     from typing_extensions import ParamSpec

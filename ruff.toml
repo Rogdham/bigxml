@@ -1,6 +1,6 @@
 select = ["ALL"]
 src = ["src"]
-target-version = "py37"
+target-version = "py38"
 
 ignore = [
     "ANN101",
