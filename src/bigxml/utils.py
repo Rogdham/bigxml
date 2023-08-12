@@ -15,7 +15,7 @@ class IterWithRollback(Iterator[T]):
         self._item_rollback = False
         self._last_item: T  # will be always set when read
 
-    def __iter__(self) -> Iterator[T]:
+    def __iter__(self) -> Iterator[T]:  # noqa: PYI034
         return self
 
     def rollback(self) -> None:

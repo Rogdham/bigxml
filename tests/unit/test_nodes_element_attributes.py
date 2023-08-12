@@ -74,11 +74,11 @@ def test_len() -> None:
 
 def test_eq() -> None:
     i = XMLElementAttributes({"foo": "bar"})
-    assert i == i  # pylint: disable=comparison-with-itself
+    assert i == i  # noqa: PLR0124 # pylint: disable=comparison-with-itself
     assert i == XMLElementAttributes(i)
 
     j = XMLElementAttributes({"{}foo": "bar"})
-    assert j == j  # pylint: disable=comparison-with-itself
+    assert j == j  # noqa: PLR0124 # pylint: disable=comparison-with-itself
     assert j == XMLElementAttributes(j)
 
     assert i == j
