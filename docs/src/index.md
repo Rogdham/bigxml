@@ -60,21 +60,14 @@ If you want to catch [exceptions](exceptions.md) raised by this module:
     :::python
     from bigxml import BigXmlError
 
-For [type hints](typing.md):
+For [type hints](typing.md), you may also import:
 
     :::python
-    from bigxml import HandlerTypeHelper, XMLElement, XMLText
+    from bigxml import HandlerTypeHelper, Streamable, XMLElement, XMLElementAttributes, XMLText
 
-## Python version support
+!!! Warning
 
-As a general rule, all Python versions that are both [released and still officially
-supported][python-versions] are supported by `bigxml` and tested against (both CPython
-and PyPy implementations).
-
-If you have other use cases or find issues with some Python versions, feel free to
-[open a ticket](https://github.com/Rogdham/bigxml/issues/new)!
-
-[python-versions]: https://devguide.python.org/versions/#supported-versions
+    Always import directly from `bigxml`. Importing from submodules is unsupported.
 
 ## Status of the project
 

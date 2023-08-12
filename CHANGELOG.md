@@ -5,20 +5,31 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/), and this project
 adheres to [Semantic Versioning](https://semver.org/).
 
+For the purpose of determining breaking changes:
+
+- Only direct imports from top-level module `bigxml` are considered public API
+- A change that only impacts type hints validation is not considered a breaking change
+- Removing support for a version of Python that is not [officially
+  supported][python-versions] anymore is not considered a breaking change
+
+[python-versions]: https://devguide.python.org/versions/#supported-versions
+
 ## [Unreleased]
 
 [unreleased]: https://github.com/rogdham/bigxml/compare/v0.10.0...HEAD
-
-### :boom: Breaking changes
-
-- End of Python 3.7 support
 
 ### :bug: Fixes
 
 - Improve documentation about usage with `requests`
 
+### :rocket: Added
+
+- Export `Streamable` and `XMLElementAttributes` to ease type hints
+- Be explicit about what is part of the public API
+
 ### :house: Internal
 
+- End of Python 3.7 support
 - Necessary code changes following dev dependency update: mypy, ruff
 - Use `pyproject.toml` and modern build system
 - Improve tox & CI pipelines
@@ -75,10 +86,6 @@ v0.9.0 introduces custom exceptions.
 
 v0.8.0 brings type hints!
 
-### :boom: Breaking changes
-
-- End of Python 3.6 support
-
 ### :bug: Fixes
 
 - Fix an edge case when a class decorated with `xml_handle_text` has an attribute
@@ -93,6 +100,7 @@ v0.8.0 brings type hints!
 
 ### :house: Internal
 
+- End of Python 3.6 support
 - Add tests for PyPy 3.9
 - Refactor handler creator code
 - Type validation with mypy
