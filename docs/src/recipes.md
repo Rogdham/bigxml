@@ -25,19 +25,18 @@ It is easy to stream an XML response from a server and parse it on the fly:
     ...     yield node.text
 
     >>> response = requests.get("https://example.com/placeholder.xml", stream=True)
-    >>> parser = Parser(response.iter_content(1 << 14))
+    >>> parser = Parser(response.iter_content(None))
 
     >>> for item in parser.iter_from(handler):
     ...     print(item)
     This example shows parsing in streaming with Requests.
     It works quite well!
 
-!!! Note "Performance optimizations"
+!!! Note
 
-    The number passed to `Response.iter_content` is the chunk size, which is the maximum
-    number of bytes that will be obtained at a time. This specific value of `1 << 14` is
-    the one used under the hood by _BigXML_'s parsing library. Although any size would
-    work, use anything between 1kb and 1Mb for best results.
+    The `None` argument passed to `Response.iter_content` asks to get the data as it is
+    received without buffering into chunks of a specific size. This allows to get
+    results as soon as possible.
 
 ## Dataclasses {: #dataclass }
 
