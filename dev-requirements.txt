@@ -1,23 +1,23 @@
 # install + dependencies
 -e .
 
-# typing
-mypy
+# build
+build
+
+# docs
+mkdocs
+
+# format
+black
+
+# lint
+pylint
+ruff==0.1.1
 
 # tests
 coverage
 pytest
 pytest-cov
 
-# lint
-pylint
-ruff==0.1.1
-
-# format
-black
-
-# publish
-build
-
-# docs
-mkdocs
+# type
+mypy

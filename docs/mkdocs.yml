@@ -5,7 +5,7 @@ repo_url: https://github.com/rogdham/bigxml
 site_url: https://bigxml.rogdham.net/
 edit_uri: blob/master/docs/src
 docs_dir: src
-site_dir: ../build/docs
+site_dir: ../dist/docs
 nav:
   - Home: index.md
   - User guide:

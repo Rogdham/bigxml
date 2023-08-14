@@ -1,6 +1,8 @@
 name: build
 
-on: [push, pull_request]
+on:
+  - push
+  - pull_request
 
 env:
   PY_COLORS: 1
@@ -26,15 +28,23 @@ jobs:
       - name: Install dependencies
         run: pip install tox
       - name: Run tests
-        run: tox -e py
+        run: tox run -e py
 
   tests-misc:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        env: [type, lint, format]
+        env:
+          - build
+          - docs
+          - format
+          - lint
+          - type
     steps:
       - uses: actions/checkout@v3
+        with:
+          # build env: fetch all commits for version computation
+          fetch-depth: ${{ matrix.env == 'build' && '0' || '1' }}
       - name: Setup Python
         uses: actions/setup-python@v4
         with:
@@ -42,60 +52,25 @@ jobs:
       - name: Install dependencies
         run: pip install tox
       - name: Run ${{ matrix.env }}
-        run: tox -e ${{ matrix.env }}
-
-  docs:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v3
-      - name: Setup Python
-        uses: actions/setup-python@v4
-        with:
-          python-version: "3.11"
-      - name: Install dependencies
-        run: pip install tox
-      - name: Run docs
-        run: |
-          tox -e docs
-          mkdir -p dist
-          tar czf dist/docs.tar.gz -C build docs
-      - name: Save docs artifacts
+        run: tox run -e ${{ matrix.env }}
+      - if: ${{ matrix.env == 'build' || matrix.env  == 'docs' }}
+        name: Save ${{ matrix.env }} artifacts
         uses: actions/upload-artifact@v3
         with:
-          name: docs
-          path: dist/docs.tar.gz
-
-  build:
-    needs: [tests-py, tests-misc, docs]
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v3
-        with:
-          # fetch all commits for setuptools_scm
-          fetch-depth: 0
-      - name: Setup Python
-        uses: actions/setup-python@v4
-        with:
-          python-version: "3.11"
-      - name: Install dependencies
-        run: pip install build
-      - name: Build
-        run: python -m build
-      - name: Save build artifacts
-        uses: actions/upload-artifact@v3
-        with:
-          name: dist
+          name: ${{ matrix.env }}
           path: dist
 
   publish:
     if: startsWith(github.ref, 'refs/tags')
-    needs: build
+    needs:
+      - tests-py
+      - tests-misc
     runs-on: ubuntu-latest
     steps:
       - name: Restore build artifacts
         uses: actions/download-artifact@v3
         with:
-          name: dist
+          name: build
           path: dist
       - name: Publish to PyPI
         uses: pypa/gh-action-pypi-publish@release/v1
@@ -112,8 +87,6 @@ jobs:
         with:
           name: docs
           path: dist
-      - name: Extract docs
-        run: tar xf dist/docs.tar.gz -C dist
       - name: Deploy docs
         uses: JamesIves/github-pages-deploy-action@v4
         with:

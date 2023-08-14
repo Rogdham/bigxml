@@ -55,12 +55,12 @@ The most used imports are the following:
     :::python
     from bigxml import Parser, xml_handle_element, xml_handle_text
 
-If you want to catch [exceptions](exceptions) raised by this module:
+If you want to catch [exceptions](exceptions.md) raised by this module:
 
     :::python
     from bigxml import BigXmlError
 
-For [type hints](typing):
+For [type hints](typing.md):
 
     :::python
     from bigxml import HandlerTypeHelper, XMLElement, XMLText
