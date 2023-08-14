@@ -20,6 +20,7 @@ adheres to [Semantic Versioning](https://semver.org/).
 ### :house: Internal
 
 - Necessary code changes following dev dependency update: ruff
+- Use `pyproject.toml` and modern build system
 
 ## [0.10.0] - 2023-04-22
 

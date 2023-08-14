@@ -17,8 +17,7 @@ ruff==0.1.1
 black
 
 # publish
-setuptools_scm
-wheel
+build
 
 # docs
 mkdocs
