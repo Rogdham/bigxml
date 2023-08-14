@@ -22,6 +22,7 @@ adheres to [Semantic Versioning](https://semver.org/).
 - Necessary code changes following dev dependency update: ruff
 - Use `pyproject.toml` and modern build system
 - Improve tox & CI pipelines
+- Add tests for PyPy 3.10
 
 ## [0.10.0] - 2023-04-22
 
