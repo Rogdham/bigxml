@@ -23,6 +23,8 @@ adheres to [Semantic Versioning](https://semver.org/).
 - Use `pyproject.toml` and modern build system
 - Improve tox & CI pipelines
 - Add tests for PyPy 3.10
+- Add tests for CPython 3.12
+- Use CPython 3.12 for misc. tests
 
 ## [0.10.0] - 2023-04-22
 
