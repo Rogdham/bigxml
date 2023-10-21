@@ -14,9 +14,12 @@ For the purpose of determining breaking changes:
 
 [python-versions]: https://devguide.python.org/versions/#supported-versions
 
-## [Unreleased]
+## [1.0.0] - 2023-10-21
 
-[unreleased]: https://github.com/rogdham/bigxml/compare/v0.10.0...HEAD
+[1.0.0]: https://github.com/rogdham/bigxml/compare/v0.10.0...v1.0.0
+
+Let's celebrate version 1! :tada: We know that `bigxml` has already been used in
+production for years, but now it's official.
 
 ### :bug: Fixes
 

@@ -7,7 +7,7 @@ readme = { file = "README.md", content-type = "text/markdown" }
 keywords = ["xml", "parser", "big", "stream"]
 license.file = "LICENSE.txt"
 classifiers = [
-    "Development Status :: 4 - Beta",
+    "Development Status :: 5 - Production/Stable",
     "License :: OSI Approved :: MIT License",
     "Operating System :: OS Independent",
     "Programming Language :: Python",

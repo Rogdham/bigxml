@@ -68,12 +68,3 @@ For [type hints](typing.md), you may also import:
 !!! Warning
 
     Always import directly from `bigxml`. Importing from submodules is unsupported.
-
-## Status of the project
-
-_BigXML_ is currently in **beta**. It is well tested, and the API should not change
-drastically but breaking changes may still occur in future releases. Changes are well
-detailed in the [changelog], and the version numbering follow [semver].
-
-[changelog]: https://github.com/Rogdham/bigxml/blob/master/CHANGELOG.md
-[semver]: https://semver.org/
