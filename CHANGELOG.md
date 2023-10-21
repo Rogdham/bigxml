@@ -25,6 +25,7 @@ adheres to [Semantic Versioning](https://semver.org/).
 - Add tests for PyPy 3.10
 - Add tests for CPython 3.12
 - Use CPython 3.12 for misc. tests
+- Freeze dev dependencies
 
 ## [0.10.0] - 2023-04-22
 

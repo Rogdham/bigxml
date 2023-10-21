@@ -2,22 +2,21 @@
 -e .
 
 # build
-build
+build==1.0.3
 
 # docs
-mkdocs
+mkdocs==1.5.3
 
 # format
-black
+black==23.10.0
 
 # lint
-pylint
+pylint==3.0.1
 ruff==0.1.1
 
 # tests
-coverage
-pytest
-pytest-cov
+pytest==7.4.2
+pytest-cov==4.1.0
 
 # type
-mypy
+mypy==1.6.1
