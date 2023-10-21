@@ -8,7 +8,7 @@
     <title>BigXML</title>
     <link rel="stylesheet" href="css/theme.css" />
     <link rel="stylesheet" href="css/theme_extra.css" />
-        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/10.5.0/styles/github.min.css" />
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/styles/github.min.css" />
         <link href="css/extra.css" rel="stylesheet" />
     
       <script>
@@ -18,12 +18,11 @@
         var mkdocs_page_url = "/";
       </script>
     
-    <script src="js/jquery-3.6.0.min.js" defer></script>
     <!--[if lt IE 9]>
       <script src="js/html5shiv.min.js"></script>
     <![endif]-->
-      <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/10.5.0/highlight.min.js"></script>
-      <script>hljs.initHighlightingOnLoad();</script> 
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/highlight.min.js"></script>
+      <script>hljs.highlightAll();</script> 
 </head>
 
 <body class="wy-body-for-nav" role="document">
@@ -35,7 +34,7 @@
           <a href="." class="icon icon-home"> BigXML
         </a><div role="search">
   <form id ="rtd-search-form" class="wy-form" action="./search.html" method="get">
-      <input type="text" name="q" placeholder="Search docs" title="Type search term here" />
+      <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" title="Type search term here" />
   </form>
 </div>
       </div>
@@ -51,10 +50,6 @@
     <li class="toctree-l2"><a class="reference internal" href="#installation">Installation</a>
     </li>
     <li class="toctree-l2"><a class="reference internal" href="#imports">Imports</a>
-    </li>
-    <li class="toctree-l2"><a class="reference internal" href="#python-version-support">Python version support</a>
-    </li>
-    <li class="toctree-l2"><a class="reference internal" href="#status-of-the-project">Status of the project</a>
     </li>
     </ul>
                 </li>
@@ -113,8 +108,8 @@
       <div class="wy-nav-content">
         <div class="rst-content"><div role="navigation" aria-label="breadcrumbs navigation">
   <ul class="wy-breadcrumbs">
-    <li><a href="." class="icon icon-home" alt="Docs"></a> &raquo;</li>
-      <li>Home</li>
+    <li><a href="." class="icon icon-home" aria-label="Docs"></a></li>
+      <li class="breadcrumb-item active">Home</li>
     <li class="wy-breadcrumbs-aside">
           <a href="https://github.com/rogdham/bigxml/blob/master/docs/src/index.md" class="icon icon-github"> Edit on GitHub</a>
     </li>
@@ -167,24 +162,18 @@ produces a single iterable that will be handled by your application.</p>
 <pre class="codehilite"><code class="language-python">from bigxml import Parser, xml_handle_element, xml_handle_text
 </code></pre>
 
-<p>If you want to catch <a href="exceptions">exceptions</a> raised by this module:</p>
+<p>If you want to catch <a href="exceptions/">exceptions</a> raised by this module:</p>
 <pre class="codehilite"><code class="language-python">from bigxml import BigXmlError
 </code></pre>
 
-<p>For <a href="typing">type hints</a>:</p>
-<pre class="codehilite"><code class="language-python">from bigxml import HandlerTypeHelper, XMLElement, XMLText
+<p>For <a href="typing/">type hints</a>, you may also import:</p>
+<pre class="codehilite"><code class="language-python">from bigxml import HandlerTypeHelper, Streamable, XMLElement, XMLElementAttributes, XMLText
 </code></pre>
 
-<h2 id="python-version-support">Python version support</h2>
-<p>As a general rule, all Python versions that are both <a href="https://devguide.python.org/versions/#supported-versions">released and still officially
-supported</a> are supported by <code>bigxml</code> and tested against (both CPython
-and PyPy implementations).</p>
-<p>If you have other use cases or find issues with some Python versions, feel free to
-<a href="https://github.com/Rogdham/bigxml/issues/new">open a ticket</a>!</p>
-<h2 id="status-of-the-project">Status of the project</h2>
-<p><em>BigXML</em> is currently in <strong>beta</strong>. It is well tested, and the API should not change
-drastically but breaking changes may still occur in future releases. Changes are well
-detailed in the <a href="https://github.com/Rogdham/bigxml/blob/master/CHANGELOG.md">changelog</a>, and the version numbering follow <a href="https://semver.org/">semver</a>.</p>
+<div class="admonition warning">
+<p class="admonition-title">Warning</p>
+<p>Always import directly from <code>bigxml</code>. Importing from submodules is unsupported.</p>
+</div>
               
             </div>
           </div><footer>
@@ -221,20 +210,21 @@ detailed in the <a href="https://github.com/Rogdham/bigxml/blob/master/CHANGELOG
     
   </span>
 </div>
-    <script>var base_url = '.';</script>
-    <script src="js/theme_extra.js" defer></script>
-    <script src="js/theme.js" defer></script>
-      <script src="search/main.js" defer></script>
-    <script defer>
-        window.onload = function () {
+    <script src="js/jquery-3.6.0.min.js"></script>
+    <script>var base_url = ".";</script>
+    <script src="js/theme_extra.js"></script>
+    <script src="js/theme.js"></script>
+      <script src="search/main.js"></script>
+    <script>
+        jQuery(function () {
             SphinxRtdTheme.Navigation.enable(true);
-        };
+        });
     </script>
 
 </body>
 </html>
 
 <!--
-MkDocs version : 1.4.2
-Build Date UTC : 2023-04-22 14:12:35.036400+00:00
+MkDocs version : 1.5.3
+Build Date UTC : 2023-10-21 17:54:00.495059+00:00
 -->

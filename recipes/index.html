@@ -8,7 +8,7 @@
     <title>Recipes - BigXML</title>
     <link rel="stylesheet" href="../css/theme.css" />
     <link rel="stylesheet" href="../css/theme_extra.css" />
-        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/10.5.0/styles/github.min.css" />
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/styles/github.min.css" />
         <link href="../css/extra.css" rel="stylesheet" />
     
       <script>
@@ -18,12 +18,11 @@
         var mkdocs_page_url = "/recipes/";
       </script>
     
-    <script src="../js/jquery-3.6.0.min.js" defer></script>
     <!--[if lt IE 9]>
       <script src="../js/html5shiv.min.js"></script>
     <![endif]-->
-      <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/10.5.0/highlight.min.js"></script>
-      <script>hljs.initHighlightingOnLoad();</script> 
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/highlight.min.js"></script>
+      <script>hljs.highlightAll();</script> 
 </head>
 
 <body class="wy-body-for-nav" role="document">
@@ -35,7 +34,7 @@
           <a href=".." class="icon icon-home"> BigXML
         </a><div role="search">
   <form id ="rtd-search-form" class="wy-form" action="../search.html" method="get">
-      <input type="text" name="q" placeholder="Search docs" title="Type search term here" />
+      <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" title="Type search term here" />
   </form>
 </div>
       </div>
@@ -111,9 +110,9 @@
       <div class="wy-nav-content">
         <div class="rst-content"><div role="navigation" aria-label="breadcrumbs navigation">
   <ul class="wy-breadcrumbs">
-    <li><a href=".." class="icon icon-home" alt="Docs"></a> &raquo;</li>
-          <li>User guide &raquo;</li>
-      <li>Recipes</li>
+    <li><a href=".." class="icon icon-home" aria-label="Docs"></a></li>
+          <li class="breadcrumb-item">User guide</li>
+      <li class="breadcrumb-item active">Recipes</li>
     <li class="wy-breadcrumbs-aside">
           <a href="https://github.com/rogdham/bigxml/blob/master/docs/src/recipes.md" class="icon icon-github"> Edit on GitHub</a>
     </li>
@@ -141,7 +140,7 @@
 ...     yield node.text
 
 &gt;&gt;&gt; response = requests.get(&quot;https://example.com/placeholder.xml&quot;, stream=True)
-&gt;&gt;&gt; parser = Parser(response.iter_content(1 &lt;&lt; 14))
+&gt;&gt;&gt; parser = Parser(response.iter_content(None))
 
 &gt;&gt;&gt; for item in parser.iter_from(handler):
 ...     print(item)
@@ -150,11 +149,10 @@ It works quite well!
 </code></pre>
 
 <div class="admonition note">
-<p class="admonition-title">Performance optimizations</p>
-<p>The number passed to <code>Response.iter_content</code> is the chunk size, which is the maximum
-number of bytes that will be obtained at a time. This specific value of <code>1 &lt;&lt; 14</code> is
-the one used under the hood by <em>BigXML</em>'s parsing library. Although any size would
-work, use anything between 1kb and 1Mb for best results.</p>
+<p class="admonition-title">Note</p>
+<p>The <code>None</code> argument passed to <code>Response.iter_content</code> asks to get the data as it is
+received without buffering into chunks of a specific size. This allows to get
+results as soon as possible.</p>
 </div>
 <h2 id="dataclass">Dataclasses</h2>
 <p>Although not mandatory, using a <a href="https://docs.python.org/3/library/dataclasses.html">dataclass</a> may seem natural to hold the parsed data:</p>
@@ -387,14 +385,15 @@ INFO  Main reactor temperature is back to an acceptable level
     
   </span>
 </div>
-    <script>var base_url = '..';</script>
-    <script src="../js/theme_extra.js" defer></script>
-    <script src="../js/theme.js" defer></script>
-      <script src="../search/main.js" defer></script>
-    <script defer>
-        window.onload = function () {
+    <script src="../js/jquery-3.6.0.min.js"></script>
+    <script>var base_url = "..";</script>
+    <script src="../js/theme_extra.js"></script>
+    <script src="../js/theme.js"></script>
+      <script src="../search/main.js"></script>
+    <script>
+        jQuery(function () {
             SphinxRtdTheme.Navigation.enable(true);
-        };
+        });
     </script>
 
 </body>
