@@ -19,7 +19,7 @@ adheres to [Semantic Versioning](https://semver.org/).
 
 ### :house: Internal
 
-- Necessary code changes following dev dependency update: ruff
+- Necessary code changes following dev dependency update: mypy, ruff
 - Use `pyproject.toml` and modern build system
 - Improve tox & CI pipelines
 - Add tests for PyPy 3.10

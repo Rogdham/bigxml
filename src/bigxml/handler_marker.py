@@ -19,7 +19,7 @@ from bigxml.typing import F, K, Protocol, T, T_co, U
 class ___xml_handle_xxx_wrapped(Protocol[T_co]):  # noqa: N801
     # wrapper for classes
     @overload
-    def __call__(
+    def __call__(  # type: ignore[misc]
         self,
         obj: K,
     ) -> K:
@@ -66,7 +66,7 @@ def xml_handle_element(*args: str) -> ___xml_handle_xxx_wrapped[XMLElement]:
 
 # @xml_handle_text (for classes)
 @overload
-def xml_handle_text(obj: K, /) -> K:
+def xml_handle_text(obj: K, /) -> K:  # type: ignore[misc]
     ...
 
 
