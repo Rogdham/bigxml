@@ -79,7 +79,7 @@ def create_nodes(
 
 
 def cases(
-    *args: Tuple[Tuple[str, ...], Optional[str], Optional[str]]
+    *args: Tuple[Tuple[str, ...], Optional[str], Optional[str]],
 ) -> pytest.MarkDecorator:
     tests: List["ParameterSet"] = []
     for node_path, expected_text, expected_node_name in args:
@@ -142,7 +142,7 @@ def test_no_handlers() -> None:
 )
 def test_one_catchall(test_create_handler: TEST_CREATE_HANDLER_TYPE) -> None:
     def catchall(
-        node: Union[XMLElement, XMLText]
+        node: Union[XMLElement, XMLText],
     ) -> Iterator[Tuple[str, Union[XMLElement, XMLText]]]:
         yield ("catchall", node)
 
@@ -307,7 +307,7 @@ def test_class_instance(
 
         @staticmethod
         def xml_handler(
-            generator: Iterator[Tuple[str, Union[XMLElement, XMLText]]]
+            generator: Iterator[Tuple[str, Union[XMLElement, XMLText]]],
         ) -> Iterator[Tuple[str, Union[XMLElement, XMLText]]]:
             yield from generator
 
@@ -337,7 +337,7 @@ def test_marked_class_instance(
 
         @staticmethod
         def xml_handler(
-            generator: Iterator[Tuple[str, XMLElement]]
+            generator: Iterator[Tuple[str, XMLElement]],
         ) -> Iterator[Tuple[str, XMLElement]]:
             yield from generator
 
@@ -371,7 +371,7 @@ def test_deep_marked_class_instances(
 
         @staticmethod
         def xml_handler(
-            generator: Iterator[Tuple[str, XMLElement]]
+            generator: Iterator[Tuple[str, XMLElement]],
         ) -> Iterator[Tuple[str, XMLElement]]:
             yield from generator
 
@@ -384,7 +384,7 @@ def test_deep_marked_class_instances(
 
         @staticmethod
         def xml_handler(
-            generator: Iterator[Tuple[str, XMLElement]]
+            generator: Iterator[Tuple[str, XMLElement]],
         ) -> Iterator[Tuple[str, XMLElement]]:
             yield from generator
 
@@ -397,7 +397,7 @@ def test_deep_marked_class_instances(
 
         @staticmethod
         def xml_handler(
-            generator: Iterator[Tuple[str, XMLElement]]
+            generator: Iterator[Tuple[str, XMLElement]],
         ) -> Iterator[Tuple[str, XMLElement]]:
             yield from generator
 
@@ -736,7 +736,7 @@ def test_class_with_handler_static_method_generator() -> None:
 
         @staticmethod
         def xml_handler(
-            generator: Iterable[Tuple[str, XMLElement]]
+            generator: Iterable[Tuple[str, XMLElement]],
         ) -> Iterable[Tuple[str, Optional[XMLElement]]]:
             yield ("start", None)
             for txt, node in generator:
@@ -826,12 +826,12 @@ def test_class_extends_builtin_list_without_init() -> None:
 def test_catchall_handler_not_alone() -> None:
     @xml_handle_element("a")
     def handle(
-        node: Union[XMLElement, XMLText]
+        node: Union[XMLElement, XMLText],
     ) -> Iterator[Tuple[str, Union[XMLElement, XMLText]]]:
         yield ("0", node)
 
     def catchall(
-        node: Union[XMLElement, XMLText]
+        node: Union[XMLElement, XMLText],
     ) -> Iterator[Tuple[str, Union[XMLElement, XMLText]]]:
         yield ("1", node)
 
@@ -850,12 +850,12 @@ def test_catchall_handler_not_alone() -> None:
 
 def test_several_catchall_handlers() -> None:
     def catchall0(
-        node: Union[XMLElement, XMLText]
+        node: Union[XMLElement, XMLText],
     ) -> Iterator[Tuple[str, Union[XMLElement, XMLText]]]:
         yield ("0", node)
 
     def catchall1(
-        node: Union[XMLElement, XMLText]
+        node: Union[XMLElement, XMLText],
     ) -> Iterator[Tuple[str, Union[XMLElement, XMLText]]]:
         yield ("1", node)
 
@@ -867,13 +867,13 @@ def test_several_catchall_handlers() -> None:
 def test_concurrent_handlers() -> None:
     @xml_handle_element("a", "b", "c")
     def handle0(
-        node: Union[XMLElement, XMLText]
+        node: Union[XMLElement, XMLText],
     ) -> Iterator[Tuple[str, Union[XMLElement, XMLText]]]:
         yield ("0", node)
 
     @xml_handle_element("a", "b", "c")
     def handle1(
-        node: Union[XMLElement, XMLText]
+        node: Union[XMLElement, XMLText],
     ) -> Iterator[Tuple[str, Union[XMLElement, XMLText]]]:
         yield ("0", node)
 

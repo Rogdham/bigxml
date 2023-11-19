@@ -22,24 +22,21 @@ class ___xml_handle_xxx_wrapped(Protocol[T_co]):  # noqa: N801
     def __call__(  # type: ignore[misc]
         self,
         obj: K,
-    ) -> K:
-        ...
+    ) -> K: ...
 
     # wrapper for functions
     @overload
     def __call__(
         self,
         obj: Callable[[T_co], Optional[Iterable[T]]],
-    ) -> Callable[[Union[XMLElement, XMLText]], Optional[Iterable[T]]]:
-        ...
+    ) -> Callable[[Union[XMLElement, XMLText]], Optional[Iterable[T]]]: ...
 
     # wrapper for methods
     @overload
     def __call__(
         self,
         obj: Callable[[U, T_co], Optional[Iterable[T]]],
-    ) -> Callable[[U, Union[XMLElement, XMLText]], Optional[Iterable[T]]]:
-        ...
+    ) -> Callable[[U, Union[XMLElement, XMLText]], Optional[Iterable[T]]]: ...
 
 
 def xml_handle_element(*args: str) -> ___xml_handle_xxx_wrapped[XMLElement]:
@@ -74,22 +71,19 @@ def xml_handle_text(obj: K, /) -> K:  # type: ignore[misc]
 @overload
 def xml_handle_text(
     obj: Callable[[XMLText], Optional[Iterable[T]]], /
-) -> Callable[[Union[XMLElement, XMLText]], Optional[Iterable[T]]]:
-    ...
+) -> Callable[[Union[XMLElement, XMLText]], Optional[Iterable[T]]]: ...
 
 
 # @xml_handle_text (for methods)
 @overload
 def xml_handle_text(
     obj: Callable[[U, XMLText], Optional[Iterable[T]]], /
-) -> Callable[[U, Union[XMLElement, XMLText]], Optional[Iterable[T]]]:
-    ...
+) -> Callable[[U, Union[XMLElement, XMLText]], Optional[Iterable[T]]]: ...
 
 
 # @xml_handle_text(...) (for functions & methods)
 @overload
-def xml_handle_text(*args: str) -> ___xml_handle_xxx_wrapped[XMLText]:
-    ...
+def xml_handle_text(*args: str) -> ___xml_handle_xxx_wrapped[XMLText]: ...
 
 
 def xml_handle_text(*args: Any) -> Any:

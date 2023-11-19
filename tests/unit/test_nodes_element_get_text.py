@@ -17,7 +17,7 @@ def create_element(*children: Union[XMLElement, XMLText]) -> XMLElement:
     def side_effect(
         handler: Callable[
             [Union[XMLElement, XMLText]], Iterator[Union[XMLElement, XMLText]]
-        ]
+        ],
     ) -> Iterator[Union[XMLElement, XMLText]]:
         for child in children:
             yield from handler(child)

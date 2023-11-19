@@ -18,7 +18,7 @@ def handler() -> HANDLER_TYPE:
     return_values = count()
 
     def handler_fct(
-        node: Union[XMLElement, XMLText]
+        node: Union[XMLElement, XMLText],
     ) -> Iterator[Tuple[str, Union[XMLElement, XMLText]]]:
         yield (f"handler-yield-{next(return_values)}", node)
 

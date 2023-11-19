@@ -154,9 +154,11 @@ testpaths = ["docs", "tests"]
 #
 
 [tool.ruff]
-select = ["ALL"]
 src = ["src"]
 target-version = "py38"
+
+[tool.ruff.lint]
+select = ["ALL"]
 ignore = [
     "ANN101",
     "ANN102",
@@ -167,21 +169,22 @@ ignore = [
     "EM",
     "ERA001",
     "FA100",
+    "ISC001",
     "PLR0912",
     "TRY003",
     "TRY301",
 ]
 
-[tool.ruff.per-file-ignores]
+[tool.ruff.lint.per-file-ignores]
 "docs/**" = ["D", "INP001", "PTH109"]
 "stubs/**" = ["D"]
 "tests/**" = ["D", "FBT", "INP001", "PLR2004", "S101", "SLF001"]
 
-[tool.ruff.isort]
+[tool.ruff.lint.isort]
 force-sort-within-sections = true
 known-first-party = ["bigxml"]
 
-[tool.ruff.flake8-pytest-style]
+[tool.ruff.lint.flake8-pytest-style]
 fixture-parentheses = false
 mark-parentheses = false
 parametrize-names-type = "list"

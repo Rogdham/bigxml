@@ -14,6 +14,14 @@ For the purpose of determining breaking changes:
 
 [python-versions]: https://devguide.python.org/versions/#supported-versions
 
+## [Unreleased]
+
+[unreleased]: https://github.com/rogdham/bigxml/compare/v1.0.0...HEAD
+
+### :house: Internal
+
+- Change code formatter from black to ruff
+
 ## [1.0.0] - 2023-10-21
 
 [1.0.0]: https://github.com/rogdham/bigxml/compare/v0.10.0...v1.0.0

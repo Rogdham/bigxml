@@ -21,7 +21,7 @@ def handler_c(_node: Union[XMLElement, XMLText]) -> Iterator[object]:
 
 
 def handle(
-    handler: Callable[[Union[XMLElement, XMLText]], Iterator[int]]
+    handler: Callable[[Union[XMLElement, XMLText]], Iterator[int]],
 ) -> Iterator[int]:
     node = Mock()
     for item in handler(node):

@@ -78,7 +78,7 @@ def test_namespaces() -> None:
 
         @staticmethod
         def xml_handler(
-            generator: Iterator[Tuple[str, str, str]]
+            generator: Iterator[Tuple[str, str, str]],
         ) -> Iterator[Tuple[str, str, str]]:
             yield from generator
 

@@ -39,7 +39,6 @@ jobs:
         env:
           - build
           - docs
-          - format
           - lint
           - type
     steps:

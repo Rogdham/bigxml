@@ -30,18 +30,17 @@ T_co = TypeVar("T_co", covariant=True)
 
 
 class SupportsRead(Protocol[T_co]):
-    def read(self, size: Optional[int] = None) -> T_co:
-        ...  # pragma: no cover
+    def read(self, size: Optional[int] = None) -> T_co: ...  # pragma: no cover
 
 
 Streamable = Union[SupportsRead[bytes], bytes, Iterable["Streamable"]]
 
 
 class ClassHandlerWithCustomWrapper0(Protocol[T_co]):
-    def xml_handler(self) -> Optional[Iterable[T_co]]:
-        ...  # pragma: no cover
+    def xml_handler(self) -> Optional[Iterable[T_co]]: ...  # pragma: no cover
 
 
 class ClassHandlerWithCustomWrapper1(Protocol[T_co]):
-    def xml_handler(self, items: Iterator[Any]) -> Optional[Iterable[T_co]]:
-        ...  # pragma: no cover
+    def xml_handler(
+        self, items: Iterator[Any]
+    ) -> Optional[Iterable[T_co]]: ...  # pragma: no cover

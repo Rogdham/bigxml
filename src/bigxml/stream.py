@@ -60,7 +60,7 @@ def _flatten_stream(stream: Streamable) -> Generator[Optional[memoryview], int, 
 
 @autostart_generator
 def _convert_to_read(
-    data_stream: Generator[Optional[memoryview], int, None]
+    data_stream: Generator[Optional[memoryview], int, None],
 ) -> Generator[bytes, int, None]:
     size = yield b""
     while True:

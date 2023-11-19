@@ -7,12 +7,9 @@ build==1.0.3
 # docs
 mkdocs==1.5.3
 
-# format
-black==23.10.0
-
 # lint
 pylint==3.0.1
-ruff==0.1.1
+ruff==0.4.2
 
 # tests
 pytest==7.4.2

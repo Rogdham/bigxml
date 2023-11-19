@@ -58,8 +58,7 @@ class HandleMgr:
             List[str],
             Tuple[str, ...],
         ],
-    ) -> Iterator["XMLElement"]:
-        ...
+    ) -> Iterator["XMLElement"]: ...
 
     @overload
     def iter_from(
@@ -71,8 +70,7 @@ class HandleMgr:
             Type[ClassHandlerWithCustomWrapper0[T]],
             Type[ClassHandlerWithCustomWrapper1[T]],
         ],
-    ) -> Iterator[T]:
-        ...
+    ) -> Iterator[T]: ...
 
     @overload
     def iter_from(
@@ -85,8 +83,7 @@ class HandleMgr:
             Type[ClassHandlerWithCustomWrapper1[T]],
             Type[T],
         ],
-    ) -> Iterator[T]:
-        ...
+    ) -> Iterator[T]: ...
 
     @overload
     def iter_from(
@@ -101,8 +98,7 @@ class HandleMgr:
             List[str],
             Tuple[str, ...],
         ],
-    ) -> Iterator[Union["XMLElement", T]]:
-        ...
+    ) -> Iterator[Union["XMLElement", T]]: ...
 
     @overload
     def iter_from(
@@ -118,15 +114,13 @@ class HandleMgr:
             List[str],
             Tuple[str, ...],
         ],
-    ) -> Iterator[Union["XMLElement", T]]:
-        ...
+    ) -> Iterator[Union["XMLElement", T]]: ...
 
     @overload  # type: ignore[misc]
     def iter_from(
         self,
         *handlers: Any,  # noqa: ANN401
-    ) -> Iterator[object]:
-        ...
+    ) -> Iterator[object]: ...
 
     def iter_from(self, *handlers: Any) -> Iterator[object]:
         if not self._handle:
@@ -139,8 +133,7 @@ class HandleMgr:
     @overload
     def return_from(
         self,
-    ) -> None:
-        ...
+    ) -> None: ...
 
     @overload
     def return_from(
@@ -150,8 +143,7 @@ class HandleMgr:
             List[str],
             Tuple[str, ...],
         ],
-    ) -> Optional["XMLElement"]:
-        ...
+    ) -> Optional["XMLElement"]: ...
 
     @overload
     def return_from(
@@ -163,8 +155,7 @@ class HandleMgr:
             Type[ClassHandlerWithCustomWrapper0[T]],
             Type[ClassHandlerWithCustomWrapper1[T]],
         ],
-    ) -> Optional[T]:
-        ...
+    ) -> Optional[T]: ...
 
     @overload
     def return_from(
@@ -177,8 +168,7 @@ class HandleMgr:
             Type[ClassHandlerWithCustomWrapper1[T]],
             Type[T],
         ],
-    ) -> Optional[T]:
-        ...
+    ) -> Optional[T]: ...
 
     @overload
     def return_from(
@@ -193,8 +183,7 @@ class HandleMgr:
             List[str],
             Tuple[str, ...],
         ],
-    ) -> Optional[Union["XMLElement", T]]:
-        ...
+    ) -> Optional[Union["XMLElement", T]]: ...
 
     @overload
     def return_from(
@@ -210,15 +199,13 @@ class HandleMgr:
             Tuple[str, ...],
             Type[T],
         ],
-    ) -> Optional[Union["XMLElement", T]]:
-        ...
+    ) -> Optional[Union["XMLElement", T]]: ...
 
     @overload
     def return_from(
         self,
         *handlers: object,
-    ) -> Optional[object]:
-        ...
+    ) -> Optional[object]: ...
 
     def return_from(self, *handlers: Any) -> Optional[Any]:
         return last_item_or_none(self.iter_from(*handlers))
