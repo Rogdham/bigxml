@@ -76,7 +76,7 @@ def transform_to_iterator(
 def get_mandatory_params(fct: Callable[..., object]) -> Tuple[str, ...]:
     try:
         sig = signature(fct)
-    except (ValueError, TypeError):
+    except (ValueError, TypeError):  # pragma: no cover
         return ()  # e.g. for built-in
     return tuple(
         param.name
