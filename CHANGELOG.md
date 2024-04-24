@@ -21,6 +21,7 @@ For the purpose of determining breaking changes:
 ### :house: Internal
 
 - Change code formatter from black to ruff
+- Fix doctests not being run with other tests
 
 ## [1.0.0] - 2023-10-21
 

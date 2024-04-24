@@ -137,12 +137,11 @@ disable = [
 #
 
 [tool.pytest.ini_options]
-addopts = [
-    "--cov",
-    "--doctest-glob='*.md'",
-    "--doctest-modules",
-    "--strict-markers",
-]
+addopts = """
+    --cov
+    --doctest-glob='*.md'
+    --doctest-modules --strict-markers
+    """
 doctest_optionflags = ["ELLIPSIS", "NORMALIZE_WHITESPACE", "NUMBER"]
 filterwarnings = ["error"]
 markers = ["docs", "integration", "unit"]
