@@ -15,7 +15,6 @@ from bigxml.typing import F, K, Protocol, T, T_co, U
 # plus xml_handle_text can be applied without parenthesis as well
 
 
-# pylint: disable-next=invalid-name
 class ___xml_handle_xxx_wrapped(Protocol[T_co]):  # noqa: N801
     # wrapper for classes
     @overload

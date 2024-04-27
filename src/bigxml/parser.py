@@ -42,7 +42,6 @@ def _parse(
         node = XMLElement(
             name=elem.tag, attributes=XMLElementAttributes(elem.attrib), parents=parents
         )
-        # pylint: disable=protected-access
         node._handle = lambda h: _parse(  # noqa: SLF001
             iterator, h, (*parents, node), elem, iteration
         )

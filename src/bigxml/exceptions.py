@@ -24,7 +24,6 @@ def rewrite_exceptions(iterable: Iterable[T]) -> Iterator[T]:
         # defusedxml has usable wording in it's exception's doc
         # except for base DefusedXmlException
         msg = (ex.__doc__ or "").strip()
-        # pylint: disable-next=unidiomatic-typecheck
         if not msg or type(ex) is DefusedXmlException:
             msg = "Invalid XML"
         raise BigXmlError(msg, security=True) from ex

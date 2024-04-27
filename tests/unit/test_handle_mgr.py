@@ -42,7 +42,7 @@ def test_return_from_no_handle() -> None:
 
 def test_iter_from_handle() -> None:
     hmgr = HandleMgr()
-    hmgr._handle = handle  # pylint: disable=protected-access
+    hmgr._handle = handle
     assert list(hmgr.iter_from(handler_a)) == [13_000, 37_000]
     assert list(hmgr.iter_from(handler_b)) == [42_000]
     assert not list(hmgr.iter_from(handler_c))
@@ -50,7 +50,7 @@ def test_iter_from_handle() -> None:
 
 def test_return_from_handle() -> None:
     hmgr = HandleMgr()
-    hmgr._handle = handle  # pylint: disable=protected-access
+    hmgr._handle = handle
     assert hmgr.return_from(handler_a) == 37_000
     assert hmgr.return_from(handler_b) == 42_000
     assert hmgr.return_from(handler_c) is None

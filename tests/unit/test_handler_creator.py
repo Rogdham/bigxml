@@ -72,7 +72,6 @@ def create_nodes(
             for child in children:
                 yield from handler(child)
 
-        # pylint: disable=protected-access
         node_parent._handle = partial(handle, children=children)  # type: ignore[assignment]
 
     return nodes
@@ -115,7 +114,7 @@ def cases(
     return pytest.mark.parametrize("test_create_handler", tests)
 
 
-TEST_CREATE_HANDLER_TYPE = Callable[..., None]  # pylint: disable=invalid-name
+TEST_CREATE_HANDLER_TYPE = Callable[..., None]
 
 #
 # no handler
@@ -451,8 +450,6 @@ def test_class_without_sub_handler() -> None:
 @pytest.mark.parametrize("init_mandatory", [False, True])
 @pytest.mark.parametrize("init_optional", [False, True])
 def test_class_init(init_mandatory: bool, init_optional: bool) -> None:
-    # pylint: disable=too-many-locals
-
     @xml_handle_element("x", "y")
     class HandlerA:
         def __init__(self, node: XMLElement, answer: int = 42) -> None:
@@ -493,7 +490,7 @@ def test_class_init(init_mandatory: bool, init_optional: bool) -> None:
         def handle0(self, node: XMLElement) -> None:
             self.seen.append(node)
 
-    Handler: Type[object]  # noqa: N806 # pylint: disable=invalid-name
+    Handler: Type[object]  # noqa: N806
     if init_mandatory:
         Handler = HandlerA if init_optional else HandlerB  # noqa: N806
     else:
@@ -508,13 +505,11 @@ def test_class_init(init_mandatory: bool, init_optional: bool) -> None:
     #
     # the use of namespaces below is to avoid e.g. node_y0==node_y1
     #
-    # pylint: disable=unbalanced-tuple-unpacking
     node_x, node_y0 = create_nodes("x", "{y0}y")
     _, node_a0, node_b0 = create_nodes("{a0}a", "{b0}b", parent=node_y0)
     _, node_b1 = create_nodes("{b1}b", parent=node_a0)
     _, _, node_b2 = create_nodes("{a1}a", "{b2}b", parent=node_y0)
     _, node_y1, _, node_b3 = create_nodes("{y1}y", "{a2}a", "{b3}b", parent=node_x)
-    # pylint: enable=unbalanced-tuple-unpacking
 
     handler = create_handler(Handler)
     items: List[Any] = list(handler(node_x))
@@ -544,10 +539,8 @@ def test_class_init_text_node() -> None:
 
     #   x -> y0 -> :text:
     #     -> y1 -> z
-    # pylint: disable=unbalanced-tuple-unpacking
     node_x, _, node_txt0 = create_nodes("x", "y0", ":text:")
     _, node_y1, node_txt1 = create_nodes("y1", ":text:", parent=node_x)
-    # pylint: enable=unbalanced-tuple-unpacking
 
     handler = create_handler(Handler)
     items: List[Any] = list(handler(node_x))
@@ -627,10 +620,8 @@ def test_class_with_handler() -> None:
                 yield (f"_{txt}", node)
             yield ("end", None)
 
-    # pylint: disable=unbalanced-tuple-unpacking
     node_x, node_a = create_nodes("x", "a")
     _, node_b = create_nodes("b", parent=node_x)
-    # pylint: enable=unbalanced-tuple-unpacking
 
     handler = create_handler(Handler)
     assert list(handler(node_x)) == [
@@ -705,10 +696,8 @@ def test_class_with_handler_generator() -> None:
                 yield (f"_{txt}", node)
             yield ("end", None)
 
-    # pylint: disable=unbalanced-tuple-unpacking
     node_x, node_a = create_nodes("x", "a")
     _, node_b = create_nodes("b", parent=node_x)
-    # pylint: enable=unbalanced-tuple-unpacking
 
     handler = create_handler(Handler)
     assert list(handler(node_x)) == [
@@ -743,10 +732,8 @@ def test_class_with_handler_static_method_generator() -> None:
                 yield (f"h{txt}", node)
             yield ("end", None)
 
-    # pylint: disable=unbalanced-tuple-unpacking
     node_x, node_a = create_nodes("x", "a")
     _, node_b = create_nodes("b", parent=node_x)
-    # pylint: enable=unbalanced-tuple-unpacking
 
     handler = create_handler(Handler)
     assert list(handler(node_x)) == [

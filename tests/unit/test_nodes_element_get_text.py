@@ -23,7 +23,7 @@ def create_element(*children: Union[XMLElement, XMLText]) -> XMLElement:
             yield from handler(child)
 
     handle.side_effect = side_effect
-    node._handle = handle  # pylint: disable=protected-access
+    node._handle = handle
     return node
 
 

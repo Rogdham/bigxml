@@ -117,22 +117,6 @@ warn_unused_configs = true
 
 
 #
-# pylint
-#
-
-[tool.pylint.DESIGN]
-max-branches = 15
-
-[tool.pylint.'MESSAGE CONTROL']
-disable = [
-    "missing-class-docstring",
-    "missing-function-docstring",
-    "missing-module-docstring",
-    "too-few-public-methods",
-]
-
-
-#
 # pytest
 #
 

@@ -17,9 +17,6 @@ else:  # pragma: no cover
     from typing import ParamSpec
 
 
-# pylint: disable=unused-argument
-
-
 P = ParamSpec("P")
 T = TypeVar("T")
 U = TypeVar("U")

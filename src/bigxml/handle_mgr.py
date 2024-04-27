@@ -44,11 +44,7 @@ class HandleMgr:
     @overload
     def iter_from(
         self,
-    ) -> Iterator["Never"]:
-        # we don't have '...' as body in this overload as a workaround
-        # to prevent 'not-an-iterable' error in pylint
-        # see https://github.com/PyCQA/astroid/issues/1015
-        return iter(())
+    ) -> Iterator["Never"]: ...
 
     @overload
     def iter_from(
@@ -126,7 +122,7 @@ class HandleMgr:
         if not self._handle:
             raise RuntimeError("No handle to use")
         handler = create_handler(*handlers)
-        return self._handle(handler)  # pylint: disable=not-callable
+        return self._handle(handler)
 
     # return_from
 

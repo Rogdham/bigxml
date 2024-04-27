@@ -8,7 +8,7 @@ from bigxml import Parser, XMLText, xml_handle_text
 @pytest.fixture
 def ram_usage() -> Iterator[Callable[[], float]]:
     try:
-        import tracemalloc  # pylint: disable=import-outside-toplevel
+        import tracemalloc
     except ImportError:  # e.g. PyPy
         pytest.skip("tracemalloc module not available")
 
@@ -48,7 +48,6 @@ def big_stream(ram_used: Callable[[], float]) -> Iterator[bytes]:
 
 
 def test_with_handler(
-    # pylint: disable=redefined-outer-name
     ram_usage: Callable[[], float],
 ) -> None:
     @xml_handle_text("root", "entry", "nb")
@@ -62,7 +61,6 @@ def test_with_handler(
 
 
 def test_no_handler(
-    # pylint: disable=redefined-outer-name
     ram_usage: Callable[[], float],
 ) -> None:
     items: Iterator[object] = Parser(big_stream(ram_usage)).iter_from()

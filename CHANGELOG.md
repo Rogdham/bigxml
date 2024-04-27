@@ -24,6 +24,7 @@ For the purpose of determining breaking changes:
 - Fix doctests not being run with other tests
 - Fix coverage report under some versions of PyPy
 - Upgrade dev dependencies
+- Remove pylint, assuming its benefits are provided by the ruff+mypy combo
 
 ## [1.0.0] - 2023-10-21
 

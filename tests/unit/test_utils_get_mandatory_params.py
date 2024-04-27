@@ -1,4 +1,3 @@
-# pylint: disable=unused-argument
 # ruff: noqa: ARG001
 
 from typing import Callable, List, Tuple
@@ -28,7 +27,6 @@ def fct4(arg0, /, arg1, *, arg2, arg3=3):  # type: ignore[no-untyped-def] # noqa
     pass  # for tests
 
 
-# pylint: disable-next=line-too-long
 def fct5(arg0, /, arg1, *arg2, arg3, arg4=4, **arg5):  # type: ignore[no-untyped-def] # noqa: ANN001,ANN002,ANN003,ANN201
     pass  # for tests
 
@@ -43,9 +41,6 @@ def fct6(
     **arg5: List[int],
 ) -> None:
     pass  # for tests
-
-
-# pylint: enable=unused-argument
 
 
 @pytest.mark.parametrize(

@@ -7,7 +7,7 @@ from bigxml.handler_marker import xml_handle_element
 from bigxml.nodes import XMLElement, XMLElementAttributes, XMLText
 from bigxml.parser import Parser
 
-HANDLER_TYPE = Callable[  # pylint: disable=invalid-name
+HANDLER_TYPE = Callable[
     [Union[XMLElement, XMLText]],
     Iterator[Tuple[str, Union[XMLElement, XMLText]]],
 ]
@@ -64,7 +64,6 @@ root_node = elem("root")
 def test_root_level(
     xml: bytes,
     node: XMLElement,
-    # pylint: disable=redefined-outer-name
     handler: Callable[
         [Union[XMLElement, XMLText]],
         Iterator[Tuple[str, Union[XMLElement, XMLText]]],
@@ -134,7 +133,6 @@ BIG_TEXT_LEN = 1_000_000
 def test_content(
     xml_content: bytes,
     nodes: List[Union[XMLElement, XMLText]],
-    # pylint: disable=redefined-outer-name
     handler: HANDLER_TYPE,
 ) -> None:
     @xml_handle_element("root")
@@ -164,11 +162,10 @@ def test_out_of_order() -> None:
     second_node = next(nodes)
     assert second_node.text == "world"
     with pytest.raises(RuntimeError):
-        first_node.text  # pylint: disable=pointless-statement  # noqa: B018
+        first_node.text  # noqa: B018
 
 
 def test_many_small_streams(
-    # pylint: disable=redefined-outer-name
     handler: HANDLER_TYPE,
 ) -> None:
     xml = b"<root>Hello<foo />World</root>"
@@ -190,7 +187,6 @@ def test_many_small_streams(
 
 
 def test_insecurely_allow_entities(
-    # pylint: disable=redefined-outer-name
     handler: HANDLER_TYPE,
 ) -> None:
     xml = b'<!DOCTYPE root [<!ENTITY pi "&#960;">]><root>&pi;</root>'
