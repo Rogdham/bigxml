@@ -14,9 +14,12 @@ For the purpose of determining breaking changes:
 
 [python-versions]: https://devguide.python.org/versions/#supported-versions
 
-## [Unreleased]
+## [1.0.1] - 2024-04-27
 
-[unreleased]: https://github.com/rogdham/bigxml/compare/v1.0.0...HEAD
+[1.0.1]: https://github.com/rogdham/bigxml/compare/v1.0.0...v1.0.1
+
+This is a maintenance release. Internal tooling is being upgraded, featuring support for
+pytest version 8 and formatting of the codebase with ruff.
 
 ### :house: Internal
 
