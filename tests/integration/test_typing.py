@@ -1,6 +1,6 @@
 from dataclasses import dataclass
 import sys
-from typing import TYPE_CHECKING, Any, Iterable, Iterator, Optional, Tuple, Union
+from typing import Iterable, Iterator, Optional, Tuple, Union
 
 from bigxml import (
     HandlerTypeHelper,
@@ -12,16 +12,9 @@ from bigxml import (
 )
 
 if sys.version_info < (3, 11):
-    from typing import NoReturn as Never
+    from typing_extensions import Never, assert_type
 else:
-    from typing import Never
-
-if TYPE_CHECKING:
-    from typing_extensions import assert_type
-else:
-
-    def assert_type(val: Any, _: Any) -> Any:  # noqa: ANN401
-        return val
+    from typing import Never, assert_type
 
 
 # Note: the aim of this file is to test the typing of return-values
