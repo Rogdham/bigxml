@@ -1,5 +1,9 @@
+from array import array
+import inspect
 from io import BytesIO, IOBase, StringIO
+from mmap import mmap
 from string import ascii_lowercase
+import sys
 from typing import Iterator, Optional, Tuple, cast
 
 import pytest
@@ -14,27 +18,52 @@ def test_no_stream() -> None:
     assert stream.read(42) == b""
 
 
-def abcdef_generator() -> Iterator[bytes]:
-    yield b"abcdef"
+DATA = b"a\x00b\x7fc\x80d\xffe"
+
+
+def to_mmap(data: bytes) -> mmap:
+    out = mmap(-1, len(data))
+    out.write(data)
+    return out
+
+
+def custom_generator() -> Iterator[bytes]:
+    yield DATA
+
+
+class CustomBuffer:
+    def __buffer__(self, flags: int) -> memoryview:
+        if flags != inspect.BufferFlags.FULL_RO:
+            raise TypeError("Only BufferFlags.FULL_RO supported")
+        return memoryview(DATA).toreadonly()
 
 
 @pytest.mark.parametrize(
     "stream",
     [
-        b"abcdef",
-        bytearray(b"abcdef"),
-        memoryview(b"abcdef"),
-        BytesIO(b"abcdef"),
-        [b"abcdef"],
-        (b"abcdef",),
-        iter([b"abcdef"]),
-        abcdef_generator(),
+        DATA,
+        bytearray(DATA),
+        memoryview(DATA),
+        array("B", DATA),
+        to_mmap(DATA),
+        BytesIO(DATA),
+        [DATA],
+        (DATA,),
+        iter([DATA]),
+        custom_generator(),
+        pytest.param(
+            CustomBuffer(),
+            marks=pytest.mark.skipif(
+                sys.version_info < (3, 12),
+                reason="requires python3.12 or higher",
+            ),
+        ),
     ],
     ids=type,
 )
 def test_types(stream: Streamable) -> None:
     stream = StreamChain(stream)
-    assert stream.read(42) == b"abcdef"
+    assert stream.read(42) == DATA
     assert stream.read(42) == b""
 
 

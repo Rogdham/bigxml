@@ -16,6 +16,10 @@ if sys.version_info < (3, 10):  # pragma: no cover
 else:  # pragma: no cover
     from typing import ParamSpec
 
+if sys.version_info < (3, 12):  # pragma: no cover
+    from typing_extensions import Buffer
+else:  # pragma: no cover
+    from collections.abc import Buffer
 
 P = ParamSpec("P")
 T = TypeVar("T")
@@ -30,7 +34,7 @@ class SupportsRead(Protocol[T_co]):
     def read(self, size: Optional[int] = None) -> T_co: ...  # pragma: no cover
 
 
-Streamable = Union[SupportsRead[bytes], bytes, Iterable["Streamable"]]
+Streamable = Union[Buffer, SupportsRead[bytes], Iterable["Streamable"]]
 
 
 class ClassHandlerWithCustomWrapper0(Protocol[T_co]):

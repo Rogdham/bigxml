@@ -1,17 +1,24 @@
 from io import IOBase
+import sys
 from typing import Any, Generator, Iterable, Optional, cast
 
 from bigxml.typing import Streamable, SupportsRead
 from bigxml.utils import autostart_generator
+
+if sys.version_info < (3, 12):  # pragma: no cover
+    from typing_extensions import Buffer
+else:  # pragma: no cover
+    from collections.abc import Buffer
 
 
 @autostart_generator
 def _flatten_stream(stream: Streamable) -> Generator[Optional[memoryview], int, None]:
     yield None
 
-    # bytes-like
+    # buffer protocol (bytes, etc.)
     try:
-        yield memoryview(cast(bytes, stream))
+        # we try-except instead of isinstance(stream, Buffer) for compatibility reasons
+        yield memoryview(cast(Buffer, stream))
         return  # noqa: TRY300
     except TypeError:
         pass
