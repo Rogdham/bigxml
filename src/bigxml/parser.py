@@ -25,7 +25,7 @@ def _parse(
         raise RuntimeError("Tried to access a node out of order")
 
     depth = 0
-    last_child: Optional["Element"] = None
+    last_child: Optional[Element] = None
 
     def handle_text() -> Iterator[T]:
         if last_child is not None:

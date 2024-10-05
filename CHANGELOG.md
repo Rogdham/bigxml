@@ -22,6 +22,10 @@ For the purpose of determining breaking changes:
 
 - Add support for buffer protocol ([PEP 688](https://peps.python.org/pep-0688/))
 
+### :house: Internal
+
+- Upgrade dev dependencies
+
 ## [1.0.1] - 2024-04-27
 
 [1.0.1]: https://github.com/rogdham/bigxml/compare/v1.0.0...v1.0.1

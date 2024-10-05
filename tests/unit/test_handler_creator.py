@@ -80,7 +80,7 @@ def create_nodes(
 def cases(
     *args: Tuple[Tuple[str, ...], Optional[str], Optional[str]],
 ) -> pytest.MarkDecorator:
-    tests: List["ParameterSet"] = []
+    tests: List[ParameterSet] = []
     for node_path, expected_text, expected_node_name in args:
         nodes = create_nodes(*node_path)
         if expected_node_name is None:
@@ -92,7 +92,7 @@ def cases(
         def test_create_handler(
             root: Union[XMLElement, XMLText],
             expected_text: Optional[str],
-            expected_node: Optional[str],
+            expected_node: Union[XMLElement, XMLText, None],
             *handles: object,
         ) -> None:
             handler = create_handler(*handles)
