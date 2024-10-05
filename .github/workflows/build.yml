@@ -23,6 +23,7 @@ jobs:
           - "3.10"
           - "3.11"
           - "3.12"
+          - "3.13"
           - "pypy-3.8"
           - "pypy-3.9"
           - "pypy-3.10"
@@ -54,7 +55,7 @@ jobs:
       - name: Setup Python
         uses: actions/setup-python@v5
         with:
-          python-version: "3.12"
+          python-version: "3.13"
       - name: Install dependencies
         run: pip install tox
       - name: Run ${{ matrix.env }}

@@ -24,6 +24,8 @@ For the purpose of determining breaking changes:
 
 ### :house: Internal
 
+- Add tests for CPython 3.13
+- Use CPython 3.13 for misc. tests
 - Upgrade dev dependencies
 
 ## [1.0.1] - 2024-04-27
