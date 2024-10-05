@@ -13,7 +13,6 @@ classifiers = [
     "Programming Language :: Python",
     "Programming Language :: Python :: 3",
     "Programming Language :: Python :: 3 :: Only",
-    "Programming Language :: Python :: 3.8",
     "Programming Language :: Python :: 3.9",
     "Programming Language :: Python :: 3.10",
     "Programming Language :: Python :: 3.11",
@@ -22,7 +21,7 @@ classifiers = [
     "Topic :: Utilities",
     "Topic :: Text Processing :: Markup :: XML",
 ]
-requires-python = ">=3.8"
+requires-python = ">=3.9"
 dependencies = [
     "defusedxml>=0.7.1",
     "typing-extensions>=4.6.0 ; python_version<'3.12'",
@@ -139,7 +138,7 @@ testpaths = ["docs", "tests"]
 
 [tool.ruff]
 src = ["src"]
-target-version = "py38"
+target-version = "py39"
 
 [tool.ruff.lint]
 select = ["ALL"]

@@ -1,10 +1,11 @@
 from array import array
+from collections.abc import Iterator
 import inspect
 from io import BytesIO, IOBase, StringIO
 from mmap import mmap
 from string import ascii_lowercase
 import sys
-from typing import Iterator, Optional, Tuple, cast
+from typing import Optional, cast
 
 import pytest
 
@@ -210,7 +211,7 @@ class InfiniteIO(IOBase):
     ],
     ids=repr,
 )
-def test_pass_read_size(streams: Tuple[Streamable, ...]) -> None:
+def test_pass_read_size(streams: tuple[Streamable, ...]) -> None:
     stream = StreamChain(*streams)
     assert stream.read(3) == b"***"
     assert stream.read(4) == b"4444"

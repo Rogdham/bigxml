@@ -1,6 +1,7 @@
+from collections.abc import Iterable, Iterator
 from dataclasses import dataclass
 import sys
-from typing import Iterable, Iterator, Optional, Tuple, Union
+from typing import Optional, Union
 
 from bigxml import (
     HandlerTypeHelper,
@@ -124,11 +125,11 @@ class WithCustomHandler:
         self.count = 0
 
     @xml_handle_text("root", "item")
-    def text_handler(self, node: XMLText) -> Iterable[Tuple[int, str]]:
+    def text_handler(self, node: XMLText) -> Iterable[tuple[int, str]]:
         yield self.count, node.text
         self.count += 1
 
-    def xml_handler(self, iterable: Iterable[Tuple[int, str]]) -> Iterable[str]:
+    def xml_handler(self, iterable: Iterable[tuple[int, str]]) -> Iterable[str]:
         for count, text in iterable:
             yield f"item {count} -> {text}"
         yield f"total -> {self.count}"

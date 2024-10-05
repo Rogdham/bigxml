@@ -1,5 +1,6 @@
+from collections.abc import Iterator
 from itertools import count
-from typing import Callable, Dict, Iterator, List, Optional, Tuple, Union
+from typing import Callable, Optional, Union
 
 import pytest
 
@@ -9,7 +10,7 @@ from bigxml.parser import Parser
 
 HANDLER_TYPE = Callable[
     [Union[XMLElement, XMLText]],
-    Iterator[Tuple[str, Union[XMLElement, XMLText]]],
+    Iterator[tuple[str, Union[XMLElement, XMLText]]],
 ]
 
 
@@ -19,7 +20,7 @@ def handler() -> HANDLER_TYPE:
 
     def handler_fct(
         node: Union[XMLElement, XMLText],
-    ) -> Iterator[Tuple[str, Union[XMLElement, XMLText]]]:
+    ) -> Iterator[tuple[str, Union[XMLElement, XMLText]]]:
         yield (f"handler-yield-{next(return_values)}", node)
 
     return handler_fct
@@ -28,8 +29,8 @@ def handler() -> HANDLER_TYPE:
 def elem(
     name: str,
     *,
-    attributes: Optional[Dict[str, str]] = None,
-    parents: Tuple["XMLElement", ...] = (),
+    attributes: Optional[dict[str, str]] = None,
+    parents: tuple["XMLElement", ...] = (),
     namespace: str = "",
 ) -> XMLElement:
     return XMLElement(
@@ -66,7 +67,7 @@ def test_root_level(
     node: XMLElement,
     handler: Callable[
         [Union[XMLElement, XMLText]],
-        Iterator[Tuple[str, Union[XMLElement, XMLText]]],
+        Iterator[tuple[str, Union[XMLElement, XMLText]]],
     ],
 ) -> None:
     parser = Parser(xml)
@@ -132,13 +133,13 @@ BIG_TEXT_LEN = 1_000_000
 )
 def test_content(
     xml_content: bytes,
-    nodes: List[Union[XMLElement, XMLText]],
+    nodes: list[Union[XMLElement, XMLText]],
     handler: HANDLER_TYPE,
 ) -> None:
     @xml_handle_element("root")
     def root_handler(
         node: XMLElement,
-    ) -> Iterator[Tuple[str, Union[XMLElement, XMLText]]]:
+    ) -> Iterator[tuple[str, Union[XMLElement, XMLText]]]:
         yield from node.iter_from(handler)
 
     parser = Parser(b"<root>", xml_content, b"</root>")
@@ -177,7 +178,7 @@ def test_many_small_streams(
     @xml_handle_element("root")
     def root_handler(
         node: XMLElement,
-    ) -> Iterator[Tuple[str, Union[XMLElement, XMLText]]]:
+    ) -> Iterator[tuple[str, Union[XMLElement, XMLText]]]:
         yield from node.iter_from(handler)
 
     parser = Parser(*xml_parts)
@@ -194,7 +195,7 @@ def test_insecurely_allow_entities(
     @xml_handle_element("root")
     def root_handler(
         node: XMLElement,
-    ) -> Iterator[Tuple[str, Union[XMLElement, XMLText]]]:
+    ) -> Iterator[tuple[str, Union[XMLElement, XMLText]]]:
         yield from node.iter_from(handler)
 
     with pytest.warns(UserWarning):

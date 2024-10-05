@@ -1,12 +1,11 @@
 from pathlib import Path
-from typing import List
 
 import pytest
 
 
 def pytest_collection_modifyitems(
     config: pytest.Config,  # noqa: ARG001
-    items: List[pytest.Item],
+    items: list[pytest.Item],
 ) -> None:
     root = Path(__file__).parent.parent
     for item in items:

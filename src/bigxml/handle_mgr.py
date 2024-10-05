@@ -1,17 +1,6 @@
+from collections.abc import Iterable, Iterator
 import sys
-from typing import (
-    TYPE_CHECKING,
-    Any,
-    Callable,
-    Iterable,
-    Iterator,
-    List,
-    Optional,
-    Tuple,
-    Type,
-    Union,
-    overload,
-)
+from typing import TYPE_CHECKING, Any, Callable, Optional, Union, overload
 
 from bigxml.handler_creator import create_handler
 from bigxml.typing import (
@@ -50,8 +39,8 @@ class HandleMgr:
         self,
         *handlers: Union[
             str,
-            List[str],
-            Tuple[str, ...],
+            list[str],
+            tuple[str, ...],
         ],
     ) -> Iterator["XMLElement"]: ...
 
@@ -62,8 +51,8 @@ class HandleMgr:
             Callable[[Union["XMLElement", "XMLText"]], Optional[Iterable[T]]],
             ClassHandlerWithCustomWrapper0[T],
             ClassHandlerWithCustomWrapper1[T],
-            Type[ClassHandlerWithCustomWrapper0[T]],
-            Type[ClassHandlerWithCustomWrapper1[T]],
+            type[ClassHandlerWithCustomWrapper0[T]],
+            type[ClassHandlerWithCustomWrapper1[T]],
         ],
     ) -> Iterator[T]: ...
 
@@ -74,9 +63,9 @@ class HandleMgr:
             Callable[[Union["XMLElement", "XMLText"]], Optional[Iterable[T]]],
             ClassHandlerWithCustomWrapper0[T],
             ClassHandlerWithCustomWrapper1[T],
-            Type[ClassHandlerWithCustomWrapper0[T]],
-            Type[ClassHandlerWithCustomWrapper1[T]],
-            Type[T],
+            type[ClassHandlerWithCustomWrapper0[T]],
+            type[ClassHandlerWithCustomWrapper1[T]],
+            type[T],
         ],
     ) -> Iterator[T]: ...
 
@@ -87,11 +76,11 @@ class HandleMgr:
             Callable[[Union["XMLElement", "XMLText"]], Optional[Iterable[T]]],
             ClassHandlerWithCustomWrapper0[T],
             ClassHandlerWithCustomWrapper1[T],
-            Type[ClassHandlerWithCustomWrapper0[T]],
-            Type[ClassHandlerWithCustomWrapper1[T]],
+            type[ClassHandlerWithCustomWrapper0[T]],
+            type[ClassHandlerWithCustomWrapper1[T]],
             str,
-            List[str],
-            Tuple[str, ...],
+            list[str],
+            tuple[str, ...],
         ],
     ) -> Iterator[Union["XMLElement", T]]: ...
 
@@ -102,12 +91,12 @@ class HandleMgr:
             Callable[[Union["XMLElement", "XMLText"]], Optional[Iterable[T]]],
             ClassHandlerWithCustomWrapper0[T],
             ClassHandlerWithCustomWrapper1[T],
-            Type[ClassHandlerWithCustomWrapper0[T]],
-            Type[ClassHandlerWithCustomWrapper1[T]],
-            Type[T],
+            type[ClassHandlerWithCustomWrapper0[T]],
+            type[ClassHandlerWithCustomWrapper1[T]],
+            type[T],
             str,
-            List[str],
-            Tuple[str, ...],
+            list[str],
+            tuple[str, ...],
         ],
     ) -> Iterator[Union["XMLElement", T]]: ...
 
@@ -135,8 +124,8 @@ class HandleMgr:
         self,
         *handlers: Union[
             str,
-            List[str],
-            Tuple[str, ...],
+            list[str],
+            tuple[str, ...],
         ],
     ) -> Optional["XMLElement"]: ...
 
@@ -147,8 +136,8 @@ class HandleMgr:
             Callable[[Union["XMLElement", "XMLText"]], Optional[Iterable[T]]],
             ClassHandlerWithCustomWrapper0[T],
             ClassHandlerWithCustomWrapper1[T],
-            Type[ClassHandlerWithCustomWrapper0[T]],
-            Type[ClassHandlerWithCustomWrapper1[T]],
+            type[ClassHandlerWithCustomWrapper0[T]],
+            type[ClassHandlerWithCustomWrapper1[T]],
         ],
     ) -> Optional[T]: ...
 
@@ -159,9 +148,9 @@ class HandleMgr:
             Callable[[Union["XMLElement", "XMLText"]], Optional[Iterable[T]]],
             ClassHandlerWithCustomWrapper0[T],
             ClassHandlerWithCustomWrapper1[T],
-            Type[ClassHandlerWithCustomWrapper0[T]],
-            Type[ClassHandlerWithCustomWrapper1[T]],
-            Type[T],
+            type[ClassHandlerWithCustomWrapper0[T]],
+            type[ClassHandlerWithCustomWrapper1[T]],
+            type[T],
         ],
     ) -> Optional[T]: ...
 
@@ -172,11 +161,11 @@ class HandleMgr:
             Callable[[Union["XMLElement", "XMLText"]], Optional[Iterable[T]]],
             ClassHandlerWithCustomWrapper0[T],
             ClassHandlerWithCustomWrapper1[T],
-            Type[ClassHandlerWithCustomWrapper0[T]],
-            Type[ClassHandlerWithCustomWrapper1[T]],
+            type[ClassHandlerWithCustomWrapper0[T]],
+            type[ClassHandlerWithCustomWrapper1[T]],
             str,
-            List[str],
-            Tuple[str, ...],
+            list[str],
+            tuple[str, ...],
         ],
     ) -> Optional[Union["XMLElement", T]]: ...
 
@@ -187,12 +176,12 @@ class HandleMgr:
             Callable[[Union["XMLElement", "XMLText"]], Optional[Iterable[T]]],
             ClassHandlerWithCustomWrapper0[T],
             ClassHandlerWithCustomWrapper1[T],
-            Type[ClassHandlerWithCustomWrapper0[T]],
-            Type[ClassHandlerWithCustomWrapper1[T]],
+            type[ClassHandlerWithCustomWrapper0[T]],
+            type[ClassHandlerWithCustomWrapper1[T]],
             str,
-            List[str],
-            Tuple[str, ...],
-            Type[T],
+            list[str],
+            tuple[str, ...],
+            type[T],
         ],
     ) -> Optional[Union["XMLElement", T]]: ...
 

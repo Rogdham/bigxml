@@ -1,18 +1,7 @@
+from collections.abc import Iterable, Iterator
 from dataclasses import is_dataclass
 from inspect import getmembers, isclass
-from typing import (
-    TYPE_CHECKING,
-    Any,
-    Callable,
-    Dict,
-    Iterable,
-    Iterator,
-    Optional,
-    Tuple,
-    Type,
-    Union,
-    cast,
-)
+from typing import TYPE_CHECKING, Any, Callable, Optional, Union, cast
 import warnings
 
 from bigxml.marks import get_marks, has_marks
@@ -26,7 +15,7 @@ CLASS_HANDLER_METHOD_NAME = "xml_handler"
 
 
 def _assert_one_mandatory_param(
-    mandatory_params: Tuple[str, ...], klass: Type[Any], method_name: str
+    mandatory_params: tuple[str, ...], klass: type[Any], method_name: str
 ) -> None:
     if len(mandatory_params) > 1:
         raise TypeError(
@@ -37,7 +26,7 @@ def _assert_one_mandatory_param(
 
 
 def _assert_iterable_or_none(
-    item: object, klass: Type[Any], method_name: str
+    item: object, klass: type[Any], method_name: str
 ) -> Optional[Iterable[object]]:
     if item is None or isinstance(item, Iterable):
         return item
@@ -52,14 +41,14 @@ def _handler_identity(node: T) -> Iterator[T]:
 
 
 class _HandlerTree:
-    def __init__(self, path: Tuple[str, ...] = ()) -> None:
-        self.path: Tuple[str, ...] = path
-        self.children: Dict[str, _HandlerTree] = {}
+    def __init__(self, path: tuple[str, ...] = ()) -> None:
+        self.path: tuple[str, ...] = path
+        self.children: dict[str, _HandlerTree] = {}
         self.handler: Optional[Callable[..., Iterable[object]]] = None
 
     def add_handler(
         self,
-        path: Tuple[str, ...],
+        path: tuple[str, ...],
         handler: object,
         *,
         ignore_direct_marks: bool,
@@ -105,7 +94,7 @@ class _HandlerTree:
 
     def add_handler_callable(
         self,
-        path: Tuple[str, ...],
+        path: tuple[str, ...],
         handler: Callable[..., Iterable[object]],
     ) -> None:
         if self.handler:
@@ -147,7 +136,7 @@ class _HandlerTree:
 
     @staticmethod
     def _handle_from_class(  # type: ignore[misc]
-        klass: Type[Any], node: Union["XMLElement", "XMLText"]
+        klass: type[Any], node: Union["XMLElement", "XMLText"]
     ) -> Optional[Iterable[object]]:
         # instantiate class
         init_mandatory_params = get_mandatory_params(klass)

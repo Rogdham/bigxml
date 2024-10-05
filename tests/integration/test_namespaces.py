@@ -1,4 +1,4 @@
-from typing import Iterator, Tuple
+from collections.abc import Iterator
 
 import pytest
 
@@ -27,19 +27,19 @@ def test_namespaces() -> None:
         # using `aaa` handle all {*}aaa unless overridden
         @staticmethod
         @xml_handle_element("root", "aaa")
-        def handle_aaa(node: XMLElement) -> Iterator[Tuple[str, str, str]]:
+        def handle_aaa(node: XMLElement) -> Iterator[tuple[str, str, str]]:
             yield ("aaa", node.namespace, "")
 
         # using `{...}aaa` overrides `aaa` handler
         @staticmethod
         @xml_handle_element("root", "{https://example.com/xml/ex}aaa")
-        def handle_aaa_ex(node: XMLElement) -> Iterator[Tuple[str, str, str]]:
+        def handle_aaa_ex(node: XMLElement) -> Iterator[tuple[str, str, str]]:
             yield ("aaa_ex", node.namespace, "")
 
         # using `{}aaa` overrides `aaa` handler when there is no namespace
         @staticmethod
         @xml_handle_element("root", "{}aaa")
-        def handle_aaa_no_namespace(node: XMLElement) -> Iterator[Tuple[str, str, str]]:
+        def handle_aaa_no_namespace(node: XMLElement) -> Iterator[tuple[str, str, str]]:
             # this code is never run
             yield ("aaa_no_namespace", node.namespace, "")
 
@@ -49,7 +49,7 @@ def test_namespaces() -> None:
 
         @staticmethod
         @xml_handle_element("root", "bbb")
-        def handle_bbb(node: XMLElement) -> Iterator[Tuple[str, str, str]]:
+        def handle_bbb(node: XMLElement) -> Iterator[tuple[str, str, str]]:
             # `name` gets any namespace
             # `{ns}name` gets specific namespace
             # `{}name` gets no namespace
@@ -78,8 +78,8 @@ def test_namespaces() -> None:
 
         @staticmethod
         def xml_handler(
-            generator: Iterator[Tuple[str, str, str]],
-        ) -> Iterator[Tuple[str, str, str]]:
+            generator: Iterator[tuple[str, str, str]],
+        ) -> Iterator[tuple[str, str, str]]:
             yield from generator
 
     assert list(Parser(XML).iter_from(Handler)) == [

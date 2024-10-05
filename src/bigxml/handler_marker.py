@@ -1,4 +1,5 @@
-from typing import Any, Callable, Generic, Iterable, Optional, Union, cast, overload
+from collections.abc import Iterable
+from typing import Any, Callable, Generic, Optional, Union, cast, overload
 
 from bigxml.marks import add_mark
 from bigxml.nodes import XMLElement, XMLText

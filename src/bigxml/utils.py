@@ -1,8 +1,9 @@
 from collections import deque
+from collections.abc import Generator, Iterable, Iterator
 from functools import wraps
 from inspect import Parameter, signature
 import re
-from typing import Callable, Generator, Iterable, Iterator, Optional, Tuple, cast
+from typing import Callable, Optional, cast
 
 from bigxml.typing import P, T, U
 
@@ -36,10 +37,10 @@ class IterWithRollback(Iterator[T]):
 _EXTRACT_NAMESPACE_REGEX = re.compile(r"^\{([^}]*)\}(.*)$")
 
 
-def extract_namespace_name(name: str) -> Tuple[str, str]:
+def extract_namespace_name(name: str) -> tuple[str, str]:
     match = _EXTRACT_NAMESPACE_REGEX.match(name)
     if match:
-        return cast(Tuple[str, str], match.groups())
+        return cast(tuple[str, str], match.groups())
     return ("", name)
 
 
@@ -73,7 +74,7 @@ def transform_to_iterator(
     return wrapped
 
 
-def get_mandatory_params(fct: Callable[..., object]) -> Tuple[str, ...]:
+def get_mandatory_params(fct: Callable[..., object]) -> tuple[str, ...]:
     try:
         sig = signature(fct)
     except (ValueError, TypeError):  # pragma: no cover

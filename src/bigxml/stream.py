@@ -1,6 +1,7 @@
+from collections.abc import Generator, Iterable
 from io import IOBase
 import sys
-from typing import Any, Generator, Iterable, Optional, cast
+from typing import Any, Optional, cast
 
 from bigxml.typing import Streamable, SupportsRead
 from bigxml.utils import autostart_generator

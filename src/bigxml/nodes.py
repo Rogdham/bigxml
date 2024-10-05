@@ -1,27 +1,16 @@
+from collections.abc import Iterator, Mapping
 from dataclasses import dataclass
-import sys
-from typing import Dict, Iterator, Optional, Tuple, Union
+from typing import Optional, Union
 import warnings
 
 from bigxml.handle_mgr import HandleMgr
 from bigxml.utils import extract_namespace_name
 
-if sys.version_info < (3, 9):  # pragma: no cover
-    from typing import Mapping
-
-    def removeprefix(data: str, prefix: str) -> str:
-        if data.startswith(prefix):
-            return data[len(prefix) :]
-        return data
-
-else:  # pragma: no cover
-    from collections.abc import Mapping
-
 
 class XMLElementAttributes(Mapping[str, str]):
     def __init__(self, attributes: Mapping[str, str]) -> None:
-        self._items: Dict[
-            str, Tuple[Optional[int], str]
+        self._items: dict[
+            str, tuple[Optional[int], str]
         ] = {}  # key -> (alternatives, value)
         self._len = 0
         for key, value in attributes.items():
@@ -53,10 +42,7 @@ class XMLElementAttributes(Mapping[str, str]):
     def __iter__(self) -> Iterator[str]:
         for key in self._items:
             if key.startswith("{"):
-                if sys.version_info < (3, 9):  # pragma: no cover
-                    yield removeprefix(key, r"{}")
-                else:  # pragma: no cover
-                    yield key.removeprefix(r"{}")
+                yield key.removeprefix(r"{}")
 
     def __len__(self) -> int:
         return self._len
@@ -81,7 +67,7 @@ def _handler_get_text(node: Union["XMLElement", "XMLText"]) -> Iterator[str]:
 class XMLElement(HandleMgr):
     name: str
     attributes: XMLElementAttributes
-    parents: Tuple["XMLElement", ...]
+    parents: tuple["XMLElement", ...]
     namespace: str = ""
 
     def __post_init__(self) -> None:
@@ -118,7 +104,7 @@ class XMLElement(HandleMgr):
 @dataclass
 class XMLText:
     text: str
-    parents: Tuple[XMLElement, ...]
+    parents: tuple[XMLElement, ...]
 
     # classname attribute name to be easily switched on with XMLElement
     name = "\0text"  # \0 makes sure it is an invalid element name

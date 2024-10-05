@@ -1,15 +1,6 @@
+from collections.abc import Iterable, Iterator
 import sys
-from typing import (
-    Any,
-    Callable,
-    Iterable,
-    Iterator,
-    Optional,
-    Protocol,
-    Type,
-    TypeVar,
-    Union,
-)
+from typing import Any, Callable, Optional, Protocol, TypeVar, Union
 
 if sys.version_info < (3, 10):  # pragma: no cover
     from typing_extensions import ParamSpec
@@ -25,7 +16,7 @@ P = ParamSpec("P")
 T = TypeVar("T")
 U = TypeVar("U")
 F = TypeVar("F", bound=Callable[..., Any])
-K = TypeVar("K", bound=Type[Any])
+K = TypeVar("K", bound=type[Any])
 
 T_co = TypeVar("T_co", covariant=True)
 

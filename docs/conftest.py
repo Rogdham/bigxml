@@ -1,8 +1,8 @@
+from collections.abc import Iterator
 from os import chdir, getcwd
 from pathlib import Path
 import re
 from tempfile import TemporaryDirectory
-from typing import Dict, Iterator
 from unittest.mock import Mock
 
 import pytest
@@ -18,7 +18,7 @@ from bigxml import (
 
 
 @pytest.fixture(scope="module", autouse=True)
-def _import_pytest(doctest_namespace: Dict[str, object]) -> None:
+def _import_pytest(doctest_namespace: dict[str, object]) -> None:
     doctest_namespace["HandlerTypeHelper"] = HandlerTypeHelper
     doctest_namespace["Parser"] = Parser
     doctest_namespace["XMLElement"] = XMLElement

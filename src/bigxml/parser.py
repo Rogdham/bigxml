@@ -1,4 +1,5 @@
-from typing import TYPE_CHECKING, Callable, Iterator, Optional, Tuple, Union
+from collections.abc import Iterator
+from typing import TYPE_CHECKING, Callable, Optional, Union
 import warnings
 
 from defusedxml.ElementTree import iterparse
@@ -15,9 +16,9 @@ if TYPE_CHECKING:
 
 
 def _parse(
-    iterator: IterWithRollback[Tuple[str, "Element"]],
+    iterator: IterWithRollback[tuple[str, "Element"]],
     handler: Callable[[Union[XMLElement, XMLText]], Iterator[T]],
-    parents: Tuple[XMLElement, ...],
+    parents: tuple[XMLElement, ...],
     parent_elem: Optional["Element"],
     expected_iteration: int,
 ) -> Iterator[T]:

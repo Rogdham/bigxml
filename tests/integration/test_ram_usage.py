@@ -1,4 +1,5 @@
-from typing import Callable, Iterator, Optional
+from collections.abc import Iterator
+from typing import Callable, Optional
 
 import pytest
 

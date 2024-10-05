@@ -1,4 +1,4 @@
-from typing import Iterator
+from collections.abc import Iterator
 
 from bigxml import Parser, XMLElement, xml_handle_element
 

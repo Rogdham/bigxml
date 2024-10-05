@@ -1,4 +1,5 @@
-from typing import Callable, Iterator, Union
+from collections.abc import Iterator
+from typing import Callable, Union
 from unittest.mock import Mock
 
 import pytest

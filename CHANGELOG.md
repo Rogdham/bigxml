@@ -24,6 +24,7 @@ For the purpose of determining breaking changes:
 
 ### :house: Internal
 
+- End of Python 3.8 support
 - Add tests for CPython 3.13
 - Use CPython 3.13 for misc. tests
 - Upgrade dev dependencies

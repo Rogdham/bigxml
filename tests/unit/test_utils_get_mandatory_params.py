@@ -1,6 +1,6 @@
 # ruff: noqa: ARG001
 
-from typing import Callable, List, Tuple
+from typing import Callable
 
 import pytest
 
@@ -35,10 +35,10 @@ def fct6(
     arg0: int,
     /,
     arg1: int,
-    *arg2: List[int],
+    *arg2: list[int],
     arg3: int,
     arg4: int = 4,
-    **arg5: List[int],
+    **arg5: list[int],
 ) -> None:
     pass  # for tests
 
@@ -60,6 +60,6 @@ def fct6(
 )  # type: ignore[misc]
 # Typing note: see https://github.com/python/mypy/issues/13436
 def test_mandatory_params(
-    fct: Callable[..., object], expected: Tuple[str, ...]
+    fct: Callable[..., object], expected: tuple[str, ...]
 ) -> None:
     assert get_mandatory_params(fct) == expected
