@@ -14,9 +14,12 @@ For the purpose of determining breaking changes:
 
 [python-versions]: https://devguide.python.org/versions/#supported-versions
 
-## [Unreleased]
+## [1.1.0] - 2024-10-10
 
-[unreleased]: https://github.com/rogdham/bigxml/compare/v1.0.1...HEAD
+[1.1.0]: https://github.com/rogdham/bigxml/compare/v1.0.1...v1.1.0
+
+This release adds support for the buffer protocol. It was working already in previous
+versions, but now it's official.
 
 ### :rocket: Added
 

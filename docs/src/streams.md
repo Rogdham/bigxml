@@ -23,7 +23,10 @@ Files open **in binary mode**, `io.BytesIO`, etc.
 
 ## Bytes-like objects
 
-`bytes`, `bytearray`, `memoryview`, etc.
+Any object supporting the [buffer protocol][bufproto]: `bytes`, `bytearray`,
+`memoryview`, etc.
+
+[bufproto]: https://docs.python.org/3/reference/datamodel.html#python-buffer-protocol
 
     :::python
     >>> @xml_handle_element("root")
