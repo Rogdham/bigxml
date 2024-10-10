@@ -138,7 +138,8 @@ raw XML data to be parsed.</p>
 </code></pre>
 
 <h2 id="bytes-like-objects">Bytes-like objects</h2>
-<p><code>bytes</code>, <code>bytearray</code>, <code>memoryview</code>, etc.</p>
+<p>Any object supporting the <a href="https://docs.python.org/3/reference/datamodel.html#python-buffer-protocol">buffer protocol</a>: <code>bytes</code>, <code>bytearray</code>,
+<code>memoryview</code>, etc.</p>
 <pre class="codehilite"><code class="language-python">&gt;&gt;&gt; @xml_handle_element(&quot;root&quot;)
 ... def handler(node):
 ...     yield node.text
