@@ -25,7 +25,7 @@ def create_nodes(
     for node_name in path:
         # the cast below is wrong but makes our life easier
         # plus that case is kind of tested in tests below
-        parents = tuple(cast(list[XMLElement], nodes))
+        parents = tuple(cast("list[XMLElement]", nodes))
         if node_name == ":text:":
             node: Union[XMLElement, XMLText] = XMLText(text="text", parents=parents)
         else:

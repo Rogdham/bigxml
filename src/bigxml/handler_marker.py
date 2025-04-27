@@ -49,14 +49,14 @@ def xml_handle_element(*args: str) -> ___xml_handle_xxx_wrapped[XMLElement]:
         if isinstance(markable, staticmethod):
             # staticmethod(xml_handle_element(...)) works as expected
             # xml_handle_element(staticmethod(...)) needs special care
-            markable = cast(F, markable.__func__)
+            markable = cast("F", markable.__func__)
 
         add_mark(markable, tuple(args))
 
         return obj
 
     return cast(
-        ___xml_handle_xxx_wrapped[XMLElement],
+        "___xml_handle_xxx_wrapped[XMLElement]",
         wrapper,
     )
 
