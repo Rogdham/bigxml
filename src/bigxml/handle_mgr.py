@@ -100,8 +100,8 @@ class HandleMgr:
         ],
     ) -> Iterator[Union["XMLElement", T]]: ...
 
-    @overload  # type: ignore[misc]
-    def iter_from(
+    @overload
+    def iter_from(  # type: ignore[misc]
         self,
         *handlers: Any,  # noqa: ANN401
     ) -> Iterator[object]: ...

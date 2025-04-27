@@ -104,12 +104,7 @@ def test_external_entities(xml: bytes, msg: str) -> None:
 
 
 def test_insecurely_allow_entities() -> None:
-    xml = (
-        b"<!DOCTYPE foobar [\n"
-        b'    <!ENTITY Omega "&#937;">\n'
-        b"]>\n"
-        b"<root>&Omega;</root>\n"
-    )
+    xml = b'<!DOCTYPE foobar [<!ENTITY Omega "&#937;">]>\n<root>&Omega;</root>\n'
     with pytest.warns(UserWarning):
         parser = Parser(xml, insecurely_allow_entities=True)
     value = parser.return_from(handler_get_text)

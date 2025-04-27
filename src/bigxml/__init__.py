@@ -9,9 +9,9 @@ __all__ = (
     "HandlerTypeHelper",
     "Parser",
     "Streamable",
-    "xml_handle_element",
-    "xml_handle_text",
     "XMLElement",
     "XMLElementAttributes",
     "XMLText",
+    "xml_handle_element",
+    "xml_handle_text",
 )

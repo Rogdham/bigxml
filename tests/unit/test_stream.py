@@ -119,7 +119,7 @@ class IntIO(IOBase):
     ],
 )
 def test_types_invalid(stream: object, err_message: str) -> None:
-    stream = StreamChain(cast(Streamable, stream))
+    stream = StreamChain(cast("Streamable", stream))
     with pytest.raises(TypeError) as excinfo:
         stream.read(42)
 
