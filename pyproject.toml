@@ -5,10 +5,10 @@ authors = [{ name = "Rogdham", email = "contact@rogdham.net" }]
 description = "Pythonic xml parser to handle big files or streams"
 readme = { file = "README.md", content-type = "text/markdown" }
 keywords = ["xml", "parser", "big", "stream"]
-license.file = "LICENSE.txt"
+license = "MIT"
+license-files = ["LICENSE.txt"]
 classifiers = [
     "Development Status :: 5 - Production/Stable",
-    "License :: OSI Approved :: MIT License",
     "Operating System :: OS Independent",
     "Programming Language :: Python",
     "Programming Language :: Python :: 3",

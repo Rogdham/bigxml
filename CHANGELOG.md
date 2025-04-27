@@ -14,6 +14,14 @@ For the purpose of determining breaking changes:
 
 [python-versions]: https://devguide.python.org/versions/#supported-versions
 
+## [Unreleased]
+
+[unreleased]: https://github.com/rogdham/bigxml/compare/v1.1.0...HEAD
+
+### :house: Internal
+
+- Update license metadata as per [PEP 639](https://peps.python.org/pep-0639)
+
 ## [1.1.0] - 2024-10-10
 
 [1.1.0]: https://github.com/rogdham/bigxml/compare/v1.0.1...v1.1.0
