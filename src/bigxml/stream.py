@@ -19,7 +19,7 @@ def _flatten_stream(stream: Streamable) -> Generator[Optional[memoryview], int, 
     # buffer protocol (bytes, etc.)
     try:
         # we try-except instead of isinstance(stream, Buffer) for compatibility reasons
-        yield memoryview(cast(Buffer, stream))
+        yield memoryview(cast("Buffer", stream))
         return  # noqa: TRY300
     except TypeError:
         pass
@@ -28,7 +28,7 @@ def _flatten_stream(stream: Streamable) -> Generator[Optional[memoryview], int, 
     if hasattr(stream, "read"):
         while True:
             size = yield None
-            data = cast(SupportsRead[Any], stream).read(size)
+            data = cast("SupportsRead[Any]", stream).read(size)
             if not data:
                 break  # EOF
             try:
@@ -57,7 +57,7 @@ def _flatten_stream(stream: Streamable) -> Generator[Optional[memoryview], int, 
 
     # stream iterator (recursive)
     try:
-        substreams = iter(cast(Iterable[Streamable], stream))
+        substreams = iter(cast("Iterable[Streamable]", stream))
     except TypeError:
         # other types not supported
         raise TypeError(f"Invalid stream type: {type(stream).__name__}") from None

@@ -9,7 +9,7 @@ from bigxml import Parser, XMLText, xml_handle_text
 @pytest.fixture
 def ram_usage() -> Iterator[Callable[[], float]]:
     try:
-        import tracemalloc
+        import tracemalloc  # noqa: PLC0415
     except ImportError:  # e.g. PyPy
         pytest.skip("tracemalloc module not available")
 

@@ -198,7 +198,10 @@ def test_insecurely_allow_entities(
     ) -> Iterator[tuple[str, Union[XMLElement, XMLText]]]:
         yield from node.iter_from(handler)
 
-    with pytest.warns(UserWarning):
+    with pytest.warns(
+        UserWarning,
+        match="Using 'insecurely_allow_entities' makes your code vulnerable to some XML attacks.",
+    ):
         parser = Parser(xml, insecurely_allow_entities=True)
 
     assert list(parser.iter_from(root_handler)) == [("handler-yield-0", text_pi_node)]

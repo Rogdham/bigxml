@@ -25,7 +25,7 @@ def create_nodes(
     for node_name in path:
         # the cast below is wrong but makes our life easier
         # plus that case is kind of tested in tests below
-        parents = tuple(cast(list[XMLElement], nodes))
+        parents = tuple(cast("list[XMLElement]", nodes))
         if node_name == ":text:":
             node: Union[XMLElement, XMLText] = XMLText(text="text", parents=parents)
         else:
@@ -631,7 +631,9 @@ def test_class_no_handler_warning() -> None:
 
     nodes = create_nodes("x", "a")
     handler = create_handler(Handler)
-    with pytest.warns(UserWarning):
+    with pytest.warns(
+        UserWarning, match="Items were yielded by some sub-handler of class Handler."
+    ):
         items = list(handler(nodes[0]))
     assert len(items) == 1
     assert isinstance(items[0], Handler)
@@ -651,7 +653,9 @@ def test_class_with_handler_static_method() -> None:
 
     nodes = create_nodes("x", "a")
     handler = create_handler(Handler)
-    with pytest.warns(UserWarning):
+    with pytest.warns(
+        UserWarning, match="Items were yielded by some sub-handler of class Handler."
+    ):
         assert list(handler(nodes[0])) == [("end", None)]
 
 

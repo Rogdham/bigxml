@@ -19,7 +19,7 @@ from bigxml.typing import F, K, Protocol, T, T_co, U
 class ___xml_handle_xxx_wrapped(Protocol[T_co]):  # noqa: N801
     # wrapper for classes
     @overload
-    def __call__(  # type: ignore[misc]
+    def __call__(
         self,
         obj: K,
     ) -> K: ...
@@ -49,22 +49,21 @@ def xml_handle_element(*args: str) -> ___xml_handle_xxx_wrapped[XMLElement]:
         if isinstance(markable, staticmethod):
             # staticmethod(xml_handle_element(...)) works as expected
             # xml_handle_element(staticmethod(...)) needs special care
-            markable = cast(F, markable.__func__)
+            markable = cast("F", markable.__func__)
 
         add_mark(markable, tuple(args))
 
         return obj
 
     return cast(
-        ___xml_handle_xxx_wrapped[XMLElement],
+        "___xml_handle_xxx_wrapped[XMLElement]",
         wrapper,
     )
 
 
 # @xml_handle_text (for classes)
 @overload
-def xml_handle_text(obj: K, /) -> K:  # type: ignore[misc]
-    ...
+def xml_handle_text(obj: K, /) -> K: ...
 
 
 # @xml_handle_text (for functions)

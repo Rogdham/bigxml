@@ -84,7 +84,7 @@ ignore_missing_imports = false
 follow_imports = "normal"
 mypy_path = "stubs"
 # Platform configuration
-python_version = 3.13
+python_version = "3.13"
 # Disallow dynamic typing
 disallow_any_unimported = true
 disallow_any_decorated = true
@@ -143,8 +143,6 @@ target-version = "py39"
 [tool.ruff.lint]
 select = ["ALL"]
 ignore = [
-    "ANN101",
-    "ANN102",
     "C901",
     "COM812",
     "D",

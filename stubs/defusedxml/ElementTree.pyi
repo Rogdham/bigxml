@@ -1,7 +1,8 @@
 # ruff: noqa: FBT001
 # note: only used items are defined here, with used typing
 
-from typing import Iterator, Optional, Protocol, Sequence, TypeVar
+from collections.abc import Iterator, Sequence
+from typing import Optional, Protocol, TypeVar
 from xml.etree.ElementTree import Element, ParseError
 
 _T_co = TypeVar("_T_co", covariant=True)
@@ -19,4 +20,4 @@ def iterparse(
 
 class DefusedXmlException(ValueError): ...  # noqa: N818
 
-__all__ = ("DefusedXmlException", "Element", "iterparse", "ParseError")
+__all__ = ("DefusedXmlException", "Element", "ParseError", "iterparse")

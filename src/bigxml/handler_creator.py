@@ -135,7 +135,7 @@ class _HandlerTree:
         return None
 
     @staticmethod
-    def _handle_from_class(  # type: ignore[misc]
+    def _handle_from_class(
         klass: type[Any], node: Union["XMLElement", "XMLText"]
     ) -> Optional[Iterable[object]]:
         # instantiate class

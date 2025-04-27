@@ -1,5 +1,3 @@
-# ruff: noqa: ARG001
-
 from typing import Callable
 
 import pytest
@@ -57,9 +55,9 @@ def fct6(
         (dict, ()),
     ],
     ids=lambda x: str(x.__name__ if callable(x) else x),
-)  # type: ignore[misc]
+)
 # Typing note: see https://github.com/python/mypy/issues/13436
-def test_mandatory_params(
+def test_mandatory_params(  # type: ignore[misc]
     fct: Callable[..., object], expected: tuple[str, ...]
 ) -> None:
     assert get_mandatory_params(fct) == expected

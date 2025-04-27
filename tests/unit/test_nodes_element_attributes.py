@@ -51,7 +51,9 @@ XML_ELEMENT_ATTRIBUTES = XMLElementAttributes(ATTRIBUTES)
 def test_get_without_namespace(key: str, value: str, should_warn: bool) -> None:
     context: AbstractContextManager[object] = nullcontext()
     if should_warn:
-        context = pytest.warns(UserWarning)
+        context = pytest.warns(
+            UserWarning, match=f"Several alternatives for attribute name '{key}'."
+        )
     with context:
         assert XML_ELEMENT_ATTRIBUTES[key] == value
 
@@ -89,5 +91,5 @@ def test_eq() -> None:
 
 @pytest.mark.parametrize("key", [r"{aaa", r"{aaa}{bbb"])
 def test_invalid_key(key: str) -> None:
-    with pytest.raises(ValueError, match="Invalid key: '.*'"):
+    with pytest.raises(ValueError, match=r"Invalid key: '.*'"):
         XMLElementAttributes({key: "foo"})

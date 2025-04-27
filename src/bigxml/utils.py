@@ -40,7 +40,7 @@ _EXTRACT_NAMESPACE_REGEX = re.compile(r"^\{([^}]*)\}(.*)$")
 def extract_namespace_name(name: str) -> tuple[str, str]:
     match = _EXTRACT_NAMESPACE_REGEX.match(name)
     if match:
-        return cast(tuple[str, str], match.groups())
+        return cast("tuple[str, str]", match.groups())
     return ("", name)
 
 

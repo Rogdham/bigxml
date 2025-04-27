@@ -22,6 +22,7 @@ For the purpose of determining breaking changes:
 
 - Update license metadata as per [PEP 639](https://peps.python.org/pep-0639)
 - Add tests for PyPy 3.11
+- Upgrade dev dependencies
 
 ## [1.1.0] - 2024-10-10
 
