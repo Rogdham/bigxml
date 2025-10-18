@@ -21,7 +21,8 @@ For the purpose of determining breaking changes:
 ### :house: Internal
 
 - Update license metadata as per [PEP 639](https://peps.python.org/pep-0639)
-- Add tests for PyPy 3.11
+- Add tests for CPython 3.14 and PyPy 3.11
+- Use CPython 3.14 for misc. tests
 - Upgrade dev dependencies
 
 ## [1.1.0] - 2024-10-10
