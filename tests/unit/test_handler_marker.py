@@ -1,5 +1,4 @@
 from collections.abc import Iterator
-from typing import Union
 
 import pytest
 
@@ -105,7 +104,7 @@ def test_mixed_markers() -> None:
     @xml_handle_element("abc", "def")
     @xml_handle_text("ghi")
     @xml_handle_element("klm", "opq", "rst")
-    def fct(node: Union[XMLElement, XMLText]) -> Iterator[str]:
+    def fct(node: XMLElement | XMLText) -> Iterator[str]:
         yield f"<{node.text}>"
 
     assert get_marks(fct) == (

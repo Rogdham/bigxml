@@ -1,7 +1,7 @@
 from collections.abc import Generator, Iterable
 from io import IOBase
 import sys
-from typing import Any, Optional, cast
+from typing import Any, cast
 
 from bigxml.typing import Streamable, SupportsRead
 from bigxml.utils import autostart_generator
@@ -13,7 +13,7 @@ else:  # pragma: no cover
 
 
 @autostart_generator
-def _flatten_stream(stream: Streamable) -> Generator[Optional[memoryview], int, None]:
+def _flatten_stream(stream: Streamable) -> Generator[memoryview | None, int, None]:
     yield None
 
     # buffer protocol (bytes, etc.)
@@ -68,7 +68,7 @@ def _flatten_stream(stream: Streamable) -> Generator[Optional[memoryview], int, 
 
 @autostart_generator
 def _convert_to_read(
-    data_stream: Generator[Optional[memoryview], int, None],
+    data_stream: Generator[memoryview | None, int, None],
 ) -> Generator[bytes, int, None]:
     size = yield b""
     while True:
@@ -90,7 +90,7 @@ class StreamChain(IOBase):
         super().__init__()
         self._read = _convert_to_read(_flatten_stream(streams))
 
-    def read(self, size: Optional[int] = None) -> bytes:
+    def read(self, size: int | None = None) -> bytes:
         if not isinstance(size, int) or size <= 0:
             raise NotImplementedError("Read size must be strictly positive")
         return self._read.send(size)

@@ -1,5 +1,4 @@
-from collections.abc import Iterator
-from typing import Callable, Optional
+from collections.abc import Callable, Iterator
 
 import pytest
 
@@ -21,7 +20,7 @@ def ram_usage() -> Iterator[Callable[[], float]]:
 
 
 def big_stream(ram_used: Callable[[], float]) -> Iterator[bytes]:
-    ram_limit: Optional[float] = None
+    ram_limit: float | None = None
 
     yield b"<root>\n"
 

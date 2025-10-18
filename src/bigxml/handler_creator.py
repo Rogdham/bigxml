@@ -1,7 +1,7 @@
-from collections.abc import Iterable, Iterator
+from collections.abc import Callable, Iterable, Iterator
 from dataclasses import is_dataclass
 from inspect import getmembers, isclass
-from typing import TYPE_CHECKING, Any, Callable, Optional, Union, cast
+from typing import TYPE_CHECKING, Any, Union, cast
 import warnings
 
 from bigxml.marks import get_marks, has_marks
@@ -27,7 +27,7 @@ def _assert_one_mandatory_param(
 
 def _assert_iterable_or_none(
     item: object, klass: type[Any], method_name: str
-) -> Optional[Iterable[object]]:
+) -> Iterable[object] | None:
     if item is None or isinstance(item, Iterable):
         return item
     raise TypeError(
@@ -44,7 +44,7 @@ class _HandlerTree:
     def __init__(self, path: tuple[str, ...] = ()) -> None:
         self.path: tuple[str, ...] = path
         self.children: dict[str, _HandlerTree] = {}
-        self.handler: Optional[Callable[..., Iterable[object]]] = None
+        self.handler: Callable[..., Iterable[object]] | None = None
 
     def add_handler(
         self,
@@ -111,15 +111,13 @@ class _HandlerTree:
             self.handler = handler
 
     @transform_to_iterator
-    def handle(
-        self, node: Union["XMLElement", "XMLText"]
-    ) -> Optional[Iterable[object]]:
+    def handle(self, node: Union["XMLElement", "XMLText"]) -> Iterable[object] | None:
         if self.handler:
             if isclass(self.handler):
                 return self._handle_from_class(self.handler, node)
             return self.handler(node)
 
-        child: Optional[_HandlerTree] = None
+        child: _HandlerTree | None = None
         namespace = getattr(node, "namespace", None)
         if namespace is not None:
             child = self.children.get(f"{{{namespace}}}{node.name}")
@@ -137,7 +135,7 @@ class _HandlerTree:
     @staticmethod
     def _handle_from_class(
         klass: type[Any], node: Union["XMLElement", "XMLText"]
-    ) -> Optional[Iterable[object]]:
+    ) -> Iterable[object] | None:
         # instantiate class
         init_mandatory_params = get_mandatory_params(klass)
         try:

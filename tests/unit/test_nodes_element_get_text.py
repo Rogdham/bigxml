@@ -1,5 +1,4 @@
-from collections.abc import Iterator
-from typing import Callable, Union
+from collections.abc import Callable, Iterator
 from unittest.mock import Mock
 
 import pytest
@@ -11,15 +10,13 @@ def create_text(text: str) -> XMLText:
     return XMLText(text, ())  # don't care about parents
 
 
-def create_element(*children: Union[XMLElement, XMLText]) -> XMLElement:
+def create_element(*children: XMLElement | XMLText) -> XMLElement:
     node = XMLElement("foo", Mock(), ())  # don't care about parents
     handle = Mock()
 
     def side_effect(
-        handler: Callable[
-            [Union[XMLElement, XMLText]], Iterator[Union[XMLElement, XMLText]]
-        ],
-    ) -> Iterator[Union[XMLElement, XMLText]]:
+        handler: Callable[[XMLElement | XMLText], Iterator[XMLElement | XMLText]],
+    ) -> Iterator[XMLElement | XMLText]:
         for child in children:
             yield from handler(child)
 

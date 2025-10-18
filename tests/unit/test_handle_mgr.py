@@ -1,5 +1,4 @@
-from collections.abc import Iterator
-from typing import Callable, Union
+from collections.abc import Callable, Iterator
 from unittest.mock import Mock
 
 import pytest
@@ -8,21 +7,21 @@ from bigxml.handle_mgr import HandleMgr
 from bigxml.nodes import XMLElement, XMLText
 
 
-def handler_a(_node: Union[XMLElement, XMLText]) -> Iterator[int]:
+def handler_a(_node: XMLElement | XMLText) -> Iterator[int]:
     yield 13
     yield 37
 
 
-def handler_b(_node: Union[XMLElement, XMLText]) -> Iterator[int]:
+def handler_b(_node: XMLElement | XMLText) -> Iterator[int]:
     yield 42
 
 
-def handler_c(_node: Union[XMLElement, XMLText]) -> Iterator[object]:
+def handler_c(_node: XMLElement | XMLText) -> Iterator[object]:
     yield from ()
 
 
 def handle(
-    handler: Callable[[Union[XMLElement, XMLText]], Iterator[int]],
+    handler: Callable[[XMLElement | XMLText], Iterator[int]],
 ) -> Iterator[int]:
     node = Mock()
     for item in handler(node):

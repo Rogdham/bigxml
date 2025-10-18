@@ -1,7 +1,6 @@
 from collections.abc import Iterable, Iterator
 from dataclasses import dataclass
 import sys
-from typing import Optional, Union
 
 from bigxml import (
     HandlerTypeHelper,
@@ -47,7 +46,7 @@ def test_no_handlers() -> None:
 # function
 
 
-def catchall(node: Union[XMLElement, XMLText]) -> Iterator[int]:
+def catchall(node: XMLElement | XMLText) -> Iterator[int]:
     yield len(node.text)
 
 
@@ -67,7 +66,7 @@ def test_catchall() -> None:
     assert list(iterator) == [11]
 
     value = Parser(XML).return_from(catchall)
-    assert_type(value, Optional[int])
+    assert_type(value, int | None)
     assert value == 11
 
 
@@ -77,7 +76,7 @@ def test_element_handler() -> None:
     assert list(iterator) == ["one", "two", "three"]
 
     value = Parser(XML).return_from(element_handler)
-    assert_type(value, Optional[str])
+    assert_type(value, str | None)
     assert value == "three"
 
 
@@ -87,7 +86,7 @@ def test_text_handler() -> None:
     assert list(iterator) == [5, 5, 5, 1]
 
     value = Parser(XML).return_from(text_handler)
-    assert_type(value, Optional[int])
+    assert_type(value, int | None)
     assert value == 1
 
 
@@ -143,7 +142,7 @@ def test_class_nothing() -> None:
     assert isinstance(items[0], Nothing)
 
     value = Parser(XML).return_from(Nothing)
-    assert_type(value, Optional[Nothing])
+    assert_type(value, Nothing | None)
     assert isinstance(value, Nothing)
 
 
@@ -157,7 +156,7 @@ def test_class_init() -> None:
     assert items[0].text == "onetwothree"
 
     value = Parser(XML).return_from(HoldNode)
-    assert_type(value, Optional[HoldNode])
+    assert_type(value, HoldNode | None)
     assert isinstance(value, HoldNode)
     assert value.name == "root"
     assert value.text == "onetwothree"
@@ -173,7 +172,7 @@ def test_class_item_init() -> None:
     assert [item.text for item in items] == ["one", "two", "three"]
 
     value = Parser(XML).return_from(ItemHoldNode)
-    assert_type(value, Optional[ItemHoldNode])
+    assert_type(value, ItemHoldNode | None)
     assert isinstance(value, ItemHoldNode)
     assert value.name == "item"
     assert value.text == "three"
@@ -186,7 +185,7 @@ def test_class_with_subhandler() -> None:
     assert items == [WithSubHandler("<one><two><three>")]
 
     value = Parser(XML).return_from(WithSubHandler)
-    assert_type(value, Optional[WithSubHandler])
+    assert_type(value, WithSubHandler | None)
     assert value == WithSubHandler("<one><two><three>")
 
 
@@ -202,7 +201,7 @@ def test_class_with_custom_handler() -> None:
     ]
 
     value = Parser(XML).return_from(WithCustomHandler)
-    assert_type(value, Optional[str])
+    assert_type(value, str | None)
     assert value == "total -> 3"
 
 
@@ -223,7 +222,7 @@ def test_instance_subhandler() -> None:
     assert items == [3, 3, 5]
 
     value = Parser(XML).return_from(SubHandler())
-    assert_type(value, Optional[object])
+    assert_type(value, object)
     assert value == 5
 
 
@@ -236,7 +235,7 @@ def test_syntactic_sugar_tuple() -> None:
     assert [node.text for node in iterator] == ["one", "two", "three"]
 
     value = Parser(XML).return_from(("root", "item"))
-    assert_type(value, Optional[XMLElement])
+    assert_type(value, XMLElement | None)
     assert value
     # cannot get node.text as it is consumed at that point
     assert isinstance(value, XMLElement)
@@ -249,7 +248,7 @@ def test_syntactic_sugar_list() -> None:
     assert [node.text for node in iterator] == ["one", "two", "three"]
 
     value = Parser(XML).return_from(["root", "item"])
-    assert_type(value, Optional[XMLElement])
+    assert_type(value, XMLElement | None)
     assert value
     # cannot get node.text as it is consumed at that point
     assert isinstance(value, XMLElement)
@@ -262,7 +261,7 @@ def test_syntactic_sugar_str() -> None:
     assert [node.text for node in iterator] == ["onetwothree"]
 
     value = Parser(XML).return_from("root")
-    assert_type(value, Optional[XMLElement])
+    assert_type(value, XMLElement | None)
     assert value
     # cannot get node.text as it is consumed at that point
     assert isinstance(value, XMLElement)
@@ -274,31 +273,31 @@ def test_syntactic_sugar_str() -> None:
 
 def test_mixed_iterator_types() -> None:
     iterator = Parser(XML).iter_from(
-        HandlerTypeHelper[Union[str, int]],  # little help
+        HandlerTypeHelper[str | int],  # little help
         element_handler,
         text_handler,
     )
-    assert_type(iterator, Iterator[Union[str, int]])
+    assert_type(iterator, Iterator[str | int])
     assert list(iterator) == [5, "one", 5, "two", 5, "three", 1]
 
     value = Parser(XML).return_from(
-        HandlerTypeHelper[Union[str, int]],  # little help
+        HandlerTypeHelper[str | int],  # little help
         element_handler,
         text_handler,
     )
-    assert_type(value, Optional[Union[str, int]])
+    assert_type(value, str | int | None)
     assert value == 1
 
 
 def test_mixed_syntactic_sugar() -> None:
     iterator = Parser(XML).iter_from(("root", "item"), text_handler)
-    assert_type(iterator, Iterator[Union[XMLElement, int]])
+    assert_type(iterator, Iterator[XMLElement | int])
     assert [
         item.name if isinstance(item, XMLElement) else item for item in iterator
     ] == [5, "item", 5, "item", 5, "item", 1]
 
     value = Parser(XML).return_from(("root", "item"), text_handler)
-    assert_type(value, Optional[Union[XMLElement, int]])
+    assert_type(value, XMLElement | int | None)
     assert value == 1
 
 
@@ -330,5 +329,5 @@ def test_mixed_callable_class() -> None:
     ]
 
     value = Parser(XML).return_from(text_handler2, WithSubHandler2)
-    assert_type(value, Optional[WithSubHandler2])
+    assert_type(value, WithSubHandler2 | None)
     assert value == WithSubHandler2("~\n~")

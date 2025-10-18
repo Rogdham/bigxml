@@ -1,6 +1,6 @@
-from collections.abc import Iterable, Iterator
+from collections.abc import Callable, Iterable, Iterator
 import sys
-from typing import TYPE_CHECKING, Any, Callable, Optional, Union, overload
+from typing import TYPE_CHECKING, Any, Optional, Union, overload
 
 from bigxml.handler_creator import create_handler
 from bigxml.typing import (
@@ -20,12 +20,12 @@ if TYPE_CHECKING:
 
 
 class HandleMgr:
-    _handle: Optional[
+    _handle: (
         Callable[
-            [Callable[[Union["XMLElement", "XMLText"]], Iterator[Any]]],
-            Iterator[Any],
+            [Callable[[Union["XMLElement", "XMLText"]], Iterator[Any]]], Iterator[Any]
         ]
-    ] = None
+        | None
+    ) = None
 
     # iter_from
 
@@ -37,67 +37,55 @@ class HandleMgr:
     @overload
     def iter_from(
         self,
-        *handlers: Union[
-            str,
-            list[str],
-            tuple[str, ...],
-        ],
+        *handlers: str | list[str] | tuple[str, ...],
     ) -> Iterator["XMLElement"]: ...
 
     @overload
     def iter_from(
         self,
-        *handlers: Union[
-            Callable[[Union["XMLElement", "XMLText"]], Optional[Iterable[T]]],
-            ClassHandlerWithCustomWrapper0[T],
-            ClassHandlerWithCustomWrapper1[T],
-            type[ClassHandlerWithCustomWrapper0[T]],
-            type[ClassHandlerWithCustomWrapper1[T]],
-        ],
+        *handlers: Callable[[Union["XMLElement", "XMLText"]], Iterable[T] | None]
+        | ClassHandlerWithCustomWrapper0[T]
+        | ClassHandlerWithCustomWrapper1[T]
+        | type[ClassHandlerWithCustomWrapper0[T]]
+        | type[ClassHandlerWithCustomWrapper1[T]],
     ) -> Iterator[T]: ...
 
     @overload
     def iter_from(
         self,
-        *handlers: Union[
-            Callable[[Union["XMLElement", "XMLText"]], Optional[Iterable[T]]],
-            ClassHandlerWithCustomWrapper0[T],
-            ClassHandlerWithCustomWrapper1[T],
-            type[ClassHandlerWithCustomWrapper0[T]],
-            type[ClassHandlerWithCustomWrapper1[T]],
-            type[T],
-        ],
+        *handlers: Callable[[Union["XMLElement", "XMLText"]], Iterable[T] | None]
+        | ClassHandlerWithCustomWrapper0[T]
+        | ClassHandlerWithCustomWrapper1[T]
+        | type[ClassHandlerWithCustomWrapper0[T]]
+        | type[ClassHandlerWithCustomWrapper1[T]]
+        | type[T],
     ) -> Iterator[T]: ...
 
     @overload
     def iter_from(
         self,
-        *handlers: Union[
-            Callable[[Union["XMLElement", "XMLText"]], Optional[Iterable[T]]],
-            ClassHandlerWithCustomWrapper0[T],
-            ClassHandlerWithCustomWrapper1[T],
-            type[ClassHandlerWithCustomWrapper0[T]],
-            type[ClassHandlerWithCustomWrapper1[T]],
-            str,
-            list[str],
-            tuple[str, ...],
-        ],
+        *handlers: Callable[[Union["XMLElement", "XMLText"]], Iterable[T] | None]
+        | ClassHandlerWithCustomWrapper0[T]
+        | ClassHandlerWithCustomWrapper1[T]
+        | type[ClassHandlerWithCustomWrapper0[T]]
+        | type[ClassHandlerWithCustomWrapper1[T]]
+        | str
+        | list[str]
+        | tuple[str, ...],
     ) -> Iterator[Union["XMLElement", T]]: ...
 
     @overload
     def iter_from(
         self,
-        *handlers: Union[
-            Callable[[Union["XMLElement", "XMLText"]], Optional[Iterable[T]]],
-            ClassHandlerWithCustomWrapper0[T],
-            ClassHandlerWithCustomWrapper1[T],
-            type[ClassHandlerWithCustomWrapper0[T]],
-            type[ClassHandlerWithCustomWrapper1[T]],
-            type[T],
-            str,
-            list[str],
-            tuple[str, ...],
-        ],
+        *handlers: Callable[[Union["XMLElement", "XMLText"]], Iterable[T] | None]
+        | ClassHandlerWithCustomWrapper0[T]
+        | ClassHandlerWithCustomWrapper1[T]
+        | type[ClassHandlerWithCustomWrapper0[T]]
+        | type[ClassHandlerWithCustomWrapper1[T]]
+        | type[T]
+        | str
+        | list[str]
+        | tuple[str, ...],
     ) -> Iterator[Union["XMLElement", T]]: ...
 
     @overload
@@ -122,74 +110,62 @@ class HandleMgr:
     @overload
     def return_from(
         self,
-        *handlers: Union[
-            str,
-            list[str],
-            tuple[str, ...],
-        ],
+        *handlers: str | list[str] | tuple[str, ...],
     ) -> Optional["XMLElement"]: ...
 
     @overload
     def return_from(
         self,
-        *handlers: Union[
-            Callable[[Union["XMLElement", "XMLText"]], Optional[Iterable[T]]],
-            ClassHandlerWithCustomWrapper0[T],
-            ClassHandlerWithCustomWrapper1[T],
-            type[ClassHandlerWithCustomWrapper0[T]],
-            type[ClassHandlerWithCustomWrapper1[T]],
-        ],
-    ) -> Optional[T]: ...
+        *handlers: Callable[[Union["XMLElement", "XMLText"]], Iterable[T] | None]
+        | ClassHandlerWithCustomWrapper0[T]
+        | ClassHandlerWithCustomWrapper1[T]
+        | type[ClassHandlerWithCustomWrapper0[T]]
+        | type[ClassHandlerWithCustomWrapper1[T]],
+    ) -> T | None: ...
 
     @overload
     def return_from(
         self,
-        *handlers: Union[
-            Callable[[Union["XMLElement", "XMLText"]], Optional[Iterable[T]]],
-            ClassHandlerWithCustomWrapper0[T],
-            ClassHandlerWithCustomWrapper1[T],
-            type[ClassHandlerWithCustomWrapper0[T]],
-            type[ClassHandlerWithCustomWrapper1[T]],
-            type[T],
-        ],
-    ) -> Optional[T]: ...
+        *handlers: Callable[[Union["XMLElement", "XMLText"]], Iterable[T] | None]
+        | ClassHandlerWithCustomWrapper0[T]
+        | ClassHandlerWithCustomWrapper1[T]
+        | type[ClassHandlerWithCustomWrapper0[T]]
+        | type[ClassHandlerWithCustomWrapper1[T]]
+        | type[T],
+    ) -> T | None: ...
 
     @overload
     def return_from(
         self,
-        *handlers: Union[
-            Callable[[Union["XMLElement", "XMLText"]], Optional[Iterable[T]]],
-            ClassHandlerWithCustomWrapper0[T],
-            ClassHandlerWithCustomWrapper1[T],
-            type[ClassHandlerWithCustomWrapper0[T]],
-            type[ClassHandlerWithCustomWrapper1[T]],
-            str,
-            list[str],
-            tuple[str, ...],
-        ],
-    ) -> Optional[Union["XMLElement", T]]: ...
+        *handlers: Callable[[Union["XMLElement", "XMLText"]], Iterable[T] | None]
+        | ClassHandlerWithCustomWrapper0[T]
+        | ClassHandlerWithCustomWrapper1[T]
+        | type[ClassHandlerWithCustomWrapper0[T]]
+        | type[ClassHandlerWithCustomWrapper1[T]]
+        | str
+        | list[str]
+        | tuple[str, ...],
+    ) -> Union["XMLElement", T] | None: ...
 
     @overload
     def return_from(
         self,
-        *handlers: Union[
-            Callable[[Union["XMLElement", "XMLText"]], Optional[Iterable[T]]],
-            ClassHandlerWithCustomWrapper0[T],
-            ClassHandlerWithCustomWrapper1[T],
-            type[ClassHandlerWithCustomWrapper0[T]],
-            type[ClassHandlerWithCustomWrapper1[T]],
-            str,
-            list[str],
-            tuple[str, ...],
-            type[T],
-        ],
-    ) -> Optional[Union["XMLElement", T]]: ...
+        *handlers: Callable[[Union["XMLElement", "XMLText"]], Iterable[T] | None]
+        | ClassHandlerWithCustomWrapper0[T]
+        | ClassHandlerWithCustomWrapper1[T]
+        | type[ClassHandlerWithCustomWrapper0[T]]
+        | type[ClassHandlerWithCustomWrapper1[T]]
+        | str
+        | list[str]
+        | tuple[str, ...]
+        | type[T],
+    ) -> Union["XMLElement", T] | None: ...
 
     @overload
     def return_from(
         self,
         *handlers: object,
-    ) -> Optional[object]: ...
+    ) -> object | None: ...
 
-    def return_from(self, *handlers: Any) -> Optional[Any]:
+    def return_from(self, *handlers: Any) -> Any | None:
         return last_item_or_none(self.iter_from(*handlers))

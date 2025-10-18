@@ -1,11 +1,6 @@
-from collections.abc import Iterable, Iterator
+from collections.abc import Callable, Iterable, Iterator
 import sys
-from typing import Any, Callable, Optional, Protocol, TypeVar, Union
-
-if sys.version_info < (3, 10):  # pragma: no cover
-    from typing_extensions import ParamSpec
-else:  # pragma: no cover
-    from typing import ParamSpec
+from typing import Any, ParamSpec, Protocol, TypeVar
 
 if sys.version_info < (3, 12):  # pragma: no cover
     from typing_extensions import Buffer
@@ -22,17 +17,17 @@ T_co = TypeVar("T_co", covariant=True)
 
 
 class SupportsRead(Protocol[T_co]):
-    def read(self, size: Optional[int] = None) -> T_co: ...  # pragma: no cover
+    def read(self, size: int | None = None) -> T_co: ...  # pragma: no cover
 
 
-Streamable = Union[Buffer, SupportsRead[bytes], Iterable["Streamable"]]
+Streamable = Buffer | SupportsRead[bytes] | Iterable["Streamable"]
 
 
 class ClassHandlerWithCustomWrapper0(Protocol[T_co]):
-    def xml_handler(self) -> Optional[Iterable[T_co]]: ...  # pragma: no cover
+    def xml_handler(self) -> Iterable[T_co] | None: ...  # pragma: no cover
 
 
 class ClassHandlerWithCustomWrapper1(Protocol[T_co]):
     def xml_handler(
         self, items: Iterator[Any]
-    ) -> Optional[Iterable[T_co]]: ...  # pragma: no cover
+    ) -> Iterable[T_co] | None: ...  # pragma: no cover

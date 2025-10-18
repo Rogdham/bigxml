@@ -21,6 +21,7 @@ For the purpose of determining breaking changes:
 ### :house: Internal
 
 - Update license metadata as per [PEP 639](https://peps.python.org/pep-0639)
+- End of Python 3.9 support
 - Add tests for CPython 3.14 and PyPy 3.11
 - Use CPython 3.14 for misc. tests
 - Upgrade dev dependencies

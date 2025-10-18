@@ -1,7 +1,6 @@
-from collections.abc import Iterable, Iterator
+from collections.abc import Callable, Iterable, Iterator
 from functools import reduce
 import operator
-from typing import Callable, Optional, Union
 
 from bigxml import Parser, XMLElement, XMLText, xml_handle_element, xml_handle_text
 
@@ -29,7 +28,7 @@ XML = b"""
 
 
 def test_maths_eval_list() -> None:
-    handlers: list[Callable[[Union[XMLElement, XMLText]], Optional[Iterable[int]]]] = []
+    handlers: list[Callable[[XMLElement | XMLText], Iterable[int] | None]] = []
 
     @xml_handle_element("expr")
     def handle_expr(node: XMLElement) -> Iterator[int]:

@@ -5,7 +5,7 @@ from io import BytesIO, IOBase, StringIO
 from mmap import mmap
 from string import ascii_lowercase
 import sys
-from typing import Optional, cast
+from typing import cast
 
 import pytest
 
@@ -74,7 +74,7 @@ def abcdef_str_generator() -> Iterator[str]:
 
 class IntIO(IOBase):
     @staticmethod
-    def read(size: Optional[int]) -> int:
+    def read(size: int | None) -> int:
         assert isinstance(size, int)
         assert size >= 0
         return 42
@@ -175,7 +175,7 @@ def test_stream_part_above_read_size() -> None:
 
 class InfiniteIO(IOBase):
     @staticmethod
-    def read(size: Optional[int]) -> bytes:
+    def read(size: int | None) -> bytes:
         assert isinstance(size, int)
         assert 0 <= size < 16
         return (b"%x" % size) * size
@@ -220,7 +220,7 @@ def test_pass_read_size(streams: tuple[Streamable, ...]) -> None:
 
 
 @pytest.mark.parametrize("size", [None, -1, 0])
-def test_invalid_read_sizes(size: Optional[int]) -> None:
+def test_invalid_read_sizes(size: int | None) -> None:
     stream = StreamChain(b"Hello, world!")
     with pytest.raises(NotImplementedError):
         stream.read(size)

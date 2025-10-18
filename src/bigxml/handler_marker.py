@@ -1,5 +1,5 @@
-from collections.abc import Iterable
-from typing import Any, Callable, Generic, Optional, Union, cast, overload
+from collections.abc import Callable, Iterable
+from typing import Any, Generic, cast, overload
 
 from bigxml.marks import add_mark
 from bigxml.nodes import XMLElement, XMLText
@@ -28,15 +28,15 @@ class ___xml_handle_xxx_wrapped(Protocol[T_co]):  # noqa: N801
     @overload
     def __call__(
         self,
-        obj: Callable[[T_co], Optional[Iterable[T]]],
-    ) -> Callable[[Union[XMLElement, XMLText]], Optional[Iterable[T]]]: ...
+        obj: Callable[[T_co], Iterable[T] | None],
+    ) -> Callable[[XMLElement | XMLText], Iterable[T] | None]: ...
 
     # wrapper for methods
     @overload
     def __call__(
         self,
-        obj: Callable[[U, T_co], Optional[Iterable[T]]],
-    ) -> Callable[[U, Union[XMLElement, XMLText]], Optional[Iterable[T]]]: ...
+        obj: Callable[[U, T_co], Iterable[T] | None],
+    ) -> Callable[[U, XMLElement | XMLText], Iterable[T] | None]: ...
 
 
 def xml_handle_element(*args: str) -> ___xml_handle_xxx_wrapped[XMLElement]:
@@ -69,15 +69,15 @@ def xml_handle_text(obj: K, /) -> K: ...
 # @xml_handle_text (for functions)
 @overload
 def xml_handle_text(
-    obj: Callable[[XMLText], Optional[Iterable[T]]], /
-) -> Callable[[Union[XMLElement, XMLText]], Optional[Iterable[T]]]: ...
+    obj: Callable[[XMLText], Iterable[T] | None], /
+) -> Callable[[XMLElement | XMLText], Iterable[T] | None]: ...
 
 
 # @xml_handle_text (for methods)
 @overload
 def xml_handle_text(
-    obj: Callable[[U, XMLText], Optional[Iterable[T]]], /
-) -> Callable[[U, Union[XMLElement, XMLText]], Optional[Iterable[T]]]: ...
+    obj: Callable[[U, XMLText], Iterable[T] | None], /
+) -> Callable[[U, XMLElement | XMLText], Iterable[T] | None]: ...
 
 
 # @xml_handle_text(...) (for functions & methods)

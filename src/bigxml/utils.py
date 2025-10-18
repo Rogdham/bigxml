@@ -1,9 +1,9 @@
 from collections import deque
-from collections.abc import Generator, Iterable, Iterator
+from collections.abc import Callable, Generator, Iterable, Iterator
 from functools import wraps
 from inspect import Parameter, signature
 import re
-from typing import Callable, Optional, cast
+from typing import cast
 
 from bigxml.typing import P, T, U
 
@@ -44,7 +44,7 @@ def extract_namespace_name(name: str) -> tuple[str, str]:
     return ("", name)
 
 
-def last_item_or_none(iterable: Iterable[T]) -> Optional[T]:
+def last_item_or_none(iterable: Iterable[T]) -> T | None:
     try:
         return deque(iterable, maxlen=1)[0]
     except IndexError:
@@ -62,7 +62,7 @@ def consume(iterable: Iterable[object]) -> bool:
 
 
 def transform_to_iterator(
-    fct: Callable[P, Optional[Iterable[T]]],
+    fct: Callable[P, Iterable[T] | None],
 ) -> Callable[P, Iterator[T]]:
     @wraps(fct)
     def wrapped(*args: P.args, **kwargs: P.kwargs) -> Iterator[T]:

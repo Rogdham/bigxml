@@ -1,7 +1,6 @@
 from datetime import datetime
 from lzma import LZMAFile
 from pathlib import Path
-from typing import Optional
 
 from bigxml import Parser, XMLText, xml_handle_element, xml_handle_text
 
@@ -10,8 +9,8 @@ def test_wikipedia_export() -> None:
     @xml_handle_element("mediawiki", "page", "revision")
     class Revision:
         def __init__(self) -> None:
-            self.author: Optional[str] = None
-            self.date: Optional[datetime] = None
+            self.author: str | None = None
+            self.date: datetime | None = None
 
         @xml_handle_text("contributor", "username")
         def handle_author(self, node: XMLText) -> None:

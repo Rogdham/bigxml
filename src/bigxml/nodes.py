@@ -1,6 +1,6 @@
 from collections.abc import Iterator, Mapping
 from dataclasses import dataclass
-from typing import Optional, Union
+from typing import Union
 import warnings
 
 from bigxml.handle_mgr import HandleMgr
@@ -10,7 +10,7 @@ from bigxml.utils import extract_namespace_name
 class XMLElementAttributes(Mapping[str, str]):
     def __init__(self, attributes: Mapping[str, str]) -> None:
         self._items: dict[
-            str, tuple[Optional[int], str]
+            str, tuple[int | None, str]
         ] = {}  # key -> (alternatives, value)
         self._len = 0
         for key, value in attributes.items():

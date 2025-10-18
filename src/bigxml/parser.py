@@ -1,5 +1,5 @@
-from collections.abc import Iterator
-from typing import TYPE_CHECKING, Callable, Optional, Union
+from collections.abc import Callable, Iterator
+from typing import TYPE_CHECKING, Optional
 import warnings
 
 from defusedxml.ElementTree import iterparse
@@ -17,7 +17,7 @@ if TYPE_CHECKING:
 
 def _parse(
     iterator: IterWithRollback[tuple[str, "Element"]],
-    handler: Callable[[Union[XMLElement, XMLText]], Iterator[T]],
+    handler: Callable[[XMLElement | XMLText], Iterator[T]],
     parents: tuple[XMLElement, ...],
     parent_elem: Optional["Element"],
     expected_iteration: int,
@@ -26,7 +26,7 @@ def _parse(
         raise RuntimeError("Tried to access a node out of order")
 
     depth = 0
-    last_child: Optional[Element] = None
+    last_child: Element | None = None
 
     def handle_text() -> Iterator[T]:
         if last_child is not None:
@@ -39,7 +39,7 @@ def _parse(
             node = XMLText(text=text, parents=parents)
             yield from handler(node)
 
-    def create_node(elem: "Element", iteration: int) -> Union[XMLElement, XMLText]:
+    def create_node(elem: "Element", iteration: int) -> XMLElement | XMLText:
         node = XMLElement(
             name=elem.tag, attributes=XMLElementAttributes(elem.attrib), parents=parents
         )
