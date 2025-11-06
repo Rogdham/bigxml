@@ -14,9 +14,12 @@ For the purpose of determining breaking changes:
 
 [python-versions]: https://devguide.python.org/versions/#supported-versions
 
-## [Unreleased]
+## [1.2.0] - 2025-11-06
 
-[unreleased]: https://github.com/rogdham/bigxml/compare/v1.1.0...HEAD
+[1.2.0]: https://github.com/rogdham/bigxml/compare/v1.1.0...v1.2.0
+
+This release updates license information in package metadata, and brings official
+support for Python 3.14.
 
 ### :house: Internal
 
