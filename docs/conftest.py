@@ -48,12 +48,12 @@ def _create_files() -> Iterator[None]:
             chdir(dirname)
             for md_path in docs_path.glob("**/*.md"):
                 for match in re.finditer(
-                    "    :::xml filename=(.*?)((?:\n    .*)+)",
+                    "```xml { title=(.*?) }((?:\n[^`].*)+)\n```",
                     md_path.read_text(),
                 ):
                     groups = match.groups()
                     filename = groups[0].strip()
-                    content = groups[1].replace("\n    ", "\n")[1:]
+                    content = groups[1].strip()
                     path = Path(dirname) / filename.strip()
                     if path.exists() and path.read_text() != content:
                         raise ValueError(f"File already exists: {filename}")

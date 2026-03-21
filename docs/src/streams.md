@@ -7,19 +7,20 @@ raw XML data to be parsed.
 
 Files open **in binary mode**, `io.BytesIO`, etc.
 
-    :::xml filename=hello.xml
-    <root>Hello, world!</root>
+```xml { title=hello.xml }
+<root>Hello, world!</root>
+```
 
-<!---->
+```python-console
+>>> @xml_handle_element("root")
+... def handler(node):
+...     yield node.text
 
-    :::python
-    >>> @xml_handle_element("root")
-    ... def handler(node):
-    ...     yield node.text
+>>> with open("hello.xml", "rb") as stream:
+...     Parser(stream).return_from(handler)
+'Hello, world!'
 
-    >>> with open("hello.xml", "rb") as stream:
-    ...     Parser(stream).return_from(handler)
-    'Hello, world!'
+```
 
 ## Bytes-like objects
 
@@ -28,34 +29,38 @@ Any object supporting the [buffer protocol][bufproto]: `bytes`, `bytearray`,
 
 [bufproto]: https://docs.python.org/3/reference/datamodel.html#python-buffer-protocol
 
-    :::python
-    >>> @xml_handle_element("root")
-    ... def handler(node):
-    ...     yield node.text
+```python-console
+>>> @xml_handle_element("root")
+... def handler(node):
+...     yield node.text
 
-    >>> stream = b"<root>Hello, world!</root>"
+>>> stream = b"<root>Hello, world!</root>"
 
-    >>> Parser(stream).return_from(handler)
-    'Hello, world!'
+>>> Parser(stream).return_from(handler)
+'Hello, world!'
+
+```
 
 ## Iterables
 
 Any iterable whose items are _streams_: lists, generators, etc.
 
-    :::python
-    >>> @xml_handle_element("root")
-    ... def handler(node):
-    ...     yield node.text
+```python-console
+>>> @xml_handle_element("root")
+... def handler(node):
+...     yield node.text
 
-    >>> def generate_stream():
-    ...     yield b"<root>"
-    ...     yield b"Hello, world!"
-    ...     yield b"</root>"
+>>> def generate_stream():
+...     yield b"<root>"
+...     yield b"Hello, world!"
+...     yield b"</root>"
 
-    >>> stream = generate_stream()
+>>> stream = generate_stream()
 
-    >>> Parser(stream).return_from(handler)
-    'Hello, world!'
+>>> Parser(stream).return_from(handler)
+'Hello, world!'
+
+```
 
 More examples:
 

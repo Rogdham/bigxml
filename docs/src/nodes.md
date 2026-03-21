@@ -4,8 +4,9 @@ A _node_ is the representation of an XML element or character data (i.e. text).
 
 They are passed as the argument to [handlers](handlers.md) functions.
 
-    :::xml
-    <p>Hello, world!</p>
+```xml
+<p>Hello, world!</p>
+```
 
 The XML document above has two nodes:
 

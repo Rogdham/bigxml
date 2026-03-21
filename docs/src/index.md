@@ -1,3 +1,7 @@
+---
+title:
+---
+
 <div class="home-header" markdown="1">
 
 # BigXML
@@ -45,25 +49,29 @@ produces a single iterable that will be handled by your application.
 
 Install _BigXML_ with pip:
 
-    :::sh
-    $ python -m pip install bigxml
+```sh
+$ python -m pip install bigxml
+```
 
 ## Imports
 
 The most used imports are the following:
 
-    :::python
-    from bigxml import Parser, xml_handle_element, xml_handle_text
+```python
+from bigxml import Parser, xml_handle_element, xml_handle_text
+```
 
 If you want to catch [exceptions](exceptions.md) raised by this module:
 
-    :::python
-    from bigxml import BigXmlError
+```python
+from bigxml import BigXmlError
+```
 
 For [type hints](typing.md), you may also import:
 
-    :::python
-    from bigxml import HandlerTypeHelper, Streamable, XMLElement, XMLElementAttributes, XMLText
+```python
+from bigxml import HandlerTypeHelper, Streamable, XMLElement, XMLElementAttributes, XMLText
+```
 
 !!! Warning
 

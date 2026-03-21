@@ -9,50 +9,53 @@ However, _BigXML_ needs `bytes`-oriented [streams](streams.md), so you need to o
 file in binary mode by explicitly specifying it with an extra parameter:
 `open("filename.xml", "rb")`.
 
-    :::xml filename=hello.xml
-    <root>Hello, world!</root>
+```xml { title=hello.xml }
+<root>Hello, world!</root>
+```
 
-<!---->
+```python-console
+>>> @xml_handle_element("root")
+... def handler(node):
+...     yield node.text
 
-    :::python
-    >>> @xml_handle_element("root")
-    ... def handler(node):
-    ...     yield node.text
+>>> # BAD
+>>> with open("hello.xml") as f:
+...    Parser(f).return_from(handler)
+Traceback (most recent call last):
+    ...
+TypeError: Stream read method returned a str, not a bytes-like object.
+            Open file objects in binary mode.
 
-    >>> # BAD
-    >>> with open("hello.xml") as f:
-    ...    Parser(f).return_from(handler)
-    Traceback (most recent call last):
-        ...
-    TypeError: Stream read method returned a str, not a bytes-like object.
-               Open file objects in binary mode.
+>>> # GOOD
+>>> with open("hello.xml", "rb") as f:
+...    Parser(f).return_from(handler)
+'Hello, world!'
 
-    >>> # GOOD
-    >>> with open("hello.xml", "rb") as f:
-    ...    Parser(f).return_from(handler)
-    'Hello, world!'
+```
 
 ## How can I parse a string? {: #parse-str }
 
 Just convert `str` into `bytes` using `.encode` or `codecs.encode`:
 
-    :::python
-    >>> @xml_handle_element("root")
-    ... def handler(node):
-    ...     yield node.text
+```python-console
+>>> @xml_handle_element("root")
+... def handler(node):
+...     yield node.text
+...
+>>> stream_str = "<root>Hello, world!</root>"
+
+>>> # BAD
+>>> Parser(stream_str).return_from(handler)
+Traceback (most recent call last):
     ...
-    >>> stream_str = "<root>Hello, world!</root>"
+TypeError: Invalid stream type: str.
+            Convert it to a bytes-like object by encoding it.
 
-    >>> # BAD
-    >>> Parser(stream_str).return_from(handler)
-    Traceback (most recent call last):
-        ...
-    TypeError: Invalid stream type: str.
-               Convert it to a bytes-like object by encoding it.
+>>> # GOOD
+>>> Parser(stream_str.encode()).return_from(handler)
+'Hello, world!'
 
-    >>> # GOOD
-    >>> Parser(stream_str.encode()).return_from(handler)
-    'Hello, world!'
+```
 
 !!! Tip
 
@@ -73,34 +76,35 @@ Usually, the issue can be solved by following these principles:
 
 For example, consider the following piece of code:
 
-    :::xml filename=user.xml
-    <user>
-        <firstname>Alice</firstname>
-        <lastname>Cooper</lastname>
-    </user>
+```xml { title=user.xml }
+<user>
+    <firstname>Alice</firstname>
+    <lastname>Cooper</lastname>
+</user>
+```
 
-<!---->
+```python-console
+>>> @xml_handle_element("firstname")
+... def handle_firstname(node):
+...     yield node.text
 
-    :::python
-    >>> @xml_handle_element("firstname")
-    ... def handle_firstname(node):
-    ...     yield node.text
+>>> @xml_handle_element("lastname")
+... def handle_lastname(node):
+...     yield node.text
 
-    >>> @xml_handle_element("lastname")
-    ... def handle_lastname(node):
-    ...     yield node.text
+>>> @xml_handle_element("user")
+... def handle_user(node):
+...     firstname = node.return_from(handle_firstname)
+...     lastname = node.return_from(handle_lastname)
+...     yield f"{firstname} {lastname}"
 
-    >>> @xml_handle_element("user")
-    ... def handle_user(node):
-    ...     firstname = node.return_from(handle_firstname)
-    ...     lastname = node.return_from(handle_lastname)
-    ...     yield f"{firstname} {lastname}"
+>>> with open("user.xml", "rb") as f:
+...    Parser(f).return_from(handle_user)
+Traceback (most recent call last):
+    ...
+RuntimeError: Tried to access a node out of order
 
-    >>> with open("user.xml", "rb") as f:
-    ...    Parser(f).return_from(handle_user)
-    Traceback (most recent call last):
-        ...
-    RuntimeError: Tried to access a node out of order
+```
 
 The issue occurred because the children of the `user` node are read twice:
 
@@ -109,44 +113,48 @@ The issue occurred because the children of the `user` node are read twice:
 
 Instead, we need to consider the `firstname` and `lastname` children at the same time:
 
-    :::python
-    >>> @xml_handle_element("user")
-    ... def handle_user(node):
-    ...     names = {}
-    ...     for child_node in node.iter_from("firstname", "lastname"):
-    ...         names[child_node.name] = child_node.text
-    ...     yield f"{names['firstname']} {names['lastname']}"
+```python-console
+>>> @xml_handle_element("user")
+... def handle_user(node):
+...     names = {}
+...     for child_node in node.iter_from("firstname", "lastname"):
+...         names[child_node.name] = child_node.text
+...     yield f"{names['firstname']} {names['lastname']}"
 
-    >>> with open("user.xml", "rb") as f:
-    ...    Parser(f).return_from(handle_user)
-    'Alice Cooper'
+>>> with open("user.xml", "rb") as f:
+...    Parser(f).return_from(handle_user)
+'Alice Cooper'
+
+```
 
 The code above is hardly readable; you probably want to use a
 [class handler](handlers.md#classes) instead:
 
-    :::python
-    >>> from dataclasses import dataclass
+```python-console
+>>> from dataclasses import dataclass
 
-    >>> @xml_handle_element("user")
-    ... @dataclass
-    ... class User:
-    ...     firstname: str = 'N/A'
-    ...     lastname: str = 'N/A'
-    ...
-    ...     @xml_handle_element("firstname")
-    ...     def handle_firstname(self, node):
-    ...         self.firstname = node.text
-    ...
-    ...     @xml_handle_element("lastname")
-    ...     def handle_lastname(self, node):
-    ...         self.lastname = node.text
-    ...
-    ...     def xml_handler(self):
-    ...         yield f"{self.firstname} {self.lastname}"
+>>> @xml_handle_element("user")
+... @dataclass
+... class User:
+...     firstname: str = 'N/A'
+...     lastname: str = 'N/A'
+...
+...     @xml_handle_element("firstname")
+...     def handle_firstname(self, node):
+...         self.firstname = node.text
+...
+...     @xml_handle_element("lastname")
+...     def handle_lastname(self, node):
+...         self.lastname = node.text
+...
+...     def xml_handler(self):
+...         yield f"{self.firstname} {self.lastname}"
 
-    >>> with open("user.xml", "rb") as f:
-    ...    Parser(f).return_from(User)
-    'Alice Cooper'
+>>> with open("user.xml", "rb") as f:
+...    Parser(f).return_from(User)
+'Alice Cooper'
+
+```
 
 ## I have an other issue, or a feature request
 

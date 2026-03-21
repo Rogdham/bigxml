@@ -1,0 +1,22 @@
+.home-header {
+  display: flex;
+  align-items: baseline;
+  justify-content: center;
+  margin: 64px 0;
+}
+@media (max-width: 900px) {
+  .home-header {
+    flex-direction: column;
+  }
+}
+.home-header * {
+  margin: 0 !important;
+}
+.home-header .description {
+  font-style: italic;
+  padding: 0 16px;
+}
+
+footer {
+    display: none;
+}

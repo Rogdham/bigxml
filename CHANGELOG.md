@@ -14,6 +14,14 @@ For the purpose of determining breaking changes:
 
 [python-versions]: https://devguide.python.org/versions/#supported-versions
 
+## [Unreleased]
+
+[unreleased]: https://github.com/rogdham/bigxml/compare/v1.2.0...HEAD
+
+### :house: Internal
+
+- Change documentation engine from `mkdocs` to `zensical`
+
 ## [1.2.0] - 2025-11-06
 
 [1.2.0]: https://github.com/rogdham/bigxml/compare/v1.1.0...v1.2.0

@@ -6,8 +6,9 @@ The `Parser` class is the entry point for using _BigXML_.
 
 Call `Parser` with any number of [streams](streams.md) as arguments:
 
-    :::python
-    Parser(stream0, stream1, ...)
+```python
+Parser(stream0, stream1, ...)
+```
 
 Each stream is consumed, in order, to get the raw XML data to be parsed.
 

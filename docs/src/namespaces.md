@@ -10,21 +10,22 @@ In most cases, you don't want to care about namespaces when parsing some XML.
 When you see `foo:bar` in XML elements or attributes, do as if the `foo:` prefix was not
 here, and everything should work as expected:
 
-    :::xml filename=hello_ns.xml
-    <root xmlns:xs="https://example.com/xml/schema">
-        <xs:item xs:type="text">Hello, world!</xs:item>
-    </root>
+```xml { title=hello_ns.xml }
+<root xmlns:xs="https://example.com/xml/schema">
+    <xs:item xs:type="text">Hello, world!</xs:item>
+</root>
+```
 
-<!---->
+```python-console
+>>> @xml_handle_element("root", "item")
+... def handler(node):
+...     yield (node.attributes["type"], node.text)
 
-    :::python
-    >>> @xml_handle_element("root", "item")
-    ... def handler(node):
-    ...     yield (node.attributes["type"], node.text)
+>>> with open("hello_ns.xml", "rb") as f:
+...    Parser(f).return_from(handler)
+('text', 'Hello, world!')
 
-    >>> with open("hello_ns.xml", "rb") as f:
-    ...    Parser(f).return_from(handler)
-    ('text', 'Hello, world!')
+```
 
 ## Namespaced elements
 
@@ -45,48 +46,49 @@ When parsing an XML element of name `bar` and namespace
 
 Example:
 
-    :::xml filename=colors.xml
-    <root
-        xmlns="https://example.com/xml/purple"
-        xmlns:blue="https://example.com/xml/blue"
-        xmlns:red="https://example.com/xml/red">
-            <blue:item>Blue</blue:item>
-            <item xmlns="https://example.com/xml/blue">Also blue</item>
-            <red:item>Red</red:item>
-            <item>Purple</item>
-    </root>
+```xml { title=colors.xml }
+<root
+    xmlns="https://example.com/xml/purple"
+    xmlns:blue="https://example.com/xml/blue"
+    xmlns:red="https://example.com/xml/red">
+        <blue:item>Blue</blue:item>
+        <item xmlns="https://example.com/xml/blue">Also blue</item>
+        <red:item>Red</red:item>
+        <item>Purple</item>
+</root>
+```
 
-<!---->
+```python-console
+>>> @xml_handle_element("root", "item")
+... def handler_default(node):
+...     yield ("default", node.text)
 
-    :::python
-    >>> @xml_handle_element("root", "item")
-    ... def handler_default(node):
-    ...     yield ("default", node.text)
+>>> @xml_handle_element("root", "{}item")
+... def handler_nothing(node):
+...     yield ("nothing", node.text)
 
-    >>> @xml_handle_element("root", "{}item")
-    ... def handler_nothing(node):
-    ...     yield ("nothing", node.text)
+>>> @xml_handle_element("root", "{https://example.com/xml/blue}item")
+... def handler_blue(node):
+...     yield ("blue", node.text)
 
-    >>> @xml_handle_element("root", "{https://example.com/xml/blue}item")
-    ... def handler_blue(node):
-    ...     yield ("blue", node.text)
+>>> @xml_handle_element("root", "{https://example.com/xml/purple}item")
+... def handler_purple(node):
+...     yield ("purple", node.text)
 
-    >>> @xml_handle_element("root", "{https://example.com/xml/purple}item")
-    ... def handler_purple(node):
-    ...     yield ("purple", node.text)
+>>> with open("colors.xml", "rb") as f:
+...    for item in Parser(f).iter_from(
+...        handler_default,
+...        handler_nothing,
+...        handler_blue,
+...        handler_purple,
+...    ):
+...        print(item)
+('blue', 'Blue')
+('blue', 'Also blue')
+('default', 'Red')
+('purple', 'Purple')
 
-    >>> with open("colors.xml", "rb") as f:
-    ...    for item in Parser(f).iter_from(
-    ...        handler_default,
-    ...        handler_nothing,
-    ...        handler_blue,
-    ...        handler_purple,
-    ...    ):
-    ...        print(item)
-    ('blue', 'Blue')
-    ('blue', 'Also blue')
-    ('default', 'Red')
-    ('purple', 'Purple')
+```
 
 !!! Note
 
@@ -111,46 +113,47 @@ When accessing the attributes of a node, you can use one of the following keys:
 
 Example:
 
-    :::xml filename=attributes_ns.xml
-    <root
-        xmlns="https://example.com/xml/purple"
-        xmlns:blue="https://example.com/xml/blue"
-        xmlns:red="https://example.com/xml/red">
-            <item color="Green">Case 0</item>
-            <item blue:color="Blue">Case 1</item>
-            <item red:color="Red">Case 2</item>
-            <item color="Green" blue:color="Blue" red:color="Red">Case 3</item>
-    </root>
+```xml { title=attributes_ns.xml }
+<root
+    xmlns="https://example.com/xml/purple"
+    xmlns:blue="https://example.com/xml/blue"
+    xmlns:red="https://example.com/xml/red">
+        <item color="Green">Case 0</item>
+        <item blue:color="Blue">Case 1</item>
+        <item red:color="Red">Case 2</item>
+        <item color="Green" blue:color="Blue" red:color="Red">Case 3</item>
+</root>
+```
 
-<!---->
+```python-console
+>>> @xml_handle_element("root", "item")
+... def handler(node):
+...     yield node.text
+...     yield ("default ns", node.attributes["color"])
+...     yield ("no ns", node.attributes.get("{}color"))
+...     yield ("blue ns", node.attributes.get("{https://example.com/xml/blue}color"))
 
-    :::python
-    >>> @xml_handle_element("root", "item")
-    ... def handler(node):
-    ...     yield node.text
-    ...     yield ("default ns", node.attributes["color"])
-    ...     yield ("no ns", node.attributes.get("{}color"))
-    ...     yield ("blue ns", node.attributes.get("{https://example.com/xml/blue}color"))
+>>> with open("attributes_ns.xml", "rb") as f:
+...    for item in Parser(f).iter_from(handler):
+...        print(item)
+Case 0
+('default ns', 'Green')
+('no ns', 'Green')
+('blue ns', None)
+Case 1
+('default ns', 'Blue')
+('no ns', None)
+('blue ns', 'Blue')
+Case 2
+('default ns', 'Red')
+('no ns', None)
+('blue ns', None)
+Case 3
+('default ns', 'Green')
+('no ns', 'Green')
+('blue ns', 'Blue')
 
-    >>> with open("attributes_ns.xml", "rb") as f:
-    ...    for item in Parser(f).iter_from(handler):
-    ...        print(item)
-    Case 0
-    ('default ns', 'Green')
-    ('no ns', 'Green')
-    ('blue ns', None)
-    Case 1
-    ('default ns', 'Blue')
-    ('no ns', None)
-    ('blue ns', 'Blue')
-    Case 2
-    ('default ns', 'Red')
-    ('no ns', None)
-    ('blue ns', None)
-    Case 3
-    ('default ns', 'Green')
-    ('no ns', 'Green')
-    ('blue ns', 'Blue')
+```
 
 !!! Note
 
