@@ -20,6 +20,7 @@ For the purpose of determining breaking changes:
 
 ### :house: Internal
 
+- Add tests for PyPy 3.12
 - Update dev dependencies
 
 ## [1.2.0] - 2025-11-06
