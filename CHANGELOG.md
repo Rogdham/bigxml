@@ -14,6 +14,14 @@ For the purpose of determining breaking changes:
 
 [python-versions]: https://devguide.python.org/versions/#supported-versions
 
+## [Unreleased]
+
+[unreleased]: https://github.com/rogdham/bigxml/compare/v1.2.0...HEAD
+
+### :house: Internal
+
+- Update dev dependencies
+
 ## [1.2.0] - 2025-11-06
 
 [1.2.0]: https://github.com/rogdham/bigxml/compare/v1.1.0...v1.2.0
@@ -27,7 +35,7 @@ support for Python 3.14.
 - End of Python 3.9 support
 - Add tests for CPython 3.14 and PyPy 3.11
 - Use CPython 3.14 for misc. tests
-- Upgrade dev dependencies
+- Update dev dependencies
 
 ## [1.1.0] - 2024-10-10
 
@@ -45,13 +53,13 @@ versions, but now it's official.
 - End of Python 3.8 support
 - Add tests for CPython 3.13
 - Use CPython 3.13 for misc. tests
-- Upgrade dev dependencies
+- Update dev dependencies
 
 ## [1.0.1] - 2024-04-27
 
 [1.0.1]: https://github.com/rogdham/bigxml/compare/v1.0.0...v1.0.1
 
-This is a maintenance release. Internal tooling is being upgraded, featuring support for
+This is a maintenance release. Internal tooling is being updated, featuring support for
 pytest version 8 and formatting of the codebase with ruff.
 
 ### :house: Internal
@@ -59,7 +67,7 @@ pytest version 8 and formatting of the codebase with ruff.
 - Change code formatter from black to ruff
 - Fix doctests not being run with other tests
 - Fix coverage report under some versions of PyPy
-- Upgrade dev dependencies
+- Update dev dependencies
 - Remove pylint, assuming its benefits are provided by the ruff+mypy combo
 - Use trusted publishing for PyPi releases
 
