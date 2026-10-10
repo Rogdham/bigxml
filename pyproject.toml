@@ -13,7 +13,6 @@ classifiers = [
     "Programming Language :: Python",
     "Programming Language :: Python :: 3",
     "Programming Language :: Python :: 3 :: Only",
-    "Programming Language :: Python :: 3.10",
     "Programming Language :: Python :: 3.11",
     "Programming Language :: Python :: 3.12",
     "Programming Language :: Python :: 3.13",
@@ -21,7 +20,7 @@ classifiers = [
     "Topic :: Utilities",
     "Topic :: Text Processing :: Markup :: XML",
 ]
-requires-python = ">=3.10"
+requires-python = ">=3.11"
 dependencies = [
     "defusedxml>=0.7.1",
     "typing-extensions>=4.6.0 ; python_version<'3.12'",
@@ -138,7 +137,7 @@ testpaths = ["docs", "tests"]
 
 [tool.ruff]
 src = ["src"]
-target-version = "py310"
+target-version = "py311"
 
 [tool.ruff.lint]
 select = ["ALL"]

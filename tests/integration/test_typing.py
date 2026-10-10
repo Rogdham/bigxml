@@ -1,6 +1,6 @@
 from collections.abc import Iterable, Iterator
 from dataclasses import dataclass
-import sys
+from typing import Never, assert_type
 
 from bigxml import (
     HandlerTypeHelper,
@@ -10,12 +10,6 @@ from bigxml import (
     xml_handle_element,
     xml_handle_text,
 )
-
-if sys.version_info < (3, 11):
-    from typing_extensions import Never, assert_type
-else:
-    from typing import Never, assert_type
-
 
 # Note: the aim of this file is to test the typing of return-values
 # for iter_from and return_from as they would be used in the wild.

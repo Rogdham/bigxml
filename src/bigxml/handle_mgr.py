@@ -1,6 +1,5 @@
 from collections.abc import Callable, Iterable, Iterator
-import sys
-from typing import TYPE_CHECKING, Any, Optional, Union, overload
+from typing import TYPE_CHECKING, Any, Never, Optional, Union, overload
 
 from bigxml.handler_creator import create_handler
 from bigxml.typing import (
@@ -9,11 +8,6 @@ from bigxml.typing import (
     T,
 )
 from bigxml.utils import last_item_or_none
-
-if sys.version_info < (3, 11):  # pragma: no cover
-    from typing_extensions import Never
-else:  # pragma: no cover
-    from typing import Never
 
 if TYPE_CHECKING:
     from bigxml.nodes import XMLElement, XMLText
