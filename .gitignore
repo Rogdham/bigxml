@@ -9,4 +9,3 @@ __pycache__
 /.coverage
 /coverage
 /.pytest_cache
-/.tox

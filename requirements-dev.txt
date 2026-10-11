@@ -1,0 +1,6 @@
+-e .
+
+-r requirements-docs.txt
+-r requirements-lint.txt
+-r requirements-tests.txt
+-r requirements-type.txt

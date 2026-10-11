@@ -52,11 +52,7 @@ source = "vcs"
 directory = "coverage"
 
 [tool.coverage.paths]
-source = [
-    "src/bigxml/",
-    ".tox/py*/lib/python*/site-packages/bigxml/",
-    ".tox/py*/site-packages/bigxml/",
-]
+source = ["src/bigxml/"]
 
 [tool.coverage.report]
 exclude_lines = [
@@ -67,6 +63,7 @@ exclude_lines = [
     "@overload",
     "if TYPE_CHECKING:",
 ]
+fail_under = 100
 show_missing = true
 
 [tool.coverage.run]
@@ -122,7 +119,9 @@ warn_unused_configs = true
 
 [tool.pytest.ini_options]
 addopts = """
-    --cov
+    --cov		
+    --cov-report=html
+    --cov-report=term-missing
     --doctest-glob='*.md'
     --doctest-modules --strict-markers
     """
@@ -137,7 +136,7 @@ testpaths = ["docs", "tests"]
 #
 
 [tool.ruff]
-src = ["src"]
+src = ["src", "tests"]
 target-version = "py311"
 
 [tool.ruff.lint]

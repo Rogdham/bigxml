@@ -24,6 +24,7 @@ For the purpose of determining breaking changes:
 - Add tests for CPython 3.15 and PyPy 3.12
 - Use CPython 3.15 for misc. tests
 - Update dev dependencies
+- Refactor CI pipeline
 
 ## [1.2.0] - 2025-11-06
 

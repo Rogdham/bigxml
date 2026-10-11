@@ -1,14 +1,13 @@
-# ruff: noqa: FBT001
 # note: only used items are defined here, with used typing
 
 from collections.abc import Iterator, Sequence
-from typing import Optional, Protocol, TypeVar
+from typing import Protocol, TypeVar
 from xml.etree.ElementTree import Element, ParseError
 
 _T_co = TypeVar("_T_co", covariant=True)
 
 class _SupportsRead(Protocol[_T_co]):
-    def read(self, size: Optional[int] = None) -> _T_co: ...
+    def read(self, size: int | None = None) -> _T_co: ...
 
 def iterparse(
     source: _SupportsRead[bytes],
