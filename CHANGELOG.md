@@ -14,9 +14,11 @@ For the purpose of determining breaking changes:
 
 [python-versions]: https://devguide.python.org/versions/#supported-versions
 
-## [Unreleased]
+## [1.3.0] - 2026-10-11
 
-[unreleased]: https://github.com/rogdham/bigxml/compare/v1.2.0...HEAD
+This release brings official support for Python 3.15.
+
+[1.3.0]: https://github.com/rogdham/bigxml/compare/v1.2.0...v1.3.0
 
 ### :house: Internal
 
